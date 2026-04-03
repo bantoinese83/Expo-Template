@@ -1,6 +1,8 @@
 import { StatusBar } from "expo-status-bar";
-import { StyleSheet, View, Text, ScrollView, SafeAreaView, TouchableOpacity } from "react-native";
+import { StyleSheet, View, Text, ScrollView, TouchableOpacity } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
+import { NavigationContainer } from "@react-navigation/native";
 import { colors } from "./theme/colors";
 import textStyles, { iosShadow } from "./theme/styles";
 import { moderateScale, verticalScale, horizontalScale } from "./utils/responsive/metrices";
@@ -21,100 +23,108 @@ const FeatureCard = ({ icon, title, desc }: { icon: any; title: string; desc: st
 
 export default function App() {
   return (
-    <SafeAreaView style={styles.safeArea}>
-      <StatusBar style="dark" />
-      <AppHeader
-        userName="Developer"
-        userImage="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=100&q=80"
-        greeting="Welcome to"
-        onNotificationPress={() => {}}
-        notificationCount={3}
-        headerStyle={{ backgroundColor: colors.white }}
-      />
-
-      <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
-        {/* Hero Section */}
-        <View style={styles.hero}>
-          <Text style={[textStyles.textBold24, styles.heroTitle]}>
-            The Ultimate Expo{"\n"}
-            <Text style={{ color: colors.primary }}>TypeScript Template</Text>
-          </Text>
-          <Text style={[textStyles.textRegular14, styles.heroSubtitle]}>
-            Enterprise-ready foundation with strict typing, clean architecture, and modern styling.
-          </Text>
-          <PrimaryButton
-            title="Get Started"
-            onPress={() => alert("Let's build something amazing!")}
-            style={styles.heroButton}
+    <SafeAreaProvider>
+      <NavigationContainer>
+        <SafeAreaView style={styles.safeArea} edges={["top", "left", "right"]}>
+          <StatusBar style="dark" />
+          <AppHeader
+            userName="Developer"
+            userImage="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=100&q=80"
+            greeting="Welcome to"
+            onNotificationPress={() => {}}
+            notificationCount={3}
+            headerStyle={{ backgroundColor: colors.white }}
           />
-        </View>
 
-        {/* Stats Row */}
-        <View style={styles.statsRow}>
-          <View style={styles.statItem}>
-            <Text style={[textStyles.textBold18, { color: colors.primary }]}>0</Text>
-            <Text style={[textStyles.textRegular11, { color: colors.textSecondary }]}>
-              Type Errors
-            </Text>
-          </View>
-          <View style={styles.statDivider} />
-          <View style={styles.statItem}>
-            <Text style={[textStyles.textBold18, { color: colors.secondary }]}>100%</Text>
-            <Text style={[textStyles.textRegular11, { color: colors.textSecondary }]}>
-              Strict Mode
-            </Text>
-          </View>
-          <View style={styles.statDivider} />
-          <View style={styles.statItem}>
-            <Text style={[textStyles.textBold18, { color: colors.sky }]}>v2.0</Text>
-            <Text style={[textStyles.textRegular11, { color: colors.textSecondary }]}>
-              Stability
-            </Text>
-          </View>
-        </View>
+          <ScrollView
+            showsVerticalScrollIndicator={false}
+            contentContainerStyle={styles.scrollContent}
+          >
+            {/* Hero Section */}
+            <View style={styles.hero}>
+              <Text style={[textStyles.textBold24, styles.heroTitle]}>
+                The Ultimate Expo{"\n"}
+                <Text style={{ color: colors.primary }}>TypeScript Template</Text>
+              </Text>
+              <Text style={[textStyles.textRegular14, styles.heroSubtitle]}>
+                Enterprise-ready foundation with strict typing, clean architecture, and modern
+                styling.
+              </Text>
+              <PrimaryButton
+                title="Get Started"
+                onPress={() => alert("Let's build something amazing!")}
+                style={styles.heroButton}
+              />
+            </View>
 
-        {/* Features Grid */}
-        <View style={styles.sectionHeader}>
-          <Text style={textStyles.textSemibold18}>Core Features</Text>
-          <TouchableOpacity>
-            <Text style={[textStyles.textMedium13, { color: colors.primary }]}>See All</Text>
-          </TouchableOpacity>
-        </View>
+            {/* Stats Row */}
+            <View style={styles.statsRow}>
+              <View style={styles.statItem}>
+                <Text style={[textStyles.textBold18, { color: colors.primary }]}>0</Text>
+                <Text style={[textStyles.textRegular11, { color: colors.textSecondary }]}>
+                  Type Errors
+                </Text>
+              </View>
+              <View style={styles.statDivider} />
+              <View style={styles.statItem}>
+                <Text style={[textStyles.textBold18, { color: colors.secondary }]}>100%</Text>
+                <Text style={[textStyles.textRegular11, { color: colors.textSecondary }]}>
+                  Strict Mode
+                </Text>
+              </View>
+              <View style={styles.statDivider} />
+              <View style={styles.statItem}>
+                <Text style={[textStyles.textBold18, { color: colors.sky }]}>v2.0</Text>
+                <Text style={[textStyles.textRegular11, { color: colors.textSecondary }]}>
+                  Stability
+                </Text>
+              </View>
+            </View>
 
-        <View style={styles.grid}>
-          <FeatureCard
-            icon="shield-check"
-            title="Type Safety"
-            desc="Strictly typed props and state across all components."
-          />
-          <FeatureCard
-            icon="layers-outline"
-            title="Clean Architecture"
-            desc="Separation of concerns using hooks and services."
-          />
-          <FeatureCard
-            icon="palette-outline"
-            title="Dynamic Theme"
-            desc="Centralized design system for rapid UI development."
-          />
-          <FeatureCard
-            icon="rocket-launch-outline"
-            title="Performance"
-            desc="Optimized rendering and optimized asset loading."
-          />
-        </View>
+            {/* Features Grid */}
+            <View style={styles.sectionHeader}>
+              <Text style={textStyles.textSemibold18}>Core Features</Text>
+              <TouchableOpacity>
+                <Text style={[textStyles.textMedium13, { color: colors.primary }]}>See All</Text>
+              </TouchableOpacity>
+            </View>
 
-        {/* Footer */}
-        <View style={styles.footer}>
-          <Text style={[textStyles.textRegular12, { color: colors.textLightGray }]}>
-            Made with ❤️ by
-          </Text>
-          <Text style={[textStyles.textSemibold14, { color: colors.textDark, marginTop: 4 }]}>
-            Monarch Labs
-          </Text>
-        </View>
-      </ScrollView>
-    </SafeAreaView>
+            <View style={styles.grid}>
+              <FeatureCard
+                icon="shield-check"
+                title="Type Safety"
+                desc="Strictly typed props and state across all components."
+              />
+              <FeatureCard
+                icon="layers-outline"
+                title="Clean Architecture"
+                desc="Separation of concerns using hooks and services."
+              />
+              <FeatureCard
+                icon="palette-outline"
+                title="Dynamic Theme"
+                desc="Centralized design system for rapid UI development."
+              />
+              <FeatureCard
+                icon="rocket-launch-outline"
+                title="Performance"
+                desc="Optimized rendering and optimized asset loading."
+              />
+            </View>
+
+            {/* Footer */}
+            <View style={styles.footer}>
+              <Text style={[textStyles.textRegular12, { color: colors.textLightGray }]}>
+                Made with ❤️ by
+              </Text>
+              <Text style={[textStyles.textSemibold14, { color: colors.textDark, marginTop: 4 }]}>
+                Monarch Labs
+              </Text>
+            </View>
+          </ScrollView>
+        </SafeAreaView>
+      </NavigationContainer>
+    </SafeAreaProvider>
   );
 }
 
