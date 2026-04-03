@@ -44,7 +44,12 @@ export default function Home() {
             powered by NativeWind.
           </Text>
           <View className="mt-6 w-[60%] h-12">
-            <PrimaryButton title="Sign Out (Demo)" onPress={signOut} className="bg-slate-200" />
+            <PrimaryButton
+              title="Sign Out (Demo)"
+              onPress={signOut}
+              className="bg-rose-50"
+              textClassName="text-rose-600"
+            />
           </View>
         </View>
 

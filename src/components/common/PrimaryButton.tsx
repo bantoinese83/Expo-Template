@@ -5,6 +5,7 @@ interface Props {
   onPress?: () => void;
   title?: string;
   className?: string;
+  textClassName?: string;
   style?: StyleProp<ViewStyle>;
   isLoading?: boolean;
   icon?: React.ReactNode;
@@ -14,7 +15,8 @@ interface Props {
 export default function PrimaryButton({
   onPress,
   title,
-  className,
+  className = "",
+  textClassName = "text-white",
   style,
   isLoading = false,
   icon,
@@ -35,7 +37,7 @@ export default function PrimaryButton({
       ) : (
         <View className="flex-row items-center justify-center">
           {icon && <View className="mr-2">{icon}</View>}
-          <Text className="text-white font-medium text-sm">{title}</Text>
+          <Text className={`font-medium text-sm ${textClassName}`}>{title}</Text>
         </View>
       )}
     </TouchableOpacity>
