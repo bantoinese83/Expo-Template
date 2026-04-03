@@ -8,6 +8,11 @@ const textStyles = StyleSheet.create({
     fontSize: moderateScale(24),
     includeFontPadding: false,
   },
+  textBold24: {
+    fontFamily: fonts.PoppinsBold,
+    fontSize: moderateScale(24),
+    includeFontPadding: false,
+  },
   textMedium20: {
     fontFamily: fonts.PoppinsMedium,
     fontSize: moderateScale(20),
