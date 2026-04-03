@@ -1,66 +1,40 @@
-import {
-  StyleSheet,
-  Text,
-  View,
-  TouchableOpacity,
-  ActivityIndicator,
-  ViewStyle,
-} from "react-native";
+import { Text, TouchableOpacity, ActivityIndicator, View } from "react-native";
 import React from "react";
-import { moderateScale } from "../../../utils/responsive/metrices";
-import { colors } from "../../../theme/colors";
-import textStyles from "../../../theme/styles";
 
 interface Props {
   onPress?: () => void;
   title?: string;
-  style?: ViewStyle | any;
+  className?: string;
   isLoading?: boolean;
-  icon?: any;
+  icon?: React.ReactNode;
   disabled?: boolean;
-  children?: React.ReactNode;
 }
 
 export default function PrimaryButton({
   onPress,
   title,
-  style,
+  className,
   isLoading = false,
   icon,
   disabled,
 }: Props) {
   return (
     <TouchableOpacity
-      style={{ ...styles.container, ...style, opacity: isLoading ? 0.6 : 1 }}
+      className={`w-full h-12 rounded-xl bg-indigo-600 justify-center items-center flex-row ${
+        isLoading || disabled ? "opacity-60" : ""
+      } ${className}`}
       onPress={onPress}
       disabled={isLoading || disabled}
+      activeOpacity={0.8}
     >
       {isLoading ? (
-        <ActivityIndicator size="small" color={colors.white} />
+        <ActivityIndicator size="small" color="#ffffff" />
       ) : (
-        <Text style={{ color: colors.white, ...textStyles.textMedium14 }}>
-          <Text
-            style={{
-              marginLeft: moderateScale(5),
-              marginRight: moderateScale(5),
-            }}
-          >
-            {icon}{" "}
-          </Text>
-          {title}
-        </Text>
+        <View className="flex-row items-center justify-center">
+          {icon && <View className="mr-2">{icon}</View>}
+          <Text className="text-white font-medium text-sm">{title}</Text>
+        </View>
       )}
     </TouchableOpacity>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    width: "100%",
-    height: moderateScale(50),
-    borderRadius: moderateScale(12),
-    backgroundColor: colors.primary,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-});

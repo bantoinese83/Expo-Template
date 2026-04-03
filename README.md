@@ -1,4 +1,4 @@
-# Expo Template - TypeScript Migration
+# Expo Template 
 
 A comprehensive, strictly-typed Expo template refactored for performance, maintainability, and clean code.
 

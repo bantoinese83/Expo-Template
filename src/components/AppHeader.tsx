@@ -1,8 +1,8 @@
 import React from "react";
-import { View, StyleSheet, TouchableOpacity, Text, ViewStyle } from "react-native";
+import { View, TouchableOpacity, Text } from "react-native";
 import { MaterialIcons } from "@expo/vector-icons";
 import UserProfile from "./UserProfile";
-import { useNavigation } from "@react-navigation/native";
+import { useRouter } from "expo-router";
 
 interface Props {
   userName: string;
@@ -10,7 +10,6 @@ interface Props {
   greeting: string;
   onNotificationPress?: () => void;
   notificationCount?: number;
-  headerStyle?: ViewStyle | any;
   showShadow?: boolean;
 }
 
@@ -20,22 +19,35 @@ const AppHeader: React.FC<Props> = ({
   greeting,
   onNotificationPress,
   notificationCount = 0,
-  headerStyle,
   showShadow = true,
 }) => {
-  const navigation: any = useNavigation();
+  const router = useRouter();
+
+  const handleNotificationPress = () => {
+    if (onNotificationPress) {
+      onNotificationPress();
+    } else {
+      // @ts-ignore
+      router.push("/notifications");
+    }
+  };
+
   return (
-    <View style={[styles.header, showShadow && styles.shadow, headerStyle]}>
+    <View
+      className={`flex-row justify-between items-center px-4 pt-10 pb-3 bg-white ${
+        showShadow ? "shadow-sm" : ""
+      }`}
+    >
       <UserProfile userName={userName} userImage={userImage} greeting={greeting} />
       <TouchableOpacity
-        style={styles.notificationButton}
-        onPress={() => navigation.navigate("Notifications")}
+        className="p-2 relative"
+        onPress={handleNotificationPress}
         activeOpacity={0.7}
       >
-        <MaterialIcons name="notifications" size={28} color="#333" />
+        <MaterialIcons name="notifications" size={28} color="#0f172a" />
         {notificationCount > 0 && (
-          <View style={styles.notificationBadge}>
-            <Text style={styles.notificationCount}>
+          <View className="absolute top-1 right-1 bg-red-500 rounded-full min-w-[18px] h-[18px] justify-center items-center px-1 border-2 border-white">
+            <Text className="text-white text-[10px] font-bold text-center">
               {notificationCount > 99 ? "99+" : notificationCount}
             </Text>
           </View>
@@ -44,51 +56,5 @@ const AppHeader: React.FC<Props> = ({
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  header: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    paddingHorizontal: 12,
-    paddingTop: 40,
-    paddingBottom: 10,
-    backgroundColor: "#ffffff",
-  },
-  shadow: {
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.1,
-    shadowRadius: 3.84,
-    elevation: 5,
-  },
-  notificationButton: {
-    padding: 8,
-    position: "relative",
-  },
-  notificationBadge: {
-    position: "absolute",
-    top: 4,
-    right: 4,
-    backgroundColor: "#e74c3c",
-    borderRadius: 10,
-    minWidth: 20,
-    height: 20,
-    justifyContent: "center",
-    alignItems: "center",
-    paddingHorizontal: 4,
-    borderWidth: 2,
-    borderColor: "#ffffff",
-  },
-  notificationCount: {
-    color: "#ffffff",
-    fontSize: 12,
-    fontWeight: "bold",
-    textAlign: "center",
-  },
-});
 
 export default AppHeader;

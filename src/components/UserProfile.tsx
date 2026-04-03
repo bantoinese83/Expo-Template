@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { View, Image, Text, StyleSheet } from "react-native";
+import { View, Image, Text } from "react-native";
 import { getAvatarUrl } from "../utils/avatar";
 
 interface Props {
@@ -32,66 +32,30 @@ const UserProfile: React.FC<Props> = ({ userName, userImage, greeting = "Hi 👋
   const renderAvatar = () => {
     if (imageError) {
       return (
-        <View style={styles.avatarContainer}>
-          <Text style={styles.avatarText}>{getInitials(userName)}</Text>
+        <View className="w-10 h-10 rounded-full bg-indigo-600 justify-center items-center mr-3">
+          <Text className="text-white text-base font-bold">{getInitials(userName)}</Text>
         </View>
       );
     }
 
     return (
-      <Image source={{ uri: avatarUri }} style={styles.userImage} onError={handleImageError} />
+      <Image
+        source={{ uri: avatarUri }}
+        className="w-10 h-10 rounded-full mr-3"
+        onError={handleImageError}
+      />
     );
   };
 
   return (
-    <View style={styles.userInfo}>
+    <View className="flex-row items-center">
       {renderAvatar()}
-      <View style={styles.userText}>
-        <Text style={styles.greeting}>{greeting}</Text>
-        <Text style={styles.userName}>{userName}</Text>
+      <View className="flex-col">
+        <Text className="text-slate-500 text-[11px] mb-0.5">{greeting}</Text>
+        <Text className="text-slate-900 text-sm font-bold">{userName}</Text>
       </View>
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  userInfo: {
-    flexDirection: "row",
-    alignItems: "center",
-  },
-  userImage: {
-    width: 40,
-    height: 40,
-    borderRadius: 25,
-    marginRight: 12,
-  },
-  avatarContainer: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    backgroundColor: "#6A0DAD",
-    justifyContent: "center",
-    alignItems: "center",
-    marginRight: 12,
-  },
-  avatarText: {
-    color: "#ffffff",
-    fontSize: 18,
-    fontWeight: "bold",
-  },
-  userText: {
-    flexDirection: "column",
-  },
-  greeting: {
-    fontSize: 12,
-    color: "#666",
-    marginBottom: 2,
-  },
-  userName: {
-    fontSize: 14,
-    fontWeight: "bold",
-    color: "#333",
-  },
-});
 
 export default UserProfile;
