@@ -1,4 +1,3 @@
-import { StyleSheet, Text, View } from "react-native";
 import React from "react";
 import StarRating from "react-native-star-rating-widget";
 import { AntDesign } from "@expo/vector-icons";
@@ -17,5 +16,3 @@ export default function RatingWidget({ rating }: Props) {
     />
   );
 }
-
-const styles = StyleSheet.create({});

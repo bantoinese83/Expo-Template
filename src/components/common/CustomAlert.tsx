@@ -1,14 +1,6 @@
 import React from "react";
-import {
-  Alert as RNAlert,
-  StyleSheet,
-  Text,
-  View,
-  Dimensions,
-  TouchableOpacity,
-  Image,
-} from "react-native";
-import { mImages } from "../../../assets/images"; // Assuming this is the correct import path
+import { Text, View, Dimensions, TouchableOpacity } from "react-native";
+import { Ionicons } from "@expo/vector-icons";
 
 interface CustomAlertProps {
   title: string;
@@ -18,27 +10,34 @@ interface CustomAlertProps {
   onDelete?: () => void;
 }
 
-const CustomAlert: React.FC<CustomAlertProps> = ({ title, text, onClose, onCancel, onDelete }) => {
+const { width, height } = Dimensions.get("window");
+
+const CustomAlert: React.FC<CustomAlertProps> = ({ title, text, onClose, onDelete }) => {
   return (
-    <View style={styles.alertContainer}>
-      <View style={styles.alert}>
-        <TouchableOpacity onPress={onClose} style={styles.closeButton}>
-          <Image source={mImages.black_cross} style={styles.closeImage} />
+    <View
+      className="absolute inset-0 flex-1 p-5 justify-center items-center bg-black/50 z-[999]"
+      style={{ width, height }}
+    >
+      <View className="bg-white dark:bg-slate-900 p-5 rounded-[15px] justify-center items-start w-full max-w-[340px]">
+        <TouchableOpacity onPress={onClose} className="absolute top-2 right-2 p-1">
+          <Ionicons name="close" size={20} color="#94a3b8" />
         </TouchableOpacity>
-        <Text style={styles.title}>{title}</Text>
-        <Text>{text}</Text>
-        <View style={styles.buttonContainer}>
+
+        <Text className="font-bold text-slate-900 dark:text-white mb-2 text-lg">{title}</Text>
+        <Text className="text-slate-600 dark:text-slate-400 mb-6">{text}</Text>
+
+        <View className="flex-row justify-end w-full gap-3">
           <TouchableOpacity
             onPress={onClose}
-            style={[styles.button, styles.cancelButton, { backgroundColor: "#EFEFEF" }]}
+            className="flex-1 py-3 px-2 rounded-lg items-center justify-center bg-slate-100 dark:bg-slate-800"
           >
-            <Text style={styles.buttonText}>Cancel</Text>
+            <Text className="text-slate-700 dark:text-slate-300 font-bold">Cancel</Text>
           </TouchableOpacity>
           <TouchableOpacity
             onPress={onDelete}
-            style={[styles.button, styles.deleteButton, { backgroundColor: "#FC4141" }]}
+            className="flex-1 py-3 px-2 rounded-lg items-center justify-center bg-rose-500"
           >
-            <Text style={styles.deleteText}>Delete</Text>
+            <Text className="text-white font-bold">Delete</Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -47,72 +46,3 @@ const CustomAlert: React.FC<CustomAlertProps> = ({ title, text, onClose, onCance
 };
 
 export default CustomAlert;
-
-const windowWidth = Dimensions.get("window").width;
-const windowHeight = Dimensions.get("window").height;
-
-const styles = StyleSheet.create({
-  alertContainer: {
-    flex: 1,
-    padding: 20,
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: "rgba(0, 0, 0, 0.5)", // Semi-transparent background to dim the rest of the screen
-    position: "absolute",
-    top: 0,
-    left: 0,
-    width: windowWidth,
-    height: windowHeight,
-    zIndex: 999, // Ensure it's on top of other elements
-  },
-  alert: {
-    backgroundColor: "white",
-    padding: 20,
-    borderRadius: 15,
-    justifyContent: "center",
-    alignItems: "flex-start",
-  },
-  title: {
-    fontWeight: "bold",
-    marginBottom: 10,
-  },
-  buttonContainer: {
-    flexDirection: "row",
-    justifyContent: "flex-end",
-    marginTop: 20,
-    paddingHorizontal: 10,
-  },
-  button: {
-    flex: 1,
-    paddingVertical: 10,
-    paddingHorizontal: 10,
-    borderRadius: 8,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  cancelButton: {
-    marginRight: 5,
-  },
-  deleteButton: {
-    marginLeft: 5,
-  },
-  buttonText: {
-    color: "#484848",
-    fontWeight: "bold",
-  },
-  deleteText: {
-    color: "white",
-    fontWeight: "bold",
-  },
-  closeButton: {
-    position: "absolute",
-    top: 5,
-    right: 5,
-    padding: 5,
-  },
-  closeImage: {
-    width: 20,
-    height: 20,
-    resizeMode: "contain",
-  },
-});

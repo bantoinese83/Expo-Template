@@ -1,10 +1,7 @@
-import { StyleSheet, Text, View, TouchableOpacity, Image } from "react-native";
+import { Text, View, TouchableOpacity } from "react-native";
 import React, { memo } from "react";
 import { horizontalScale, moderateScale } from "../../../../utils/responsive/metrices";
-import { flexRow } from "../../../../theme/styles";
-import { colors } from "../../../../theme/colors";
-import { mImages } from "../../../../assets/images";
-import textStyles from "../../../../theme/styles";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 interface Props {
   onLogout: () => void;
@@ -12,29 +9,16 @@ interface Props {
 
 const MenuLogout = ({ onLogout }: Props) => {
   return (
-    <TouchableOpacity style={styles.linkRow} onPress={onLogout}>
-      <View style={{ ...flexRow, gap: 8 }}>
-        <Image source={mImages.avatarSmall} />
-        <Text
-          style={{
-            ...textStyles.textRegular13,
-            color: colors.darkGray,
-          }}
-        >
-          Log Out
-        </Text>
+    <TouchableOpacity
+      className={`flex-row items-center justify-between gap-[${horizontalScale(8)}px] h-[${moderateScale(38)}px]`}
+      onPress={onLogout}
+    >
+      <View className="flex-row items-center gap-2">
+        <MaterialCommunityIcons name="logout" size={16} color="#f43f5e" />
+        <Text className="text-[13px] font-normal text-slate-600 dark:text-slate-400">Log Out</Text>
       </View>
     </TouchableOpacity>
   );
 };
-
-const styles = StyleSheet.create({
-  linkRow: {
-    height: moderateScale(38),
-    ...flexRow,
-    justifyContent: "space-between",
-    gap: horizontalScale(8),
-  },
-});
 
 export default memo(MenuLogout);

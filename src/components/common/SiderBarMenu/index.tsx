@@ -1,83 +1,54 @@
-import {
-  StyleSheet,
-  Text,
-  View,
-  TouchableOpacity,
-  Dimensions,
-  ScrollView,
-} from "react-native";
-import React, { useEffect, useState } from "react";
+import { Text, View, TouchableOpacity, Dimensions, ScrollView } from "react-native";
+import React, { useState } from "react";
 import {
   horizontalScale,
   moderateScale,
   verticalScale,
 } from "../../../../utils/responsive/metrices";
-import textStyles, { flexRow, flexCenter } from "../../../../theme/styles";
-import { colors } from "../../../../theme/colors";
 import { Octicons } from "@expo/vector-icons";
-import { mImages } from "../../../../assets/images";
 import ModalWrapper from "../Modal/ModalWrapper";
-import { useNavigation } from "@react-navigation/native";
-import { useDispatch, useSelector } from "react-redux";
-import { logout } from "../../../redux/slices/auth.slice";
-import API from "../../../../utils/api";
+import { useRouter } from "expo-router";
 import ContactUsInformation from "./ContactUsInformation";
 import AccountRelatedLinks from "./AccountRelatedLinks";
 import MenuHeader from "./MenuHeader";
 import MenuUserInfo from "./MenuUserInfo";
 import { useMenuLinks } from "./useMenuLinks";
+import { useAuth } from "../../../hooks/useAuth";
 
 const { width, height } = Dimensions.get("screen");
 
 export default function SideBarMenu() {
-  const navigation = useNavigation<any>();
-  const dispatch = useDispatch();
-  const user = useSelector((state: any) => state?.auth);
+  const router = useRouter();
+  const { user, signOut } = useAuth();
   const [isModalOpen, setisModalOpen] = useState(false);
-  const [contactInformations, setContactInformations] = useState<any[]>([]);
 
-  const otherLinks = useMenuLinks(user);
+  const dynamicLinks = useMenuLinks(user);
 
-  useEffect(() => {
-    const loadThemeData = async () => {
-      try {
-        const { data } = await API.get("/get-theme");
-        setContactInformations([
-          { label: data?.theme_contact, icon: mImages.callSmall, path: null },
-          { label: data?.theme_email, icon: mImages.emailSmall, path: null },
-          { label: data?.theme_address, icon: mImages.locSmall, path: null },
-        ]);
-      } catch (error) {
-        console.error("Failed to load theme data", error);
-      }
-    };
-    loadThemeData();
-  }, []);
-
-  const logoutHandler = () => {
-    dispatch(logout());
+  const logoutHandler = async () => {
+    await signOut();
     setisModalOpen(false);
   };
 
   const mainLinks = [
-    { label: "Home", screen: "Home", tab: "Tabs" },
-    { label: "Buy", screen: "Buy", tab: "Tabs" },
-    { label: "Rent", screen: "Rent", tab: "Tabs" },
-    { label: "Projects", screen: "OurProjects", tab: "NormalStack" },
-    { label: "Interior designers", screen: "InteriorDesigners", tab: "Tabs" },
-    { label: "Architects", screen: "OurArchitects", tab: "Tabs" },
-    { label: "News", screen: "OurBlogs", tab: "NormalStack" },
+    { label: "Home", href: "/" },
+    { label: "Orders", href: "/orders" },
+    { label: "Customers", href: "/customers" },
+    { label: "Profile", href: "/profile" },
+    { label: "Notifications", href: "/notifications" },
   ];
 
-  const handleNavigate = (tab: string, screen: string) => {
-    navigation.navigate(tab, { screen });
+  const handleNavigate = (href: string) => {
+    router.push(href as any);
     setisModalOpen(false);
   };
 
   return (
     <>
-      <TouchableOpacity style={styles.iconWrapper} onPress={() => setisModalOpen(true)}>
-        <Octicons name="three-bars" size={16} color={colors.primary} />
+      <TouchableOpacity
+        className={`w-[${moderateScale(30)}px] h-[${moderateScale(30)}px] rounded-[${moderateScale(5)}px] bg-slate-100 dark:bg-slate-800 items-center justify-center`}
+        onPress={() => setisModalOpen(true)}
+      >
+        <Octicons name="three-bars" size={16} color="#6366f1" />
       </TouchableOpacity>
 
       <ModalWrapper
@@ -86,80 +57,48 @@ export default function SideBarMenu() {
         callBack={() => setisModalOpen(false)}
       >
         <ScrollView
-          style={[styles.modalParrent, { backgroundColor: colors.white }]}
+          className={`h-full w-[${width - horizontalScale(30)}px] bg-white dark:bg-slate-900`}
           showsVerticalScrollIndicator={false}
         >
-          <View style={styles.modalContainer}>
+          <View className={`flex-1 px-[${horizontalScale(18)}px] py-[${verticalScale(20)}px]`}>
             <MenuHeader onClose={() => setisModalOpen(false)} />
             <MenuUserInfo
-              onLoginClick={() => handleNavigate("Auth", "Login")}
+              onLoginClick={() => handleNavigate("/login")}
               onClose={() => setisModalOpen(false)}
             />
 
-            <View style={styles.listWrapper}>
+            <View className={`pb-[${verticalScale(8)}px] self-start`}>
               {mainLinks.map((link, index) => (
                 <TouchableOpacity
-                  style={styles.linkItem}
+                  className={`h-[${moderateScale(38)}px] justify-center`}
                   key={index}
-                  onPress={() => handleNavigate(link.tab, link.screen)}
+                  onPress={() => handleNavigate(link.href)}
                 >
-                  <Text style={[textStyles.textRegular13, { color: colors.darkGray }]}>
+                  <Text className="text-[13px] font-normal text-slate-600 dark:text-slate-400">
                     {link.label}
                   </Text>
                 </TouchableOpacity>
               ))}
             </View>
 
-            <View style={styles.divider} />
+            <View className="border-b border-slate-100 dark:border-slate-800 my-[${verticalScale(10)}px]" />
 
             <AccountRelatedLinks
-              data={otherLinks}
+              links={dynamicLinks}
               onPress={(link) => {
                 if (link?.checkAuth && !user) {
-                  handleNavigate("Auth", "Login");
+                  handleNavigate("/login");
                 } else {
-                  handleNavigate(link.tab || "NormalStack", link.screen || "");
+                  handleNavigate(link.href || "/");
                 }
               }}
               onLogout={logoutHandler}
             />
 
-            <ContactUsInformation data={contactInformations} />
+            <ContactUsInformation contactList={[]} />
           </View>
         </ScrollView>
       </ModalWrapper>
     </>
   );
 }
-
-const styles = StyleSheet.create({
-  iconWrapper: {
-    width: moderateScale(30),
-    height: moderateScale(30),
-    borderRadius: moderateScale(5),
-    backgroundColor: colors.lightBg,
-    ...flexCenter,
-  },
-  modalParrent: {
-    height: height,
-    width: width - horizontalScale(30),
-  },
-  modalContainer: {
-    flex: 1,
-    paddingHorizontal: horizontalScale(18),
-    paddingVertical: verticalScale(20),
-  },
-  listWrapper: {
-    paddingBottom: verticalScale(8),
-    alignSelf: "flex-start",
-  },
-  linkItem: {
-    height: moderateScale(38),
-    justifyContent: "center",
-  },
-  divider: {
-    borderBottomWidth: 1,
-    borderBottomColor: "#ddd",
-    marginVertical: verticalScale(10),
-  },
-});

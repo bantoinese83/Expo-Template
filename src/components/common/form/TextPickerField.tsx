@@ -1,7 +1,6 @@
 import React, { useState, useEffect, memo } from "react";
 import {
   View,
-  StyleSheet,
   Text,
   TouchableOpacity,
   Modal,
@@ -12,16 +11,12 @@ import {
   Platform,
   ViewStyle,
 } from "react-native";
-import { AntDesign } from "@expo/vector-icons";
-import { Entypo } from "@expo/vector-icons";
+import { AntDesign, Entypo } from "@expo/vector-icons";
 import {
   horizontalScale,
   moderateScale,
   verticalScale,
 } from "../../../../utils/responsive/metrices";
-import { colors } from "../../../../theme/colors";
-import { flexRow } from "../../../../theme/styles";
-import textStyles from "../../../../theme/styles";
 import ErrorMessage from "../ErrorMessage";
 
 const { width, height } = Dimensions.get("screen");
@@ -34,7 +29,7 @@ interface PickerItem {
 interface Props {
   heading: string;
   callBack: (item: any) => void;
-  data: PickerItem[];
+  options: PickerItem[];
   value: any;
   placeholder?: string;
   style?: ViewStyle | ViewStyle[];
@@ -47,7 +42,7 @@ interface Props {
 const TextPickerField = ({
   heading,
   callBack,
-  data,
+  options,
   value,
   placeholder,
   style,
@@ -57,35 +52,33 @@ const TextPickerField = ({
   label,
 }: Props) => {
   const [isModalOpen, setisModalOpen] = useState(false);
-  const [itemsList, setItemsList] = useState<PickerItem[]>([]);
+  const [filteredOptions, setFilteredOptions] = useState<PickerItem[]>([]);
   const [searchValue, setSearchValue] = useState<string>("");
 
   const searchItem = (search: string) => {
-    if (Array.isArray(data)) {
+    if (Array.isArray(options)) {
       if (!search || search.length < 1) {
-        setItemsList(data);
+        setFilteredOptions(options);
       } else {
-        const filteredData = data.filter((item: PickerItem) => {
-          const temp = item.label?.toUpperCase();
-          const n = temp?.search(search.toUpperCase());
-          return n !== -1;
+        const filteredData = options.filter((item: PickerItem) => {
+          const labelUpper = item.label?.toUpperCase();
+          const searchIndex = labelUpper?.search(search.toUpperCase());
+          return searchIndex !== -1;
         });
-        setItemsList(filteredData);
+        setFilteredOptions(filteredData);
       }
     }
   };
 
   const handleOnPress = (item: PickerItem) => {
     if (Array.isArray(value)) {
-      const isItemAlreadySelected = value.some(
-        (element: PickerItem) => element.value === item.value
-      );
+      const isItemAlreadySelected = value.some((option: PickerItem) => option.value === item.value);
       if (isItemAlreadySelected) {
-        const temp = value.filter((e: PickerItem) => e.value !== item.value);
-        callBack(temp);
+        const filteredValue = value.filter((v: PickerItem) => v.value !== item.value);
+        callBack(filteredValue);
       } else {
-        const temp2 = [...value, item];
-        callBack(temp2);
+        const updatedValue = [...value, item];
+        callBack(updatedValue);
       }
     } else {
       callBack(item);
@@ -94,8 +87,8 @@ const TextPickerField = ({
   };
 
   useEffect(() => {
-    setItemsList(data);
-  }, [data]);
+    setFilteredOptions(options);
+  }, [options]);
 
   const getDisplayValue = () => {
     if (Array.isArray(value)) {
@@ -112,49 +105,42 @@ const TextPickerField = ({
   };
 
   return (
-    <View style={[styles.container, style]}>
-      <View style={{ width: "100%" }}>
+    <View className="self-stretch flex-col items-start" style={style}>
+      <View className="w-full">
         {label && (
-          <Text
-            style={{
-              ...textStyles.textMedium14,
-              color: colors.darkGray,
-              marginBottom: 7,
-            }}
-          >
+          <Text className="text-[14px] font-medium text-slate-500 dark:text-slate-400 mb-[7px]">
             {label}
           </Text>
         )}
 
         <TouchableOpacity
-          style={[styles.btnwrapper, wrapperStyle, { borderColor: error ? "red" : "transparent" }]}
+          className={`w-full h-[${verticalScale(50)}px] rounded-[${moderateScale(5)}px] bg-slate-50 dark:bg-slate-800 flex-row items-center px-[${horizontalScale(15)}px] justify-between mb-[${verticalScale(5)}px] border ${
+            error ? "border-rose-500" : "border-transparent dark:border-slate-700"
+          }`}
           activeOpacity={0.8}
           onPress={() => setisModalOpen(true)}
+          style={wrapperStyle}
         >
-          <View style={{ ...flexRow, alignItems: "center", flex: 1 }}>
+          <View className="flex-row items-center flex-1">
             {icon && (
               <Image
                 source={icon}
-                style={{
-                  width: moderateScale(18),
-                  height: moderateScale(18),
-                  marginRight: horizontalScale(10),
-                }}
+                className={`w-[${moderateScale(18)}px] h-[${moderateScale(18)}px] mr-[${horizontalScale(10)}px]`}
               />
             )}
             <Text
               numberOfLines={1}
-              style={{
-                ...styles.valueText,
-                color: hasValue() ? "#090909" : "#9B9B9B",
-                flex: 1,
-              }}
+              className={`text-[13px] font-normal flex-1 ${
+                hasValue()
+                  ? "text-slate-900 dark:text-slate-100"
+                  : "text-slate-400 dark:text-slate-500"
+              }`}
             >
               {getDisplayValue()}
             </Text>
           </View>
 
-          <Entypo name="chevron-small-down" size={moderateScale(24)} color={colors.darkGray} />
+          <Entypo name="chevron-small-down" size={moderateScale(24)} color="#64748b" />
         </TouchableOpacity>
         {error && <ErrorMessage message={error} />}
       </View>
@@ -167,15 +153,19 @@ const TextPickerField = ({
           setisModalOpen(false);
         }}
       >
-        <View style={styles.modalParrent}>
-          <View style={styles.headerWrapper}>
+        <View className="flex-1 bg-white dark:bg-slate-950 px-[${horizontalScale(20)}px] py-[${verticalScale(20)}px]">
+          <View
+            className={`flex-row items-center self-stretch gap-[${horizontalScale(5)}px] ${
+              Platform.OS === "ios" ? `mt-[${moderateScale(45)}px]` : ""
+            }`}
+          >
             <TouchableOpacity onPress={() => setisModalOpen(false)}>
-              <AntDesign name="arrowleft" size={moderateScale(20)} color={"#131A22"} />
+              <AntDesign name="arrowleft" size={moderateScale(20)} color="#64748b" />
             </TouchableOpacity>
             <TextInput
               placeholder="Search"
-              style={styles.input}
-              placeholderTextColor={"#ABABAB"}
+              className="flex-1 h-[${verticalScale(44)}px] rounded-[${moderateScale(10)}px] px-[${horizontalScale(14)}px] ml-[${horizontalScale(10)}px] bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-slate-100 text-[13px] font-normal"
+              placeholderTextColor="#94a3b8"
               value={searchValue}
               onChangeText={(text: string) => {
                 setSearchValue(text);
@@ -183,105 +173,33 @@ const TextPickerField = ({
               }}
             />
           </View>
-          <ScrollView style={styles.scrollview} showsVerticalScrollIndicator={false}>
-            <Text style={styles.headingText}>{heading}</Text>
-            {Array.isArray(itemsList) &&
-              itemsList.map((element: PickerItem, index: number) => {
+          <ScrollView
+            className={`flex-grow bg-white dark:bg-slate-950 pt-[${verticalScale(20)}px]`}
+            showsVerticalScrollIndicator={false}
+          >
+            <Text className="text-[16px] font-normal mb-[${verticalScale(5)}px] text-slate-900 dark:text-slate-100">
+              {heading}
+            </Text>
+            {Array.isArray(filteredOptions) &&
+              filteredOptions.map((option: PickerItem, index: number) => {
                 return (
                   <TouchableOpacity
-                    onPress={() => handleOnPress(element)}
-                    style={styles.itemWrapper}
+                    onPress={() => handleOnPress(option)}
+                    className={`border-b border-slate-100 dark:border-slate-800 py-[${verticalScale(13)}px] px-[${horizontalScale(2)}px] flex-row items-center justify-between`}
                     key={index + 1}
                   >
-                    <Text style={{ ...textStyles.textRegular14, color: "#474747" }}>
-                      {element.label}
+                    <Text className="text-[14px] font-normal text-slate-700 dark:text-slate-300">
+                      {option.label}
                     </Text>
                   </TouchableOpacity>
                 );
               })}
-            <View style={{ height: 200 }} />
+            <View className="h-[200px]" />
           </ScrollView>
         </View>
       </Modal>
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    alignSelf: "stretch",
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "flex-start",
-  },
-  btnwrapper: {
-    backgroundColor: colors.lightBg,
-    height: verticalScale(50),
-    borderRadius: moderateScale(5),
-    alignSelf: "stretch",
-    display: "flex",
-    flexDirection: "row",
-    alignItems: "center",
-    paddingHorizontal: horizontalScale(15),
-    justifyContent: "space-between",
-    marginBottom: verticalScale(5),
-    borderWidth: 1,
-  },
-  modalParrent: {
-    backgroundColor: "white",
-    height: height,
-    width: width,
-    display: "flex",
-    flexDirection: "column",
-    paddingHorizontal: horizontalScale(20),
-    paddingVertical: verticalScale(20),
-  },
-  valueText: {
-    ...textStyles.textRegular13,
-    color: colors.textDark,
-  },
-  headerWrapper: {
-    display: "flex",
-    alignItems: "center",
-    flexDirection: "row",
-    alignSelf: "stretch",
-    gap: horizontalScale(5),
-    marginTop: Platform.OS === "ios" ? moderateScale(45) : 0,
-  },
-  headingText: {
-    ...textStyles.textRegular16,
-    marginBottom: verticalScale(5),
-    color: "#090909",
-  },
-  input: {
-    flex: 1,
-    height: verticalScale(44),
-    borderRadius: moderateScale(10),
-    paddingHorizontal: horizontalScale(14),
-    marginLeft: horizontalScale(10),
-    backgroundColor: "#F6F6F6",
-    color: "#090909",
-    ...textStyles.textRegular13,
-  },
-  btnContainer: {
-    // marginTop: verticalScale(15),
-    alignSelf: "stretch",
-  },
-  scrollview: {
-    flexGrow: 1,
-    backgroundColor: "white",
-    paddingTop: verticalScale(20),
-  },
-  itemWrapper: {
-    borderBottomColor: "#ddd",
-    borderBottomWidth: 1,
-    paddingVertical: verticalScale(13),
-    paddingHorizontal: horizontalScale(2),
-    display: "flex",
-    alignItems: "center",
-    flexDirection: "row",
-    justifyContent: "space-between",
-  },
-});
 
 export default memo(TextPickerField);

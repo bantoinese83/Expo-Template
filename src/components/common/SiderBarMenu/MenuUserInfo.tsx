@@ -1,12 +1,9 @@
-import { StyleSheet, Text, View, Image, TouchableOpacity } from "react-native";
+import { Text, View, Image, TouchableOpacity } from "react-native";
 import React, { memo } from "react";
-import { useSelector } from "react-redux";
 import PrimaryButton from "../PrimaryButton";
 import { moderateScale, verticalScale } from "../../../../utils/responsive/metrices";
-import { flexCenter, flexRow } from "../../../../theme/styles";
-import { colors } from "../../../../theme/colors";
-import textStyles from "../../../../theme/styles";
-import { useNavigation } from "@react-navigation/native";
+import { useRouter } from "expo-router";
+import { useAuth } from "../../../hooks/useAuth";
 
 interface Props {
   onLoginClick: () => void;
@@ -14,59 +11,48 @@ interface Props {
 }
 
 const MenuUserInfo = ({ onLoginClick, onClose }: Props) => {
-  const navigation = useNavigation<any>();
-  const user = useSelector((state: any) => state?.auth);
+  const router = useRouter();
+  const { user } = useAuth();
+
   return (
     <>
       {!user ? (
         <PrimaryButton
           title="Log in or create your account"
-          style={{
-            height: moderateScale(44),
-            marginVertical: verticalScale(32),
-            borderRadius: moderateScale(5),
-          }}
+          className={`h-[${moderateScale(44)}px] my-[${verticalScale(32)}px] rounded-[${moderateScale(5)}px]`}
           onPress={onLoginClick}
         />
       ) : (
         <TouchableOpacity
           onPress={() => {
             onClose();
-            navigation.navigate("NormalStack", {
-              screen: "PersonalInformation",
-            });
+            router.push("/profile");
           }}
-          style={{ alignSelf: "flex-start" }}
+          className="self-start"
         >
-          <View
-            style={{
-              ...flexRow,
-              gap: 12,
-              marginVertical: verticalScale(32),
-            }}
-          >
-            {user?.avatar ? (
-              <Image source={{ uri: user?.avatar }} style={styles.avatar} />
+          <View className={`flex-row items-center gap-[12px] my-[${verticalScale(32)}px]`}>
+            {user?.avatarUrl ? (
+              <Image
+                source={{ uri: user?.avatarUrl }}
+                className={`w-[${moderateScale(37)}px] h-[${moderateScale(37)}px] rounded-full`}
+              />
             ) : (
-              <View style={{ ...flexCenter, ...styles.avatar }}>
-                <Text>{user.full_name.charAt(0)}</Text>
+              <View
+                className={`w-[${moderateScale(37)}px] h-[${moderateScale(37)}px] rounded-full bg-slate-100 dark:bg-slate-800 items-center justify-center`}
+              >
+                <Text className="text-slate-900 dark:text-white font-bold">
+                  {(user?.name || "U").charAt(0).toUpperCase()}
+                </Text>
               </View>
             )}
-            <Text style={textStyles.textMedium14}>{user?.full_name}</Text>
+            <Text className="text-[14px] font-medium text-slate-900 dark:text-white">
+              {user?.name}
+            </Text>
           </View>
         </TouchableOpacity>
       )}
     </>
   );
 };
-
-const styles = StyleSheet.create({
-  avatar: {
-    width: moderateScale(37),
-    height: moderateScale(37),
-    backgroundColor: colors.lightBg,
-    borderRadius: moderateScale(37),
-  },
-});
 
 export default memo(MenuUserInfo);

@@ -22,9 +22,9 @@ export const AppCard: React.FC<AppCardProps> = ({
   };
 
   const variantStyles = {
-    elevated: "bg-white shadow-sm border border-slate-100",
-    flat: "bg-slate-50",
-    outline: "bg-transparent border border-slate-200",
+    elevated: "bg-white dark:bg-slate-900 shadow-sm border border-slate-100 dark:border-slate-800",
+    flat: "bg-slate-50 dark:bg-slate-800",
+    outline: "bg-transparent border border-slate-200 dark:border-slate-700",
   };
 
   return (

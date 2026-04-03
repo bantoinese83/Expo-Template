@@ -1,7 +1,5 @@
-import { StyleSheet, Text, View, TouchableOpacity, ScrollView } from "react-native";
+import { Text, View, TouchableOpacity, ScrollView } from "react-native";
 import React from "react";
-import textStyles, { flexRow } from "../../../../theme/styles";
-import { colors } from "../../../../theme/colors";
 import {
   horizontalScale,
   moderateScale,
@@ -12,46 +10,48 @@ type SelectionItem = string | { label: string; value: any };
 
 interface Props {
   label: string;
-  data: SelectionItem[];
+  options: SelectionItem[];
   selected?: SelectionItem;
-  onSelect: (item: SelectionItem) => void;
+  onSelect: (option: SelectionItem) => void;
 }
 
-export default function SelectionField({ label, data, selected, onSelect }: Props) {
-  const getLabel = (item: SelectionItem | undefined) => {
-    if (!item) return "";
-    return typeof item === "string" ? item : item.label;
+export default function SelectionField({ label, options, selected, onSelect }: Props) {
+  const getLabel = (option: SelectionItem | undefined) => {
+    if (!option) return "";
+    return typeof option === "string" ? option : option.label;
   };
 
-  const getValue = (item: SelectionItem | undefined) => {
-    if (!item) return undefined;
-    return typeof item === "string" ? item : item.value;
+  const getValue = (option: SelectionItem | undefined) => {
+    if (!option) return undefined;
+    return typeof option === "string" ? option : option.value;
   };
 
   return (
-    <View style={{ marginBottom: verticalScale(25) }}>
-      <Text style={{ ...textStyles.textMedium14, color: colors.darkGray }}>{label}</Text>
+    <View className={`mb-[${verticalScale(25)}px]`}>
+      <Text className="text-[14px] font-medium text-slate-500 dark:text-slate-400">{label}</Text>
       <ScrollView
-        contentContainerStyle={styles.inputWrapper}
+        className={`mt-[${verticalScale(10)}px]`}
+        contentContainerStyle={{
+          height: moderateScale(44),
+          flexDirection: "row",
+        }}
         showsHorizontalScrollIndicator={false}
         horizontal
       >
-        {data?.map((type, index) => {
+        {options?.map((type, index) => {
           const active = getValue(selected) === getValue(type);
           return (
             <TouchableOpacity
-              style={{
-                ...styles.button,
-                backgroundColor: active ? colors.secondary : colors.lightBg,
-              }}
+              className={`w-[${moderateScale(168)}px] h-[${moderateScale(44)}px] rounded-[${moderateScale(5)}px] mr-[${horizontalScale(10)}px] justify-center items-center ${
+                active ? "bg-indigo-600" : "bg-slate-50 dark:bg-slate-800"
+              }`}
               onPress={() => onSelect(type)}
               key={index}
             >
               <Text
-                style={{
-                  ...textStyles.textRegular13,
-                  color: active ? colors.white : colors.lightGray,
-                }}
+                className={`text-[13px] font-normal ${
+                  active ? "text-white" : "text-slate-400 dark:text-slate-500"
+                }`}
               >
                 {getLabel(type)}
               </Text>
@@ -62,22 +62,3 @@ export default function SelectionField({ label, data, selected, onSelect }: Prop
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  inputWrapper: {
-    height: moderateScale(44),
-    borderRadius: moderateScale(5),
-    backgroundColor: colors.white,
-    marginTop: verticalScale(10),
-    ...flexRow,
-  },
-  button: {
-    width: moderateScale(168),
-    height: moderateScale(44),
-    borderRadius: moderateScale(5),
-    backgroundColor: colors.secondary,
-    marginRight: horizontalScale(10),
-    justifyContent: "center",
-    alignItems: "center",
-  },
-});

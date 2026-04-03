@@ -1,22 +1,37 @@
 import React from "react";
-import { Modal, View, Text, StyleSheet, TouchableOpacity, Dimensions } from "react-native";
+import { Modal, View, Text, TouchableOpacity } from "react-native";
 
-const windowWidth = Dimensions.get("window").width;
-const windowHeight = Dimensions.get("window").height;
+interface Props {
+  visible?: boolean;
+  title?: string;
+  message?: string;
+  onClose?: () => void;
+}
 
-const SessionExpiredModal = ({ visible = false, title = "", message = "", onClose = () => {} }) => {
+const SessionExpiredModal = ({
+  visible = false,
+  title = "",
+  message = "",
+  onClose = () => {},
+}: Props) => {
   return (
     <Modal visible={visible} transparent animationType="fade">
-      <View style={styles.overlay}>
-        <View style={styles.card}>
-          <Text style={styles.title}>{title || "Session Expired"}</Text>
-          <Text style={styles.message}>
+      <View className="flex-1 bg-black/50 justify-center items-center">
+        <View className="w-[90%] max-w-[360px] bg-white dark:bg-slate-900 rounded-xl p-5 items-start">
+          <Text className="text-[18px] font-bold text-slate-900 dark:text-white mb-2">
+            {title || "Session Expired"}
+          </Text>
+          <Text className="text-[14px] text-slate-600 dark:text-slate-400">
             {message || "Your session has expired. Please contact the Support team for assistance."}
           </Text>
 
-          <View style={styles.actions}>
-            <TouchableOpacity style={styles.primaryButton} onPress={onClose} activeOpacity={0.8}>
-              <Text style={styles.primaryButtonText}>Contact Support</Text>
+          <View className="w-full mt-[18px] items-center">
+            <TouchableOpacity
+              className="w-full bg-indigo-600 py-3 rounded-lg items-center"
+              onPress={onClose}
+              activeOpacity={0.8}
+            >
+              <Text className="text-white font-bold">Contact Support</Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -26,44 +41,3 @@ const SessionExpiredModal = ({ visible = false, title = "", message = "", onClos
 };
 
 export default SessionExpiredModal;
-
-const styles = StyleSheet.create({
-  overlay: {
-    flex: 1,
-    backgroundColor: "rgba(0,0,0,0.5)",
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  card: {
-    width: Math.min(windowWidth - 48, 360),
-    backgroundColor: "#fff",
-    borderRadius: 12,
-    padding: 20,
-    alignItems: "flex-start",
-  },
-  title: {
-    fontSize: 18,
-    fontWeight: "700",
-    marginBottom: 8,
-  },
-  message: {
-    fontSize: 14,
-    color: "#333",
-  },
-  actions: {
-    width: "100%",
-    marginTop: 18,
-    alignItems: "center",
-  },
-  primaryButton: {
-    width: "100%",
-    backgroundColor: "#2E6CEF",
-    paddingVertical: 12,
-    borderRadius: 8,
-    alignItems: "center",
-  },
-  primaryButtonText: {
-    color: "#fff",
-    fontWeight: "700",
-  },
-});

@@ -9,12 +9,12 @@ import { useAuth } from "../../src/hooks/useAuth";
 import React from "react";
 
 const FeatureCard = ({ icon, title, desc }: { icon: any; title: string; desc: string }) => (
-  <View className="w-[47%] bg-white rounded-2xl p-4 mb-4 border border-slate-200 shadow-sm">
-    <View className="w-10 h-10 rounded-lg bg-indigo-50 items-center justify-center">
+  <View className="w-[47%] bg-white dark:bg-slate-900 rounded-2xl p-4 mb-4 border border-slate-200 dark:border-slate-800 shadow-sm">
+    <View className="w-10 h-10 rounded-lg bg-indigo-50 dark:bg-indigo-900/30 items-center justify-center">
       <MaterialCommunityIcons name={icon} size={24} color="#6366f1" />
     </View>
-    <Text className="text-slate-900 font-semibold text-base mt-3">{title}</Text>
-    <Text className="text-slate-500 text-xs mt-1 leading-4">{desc}</Text>
+    <Text className="text-slate-900 dark:text-white font-semibold text-base mt-3">{title}</Text>
+    <Text className="text-slate-500 dark:text-slate-400 text-xs mt-1 leading-4">{desc}</Text>
   </View>
 );
 
@@ -22,8 +22,8 @@ export default function Home() {
   const { user, signOut } = useAuth();
 
   return (
-    <SafeAreaView className="flex-1 bg-white" edges={["top", "left", "right"]}>
-      <StatusBar style="dark" />
+    <SafeAreaView className="flex-1 bg-white dark:bg-slate-950" edges={["top", "left", "right"]}>
+      <StatusBar style="auto" />
       <AppHeader
         userName={user?.name || "Developer"}
         userImage={getAvatarUrl(user?.name || "Dev")}
@@ -32,14 +32,14 @@ export default function Home() {
         notificationCount={3}
       />
 
-      <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingBottom: 40 }}>
+      <ScrollView showsVerticalScrollIndicator={false} contentContainerClassName="pb-10">
         {/* Hero Section */}
         <View className="px-6 py-8 items-center">
-          <Text className="text-center font-bold text-2xl leading-9">
+          <Text className="text-center font-bold text-2xl leading-9 dark:text-white">
             The Ultimate Expo{"\n"}
             <Text className="text-indigo-600">TypeScript Template</Text>
           </Text>
-          <Text className="text-center text-slate-500 mt-4 text-sm leading-5 px-2">
+          <Text className="text-center text-slate-500 dark:text-slate-400 mt-4 text-sm leading-5 px-2">
             Enterprise-ready foundation with strict typing, clean architecture, and modern styling
             powered by NativeWind.
           </Text>
@@ -47,33 +47,33 @@ export default function Home() {
             <PrimaryButton
               title="Sign Out (Demo)"
               onPress={signOut}
-              className="bg-rose-50"
+              className="bg-rose-50 dark:bg-rose-900/20"
               textClassName="text-rose-600"
             />
           </View>
         </View>
 
         {/* Stats Row */}
-        <View className="flex-row bg-indigo-50/50 mx-6 rounded-2xl py-4 items-center justify-around">
+        <View className="flex-row bg-indigo-50/50 dark:bg-indigo-900/10 mx-6 rounded-2xl py-4 items-center justify-around">
           <View className="items-center">
             <Text className="font-bold text-lg text-indigo-600">0</Text>
-            <Text className="text-[11px] text-slate-500">Type Errors</Text>
+            <Text className="text-[11px] text-slate-500 dark:text-slate-400">Type Errors</Text>
           </View>
-          <View className="w-[1px] h-3/5 bg-slate-200" />
+          <View className="w-[1px] h-3/5 bg-slate-200 dark:bg-slate-800" />
           <View className="items-center">
             <Text className="font-bold text-lg text-emerald-500">100%</Text>
-            <Text className="text-[11px] text-slate-500">Strict Mode</Text>
+            <Text className="text-[11px] text-slate-500 dark:text-slate-400">Strict Mode</Text>
           </View>
-          <View className="w-[1px] h-3/5 bg-slate-200" />
+          <View className="w-[1px] h-3/5 bg-slate-200 dark:bg-slate-800" />
           <View className="items-center">
             <Text className="font-bold text-lg text-sky-400">v2026</Text>
-            <Text className="text-[11px] text-slate-500">Stability</Text>
+            <Text className="text-[11px] text-slate-500 dark:text-slate-400">Stability</Text>
           </View>
         </View>
 
         {/* Features Grid */}
         <View className="flex-row justify-between items-center px-6 mt-8 mb-4">
-          <Text className="font-semibold text-lg">Core Features</Text>
+          <Text className="font-semibold text-lg dark:text-white">Core Features</Text>
           <TouchableOpacity>
             <Text className="font-medium text-sm text-indigo-600">See All</Text>
           </TouchableOpacity>
@@ -105,7 +105,9 @@ export default function Home() {
         {/* Footer */}
         <View className="mt-10 items-center">
           <Text className="text-slate-400 text-xs">Made with ❤️ by</Text>
-          <Text className="font-semibold text-sm text-slate-900 mt-1">Monarch Labs</Text>
+          <Text className="font-semibold text-sm text-slate-900 dark:text-white mt-1">
+            Monarch Labs
+          </Text>
         </View>
       </ScrollView>
     </SafeAreaView>

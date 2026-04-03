@@ -1,8 +1,6 @@
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { TouchableOpacity, View } from "react-native";
 import React from "react";
 import { moderateScale } from "../../../utils/responsive/metrices";
-import { colors } from "../../../theme/colors";
-import { Octicons } from "@expo/vector-icons";
 
 interface Props {
   checked?: boolean;
@@ -11,34 +9,17 @@ interface Props {
 
 export default function RadioButton({ checked = false, toggleRadioButton }: Props) {
   return (
-    <>
-      <TouchableOpacity
-        style={{
-          ...styles.container,
-          borderColor: checked ? colors.primary : colors.black,
-        }}
-        onPress={() => toggleRadioButton()}
-      >
-        {checked && <View style={styles.checked}></View>}
-      </TouchableOpacity>
-    </>
+    <TouchableOpacity
+      className={`w-[${moderateScale(14)}px] h-[${moderateScale(14)}px] rounded-full border-2 items-center justify-center opacity-70 ${
+        checked ? "border-indigo-600" : "border-slate-900 dark:border-slate-100"
+      }`}
+      onPress={toggleRadioButton}
+    >
+      {checked && (
+        <View
+          className={`w-[${moderateScale(6)}px] h-[${moderateScale(6)}px] bg-indigo-600 rounded-full`}
+        />
+      )}
+    </TouchableOpacity>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    width: moderateScale(14),
-    height: moderateScale(14),
-    borderRadius: moderateScale(17),
-    borderWidth: 2,
-    opacity: 0.7,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  checked: {
-    width: moderateScale(6),
-    height: moderateScale(6),
-    backgroundColor: colors.primary,
-    borderRadius: moderateScale(12),
-  },
-});

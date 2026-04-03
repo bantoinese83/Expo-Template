@@ -5,13 +5,8 @@ import YouTube from "react-native-youtube-iframe";
 const VideoComponent = ({ source = "9-148GVcbi8" }) => {
   try {
     return (
-      <View style={{ height: 200 }}>
-        <YouTube
-          videoId={source}
-          height={200}
-          play={false} // Set to true if you want the video to start playing automatically
-          style={{ alignSelf: "stretch", flex: 1 }}
-        />
+      <View className="h-[200px] self-stretch">
+        <YouTube videoId={source} height={200} play={false} />
       </View>
     );
   } catch (error) {

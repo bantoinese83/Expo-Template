@@ -11,7 +11,6 @@ import PrimaryButton from "../../src/components/common/PrimaryButton";
 import TextField from "../../src/components/common/form/TextField";
 import PasswordField from "../../src/components/common/form/PasswordField";
 import { useAuth } from "../../src/hooks/useAuth";
-import { colors } from "../../theme/colors";
 
 const schema = z
   .object({
@@ -61,17 +60,14 @@ export default function SignupScreen() {
   };
 
   return (
-    <SafeAreaView className="flex-1 bg-white">
-      <ScrollView
-        contentContainerStyle={{ flexGrow: 1, padding: 24 }}
-        showsVerticalScrollIndicator={false}
-      >
+    <SafeAreaView className="flex-1 bg-white dark:bg-slate-950">
+      <ScrollView contentContainerClassName="flex-grow p-6" showsVerticalScrollIndicator={false}>
         <View className="items-center mt-4 mb-8">
-          <View className="w-16 h-16 bg-indigo-50 rounded-2xl items-center justify-center mb-4">
-            <MaterialCommunityIcons name="account-plus-outline" size={32} color={colors.primary} />
+          <View className="w-16 h-16 bg-indigo-50 dark:bg-indigo-900/20 rounded-2xl items-center justify-center mb-4">
+            <MaterialCommunityIcons name="account-plus-outline" size={32} color="#6366f1" />
           </View>
-          <Text className="text-2xl font-bold text-slate-900">Create Account</Text>
-          <Text className="text-slate-500 mt-1">Join Monarch Labs today</Text>
+          <Text className="text-2xl font-bold text-slate-900 dark:text-white">Create Account</Text>
+          <Text className="text-slate-500 dark:text-slate-400 mt-1">Join Expo Template today</Text>
         </View>
 
         <View className="mb-6">
@@ -143,10 +139,10 @@ export default function SignupScreen() {
         />
 
         <View className="flex-row justify-center items-center mt-auto pb-4">
-          <Text className="text-slate-500">Already have an account? </Text>
+          <Text className="text-slate-500 dark:text-slate-400">Already have an account? </Text>
           <Link href="/login" asChild>
             <TouchableOpacity>
-              <Text className="text-indigo-600 font-semibold">Sign In</Text>
+              <Text className="text-indigo-600 dark:text-indigo-400 font-semibold">Sign In</Text>
             </TouchableOpacity>
           </Link>
         </View>

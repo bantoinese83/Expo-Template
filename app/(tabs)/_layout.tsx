@@ -31,6 +31,33 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
+        name="orders"
+        options={{
+          title: "Orders",
+          tabBarIcon: ({ color, size }) => (
+            <MaterialCommunityIcons name="clipboard-text-outline" size={size} color={color} />
+          ),
+        }}
+      />
+      <Tabs.Screen
+        name="add-order"
+        options={{
+          title: "Add",
+          tabBarIcon: ({ color, size }) => (
+            <MaterialCommunityIcons name="plus-circle" size={size + 10} color="#6366f1" />
+          ),
+        }}
+      />
+      <Tabs.Screen
+        name="customers"
+        options={{
+          title: "Customers",
+          tabBarIcon: ({ color, size }) => (
+            <MaterialCommunityIcons name="account-group-outline" size={size} color={color} />
+          ),
+        }}
+      />
+      <Tabs.Screen
         name="profile"
         options={{
           title: t("profile"),

@@ -1,5 +1,5 @@
-import React, { useEffect, useRef, useState } from "react";
-import { StyleSheet, View, Dimensions } from "react-native";
+import React from "react";
+import { View } from "react-native";
 import MapView, { Marker, PROVIDER_GOOGLE } from "react-native-maps";
 
 interface Props {
@@ -8,46 +8,32 @@ interface Props {
 }
 
 const MapViewComponent: React.FC<Props> = ({ lat, lng }) => {
+  if (!lat) return null;
+
   return (
-    <View style={styles.mapContainer}>
-      {lat ? (
-        <MapView
-          style={styles.map}
-          showsBuildings={true}
-          provider={PROVIDER_GOOGLE}
-          initialRegion={{
-            latitude: lat ? 30.3753 : lat,
-            longitude: lng ? 69.3451 : lng,
-            latitudeDelta: 0.00122,
-            longitudeDelta: 0.00421,
+    <View className="w-full h-full items-center justify-center">
+      <MapView
+        className="w-full h-full"
+        showsBuildings={true}
+        provider={PROVIDER_GOOGLE}
+        initialRegion={{
+          latitude: lat || 30.3753,
+          longitude: lng || 69.3451,
+          latitudeDelta: 0.00122,
+          longitudeDelta: 0.00421,
+        }}
+      >
+        <Marker
+          coordinate={{
+            latitude: lat || 30.3753,
+            longitude: lng || 69.3451,
           }}
-        >
-          <Marker
-            coordinate={{
-              latitude: lat === undefined ? 30.3753 : lat,
-              longitude: lng === undefined ? 69.3451 : lng,
-            }}
-            title={"Project location"}
-            description={"Project location"}
-          />
-        </MapView>
-      ) : null}
+          title={"Project location"}
+          description={"Project location"}
+        />
+      </MapView>
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  mapContainer: {
-    height: "100%",
-    width: "100%",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  map: {
-    width: "100%",
-    height: "100%",
-  },
-});
 
 export default MapViewComponent;

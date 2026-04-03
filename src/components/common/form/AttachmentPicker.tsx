@@ -1,17 +1,14 @@
-import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { Text, TouchableOpacity, View } from "react-native";
 import React, { useState } from "react";
 import {
   horizontalScale,
   moderateScale,
   verticalScale,
 } from "../../../../utils/responsive/metrices";
-import { colors } from "../../../../theme/colors";
-import textStyles, { flexCenter, flexCol, flexRow } from "../../../../theme/styles";
 import * as DocumentPicker from "expo-document-picker";
 import { Entypo } from "@expo/vector-icons";
-import { mImages } from "../../../../assets/images";
 import ErrorMessage from "../ErrorMessage";
-import useToaster from "../../../hooks/useToaster";
+import { useToaster } from "../../../hooks/useToaster";
 
 interface Props {
   onSelectAttachement: (attachments: any[]) => void;
@@ -49,32 +46,45 @@ export default function AttachementsPicker({ onSelectAttachement, error }: Props
   return (
     <>
       <TouchableOpacity
-        style={{ ...styles.container, borderColor: error ? colors.danger : colors.sky }}
+        className={`w-full h-[${moderateScale(100)}px] rounded-[${moderateScale(8)}px] bg-sky-50 dark:bg-sky-900/10 border-dashed border justify-center items-center flex-col ${
+          error ? "border-rose-500" : "border-sky-400 dark:border-sky-800"
+        }`}
         onPress={pickAttachment}
       >
-        <Text style={{ ...textStyles.textRegular12, color: colors.primary }}>Add attachments</Text>
-        <Text style={styles.info}>Max file upload limit is 2 MB</Text>
+        <Text className="text-[12px] font-normal text-indigo-600 dark:text-indigo-400">
+          Add attachments
+        </Text>
+        <Text
+          className={`text-[11px] font-normal text-slate-400 dark:text-slate-500 mt-[${verticalScale(6)}px]`}
+        >
+          Max file upload limit is 2 MB
+        </Text>
       </TouchableOpacity>
       {error && <ErrorMessage message={error} />}
-      <View style={{ ...flexCol, marginVertical: verticalScale(13) }}>
+      <View className={`my-[${verticalScale(13)}px] flex-col`}>
         {attachments?.length > 0 &&
           attachments?.map((att, index) => (
-            <View style={styles.prevWrapper} key={index}>
-              <View style={{ ...flexRow, alignItems: "center" }}>
-                <View style={styles.iconWrapper}>
-                  {/* <Image
-                    source={mImages.jpgWhite}
-                    style={{ width: moderateScale(16), height: moderateScale(16) }}
-                  /> */}
-
-                  <Text style={{ color: colors.white, ...textStyles.textRegular12 }}>
+            <View
+              className={`flex-row justify-between items-center mb-[${verticalScale(7)}px] h-[${moderateScale(56)}px] rounded-[${moderateScale(12)}px] bg-indigo-50 dark:bg-indigo-900/20 px-[${horizontalScale(12)}px] overflow-hidden`}
+              key={index}
+            >
+              <View className="flex-row items-center flex-1">
+                <View
+                  className={`justify-center items-center w-[${moderateScale(34)}px] h-[${moderateScale(34)}px] rounded-[${moderateScale(8)}px] bg-indigo-600 mr-[${horizontalScale(9)}px]`}
+                >
+                  <Text className="text-white text-[12px] font-normal uppercase">
                     {att?.name?.split(".").pop()}
                   </Text>
                 </View>
-                <Text style={styles.preveiw}>{att?.name}</Text>
+                <Text
+                  numberOfLines={1}
+                  className={`flex-1 text-[12px] font-normal text-slate-700 dark:text-slate-300 max-w-[${moderateScale(230)}px]`}
+                >
+                  {att?.name}
+                </Text>
               </View>
               <TouchableOpacity onPress={() => removeItem(att)}>
-                <Entypo name="cross" size={20} color="#FC5A5A" />
+                <Entypo name="cross" size={20} color="#f43f5e" />
               </TouchableOpacity>
             </View>
           ))}
@@ -82,52 +92,3 @@ export default function AttachementsPicker({ onSelectAttachement, error }: Props
     </>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    width: "100%",
-    height: moderateScale(100),
-    borderRadius: moderateScale(8),
-    backgroundColor: "#F1F9FF",
-    borderWidth: 1,
-    borderStyle: "dashed",
-    display: "flex",
-    flexDirection: "column",
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  info: {
-    ...textStyles.textRegular11,
-    color: colors.textLightGray,
-    marginTop: verticalScale(6),
-  },
-  prevWrapper: {
-    // flex: 1,
-    display: "flex",
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    marginBottom: verticalScale(7),
-    height: moderateScale(56),
-    borderRadius: moderateScale(12),
-    backgroundColor: colors.primaryLight,
-    paddingHorizontal: horizontalScale(12),
-    overflow: "hidden",
-  },
-  preveiw: {
-    flex: 1,
-    flexWrap: "wrap",
-    marginRight: horizontalScale(6),
-    ...textStyles.textRegular12,
-    maxWidth: moderateScale(230),
-  },
-  iconWrapper: {
-    justifyContent: "center",
-    alignItems: "center",
-    width: moderateScale(34),
-    height: moderateScale(34),
-    borderRadius: moderateScale(8),
-    backgroundColor: colors.primary,
-    marginRight: horizontalScale(9),
-  },
-});

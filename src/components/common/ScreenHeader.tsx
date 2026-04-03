@@ -1,31 +1,22 @@
-import { StyleSheet, Text, View, Image } from "react-native";
+import { Text, View } from "react-native";
 import React from "react";
-import textStyles, { flexBetween } from "../../../theme/styles";
 import { horizontalScale, verticalScale } from "../../../utils/responsive/metrices";
-// import SideBarMenu from "./SiderBarMenu";
 
 interface Props {
   title: string;
   onBackPress?: () => void;
 }
 
-export default function ScreenHeader({ title, onBackPress }: Props) {
+export default function ScreenHeader({ title }: Props) {
   return (
-    <View style={styles.container}>
-      {/* <SideBarMenu /> */}
-      <View style={{ flex: 1, paddingRight: horizontalScale(30) }}>
-        <Text style={{ ...textStyles.textSemibold15, textAlign: "center" }}>{title}</Text>
+    <View
+      className={`flex-row justify-between items-center pt-[${verticalScale(25)}px] pb-[${verticalScale(32)}px] px-[${horizontalScale(18)}px]`}
+    >
+      <View className={`flex-1 pr-[${horizontalScale(30)}px]`}>
+        <Text className="text-[15px] font-semibold text-center text-slate-900 dark:text-white">
+          {title}
+        </Text>
       </View>
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    ...flexBetween,
-    justifyContent: "space-between",
-    paddingTop: verticalScale(25),
-    paddingBottom: verticalScale(32),
-    paddingHorizontal: horizontalScale(18),
-  },
-});

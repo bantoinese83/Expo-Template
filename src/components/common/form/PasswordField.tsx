@@ -1,7 +1,5 @@
-import { StyleSheet, TextInput, TouchableOpacity, TextInputProps, ViewStyle } from "react-native";
+import { TextInput, TouchableOpacity, TextInputProps, ViewStyle } from "react-native";
 import React, { useState } from "react";
-import { colors } from "../../../../theme/colors";
-import textStyles from "../../../../theme/styles";
 import { Feather } from "@expo/vector-icons";
 import FormFieldWrapper from "./FormFieldWrapper";
 
@@ -24,23 +22,18 @@ export default function PasswordField(props: Props) {
         secureTextEntry={!show}
         value={value}
         onChangeText={onTextChange}
-        style={styles.input}
-        placeholderTextColor={colors.lightGray}
+        className="flex-1 h-full bg-transparent text-slate-800 dark:text-slate-100 text-[14px] font-normal"
+        placeholderTextColor="#94a3b8"
         {...rest}
       />
-      <TouchableOpacity onPress={() => setShow(!show)}>
-        <Feather name={show ? "eye" : "eye-off"} size={16} color={colors.darkGray} />
+      <TouchableOpacity onPress={() => setShow(!show)} className="p-2">
+        <Feather
+          name={show ? "eye" : "eye-off"}
+          size={16}
+          color="#475569"
+          className="dark:text-slate-400"
+        />
       </TouchableOpacity>
     </FormFieldWrapper>
   );
 }
-
-const styles = StyleSheet.create({
-  input: {
-    flex: 1,
-    height: "100%",
-    backgroundColor: "transparent",
-    color: colors.darkGray,
-    ...textStyles.textRegular14,
-  },
-});

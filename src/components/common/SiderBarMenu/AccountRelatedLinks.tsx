@@ -1,15 +1,12 @@
-import { StyleSheet, Text, View, TouchableOpacity, Image } from "react-native";
+import { Text, View, TouchableOpacity, Image } from "react-native";
 import React, { memo } from "react";
 import {
   horizontalScale,
   moderateScale,
   verticalScale,
 } from "../../../../utils/responsive/metrices";
-import { flexRow } from "../../../../theme/styles";
-import textStyles from "../../../../theme/styles";
-import { colors } from "../../../../theme/colors";
-import { useSelector } from "react-redux";
 import MenuLogout from "./MenuLogout";
+import { useAuth } from "../../../hooks/useAuth";
 
 interface LinkItem {
   label: string;
@@ -18,63 +15,41 @@ interface LinkItem {
 }
 
 interface Props {
-  data: LinkItem[];
+  links: LinkItem[];
   onPress: (link: LinkItem) => void;
   onLogout: () => void;
 }
 
-const AccountRelatedLinks = ({ data, onPress, onLogout }: Props) => {
-  const user = useSelector((state: any) => state?.auth);
+const AccountRelatedLinks = ({ links, onPress, onLogout }: Props) => {
+  const { user } = useAuth();
+
   return (
-    <View
-      style={{
-        ...styles.listWrapper,
-        marginTop: verticalScale(20),
-        borderBottomWidth: 0,
-        alignSelf: "flex-start",
-      }}
-    >
-      {data.map((link, index) => {
+    <View className={`pb-[${verticalScale(8)}px] mt-[${verticalScale(20)}px] self-start w-full`}>
+      {links.map((link, index) => {
         return (
           <TouchableOpacity
-            style={styles.linkRow}
+            className={`flex-row items-center justify-between gap-[${horizontalScale(8)}px] h-[${moderateScale(38)}px]`}
             key={index}
             onPress={() => {
               onPress(link);
             }}
           >
-            <View style={{ ...flexRow, gap: 8 }}>
-              <Image source={link.icon} />
-              <Text
-                style={{
-                  ...textStyles.textRegular13,
-                  color: colors.darkGray,
-                }}
-              >
+            <View className="flex-row items-center gap-2">
+              {typeof link.icon === "number" ? (
+                <Image source={link.icon} className="w-4 h-4" resizeMode="contain" />
+              ) : (
+                link.icon
+              )}
+              <Text className="text-[13px] font-normal text-slate-600 dark:text-slate-400">
                 {link.label}
               </Text>
             </View>
           </TouchableOpacity>
         );
       })}
-      {user ? <MenuLogout onLogout={onLogout} /> : null}
+      {user && <MenuLogout onLogout={onLogout} />}
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  listWrapper: {
-    paddingBottom: verticalScale(8),
-    borderBottomWidth: 1,
-    borderBottomColor: "#ddd",
-  },
-
-  linkRow: {
-    ...flexRow,
-    height: moderateScale(38),
-    justifyContent: "space-between",
-    gap: horizontalScale(8),
-  },
-});
 
 export default memo(AccountRelatedLinks);

@@ -1,7 +1,6 @@
 import React from "react";
 import { View, Text, ViewStyle, StyleProp } from "react-native";
-import { colors } from "../../../../theme/colors";
-import textStyles, { commonStyles } from "../../../../theme/styles";
+import { verticalScale } from "../../../../utils/responsive/metrices";
 import ErrorMessage from "../ErrorMessage";
 
 interface FormFieldWrapperProps {
@@ -20,18 +19,17 @@ const FormFieldWrapper: React.FC<FormFieldWrapperProps> = ({
   wrapperStyle,
 }) => {
   return (
-    <View style={[commonStyles.formContainer, containerStyle]}>
+    <View className={`mb-[${verticalScale(20)}px]`} style={containerStyle}>
       {label && (
-        <Text style={{ ...textStyles.textMedium14, color: colors.darkGray }}>
+        <Text className="text-[14px] font-medium text-slate-500 dark:text-slate-400 mb-2">
           {label}
         </Text>
       )}
       <View
-        style={[
-          commonStyles.inputWrapper,
-          { borderColor: error ? colors.danger : "transparent" },
-          wrapperStyle,
-        ]}
+        className={`w-full h-[52px] px-4 rounded-xl flex-row items-center border bg-slate-50 dark:bg-slate-800 ${
+          error ? "border-rose-500" : "border-slate-100 dark:border-slate-700"
+        }`}
+        style={wrapperStyle}
       >
         {children}
       </View>

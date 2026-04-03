@@ -1,20 +1,34 @@
-import { SafeAreaView, StatusBar, StyleSheet, Text, View, ViewStyle } from "react-native";
+import { View, ViewProps } from "react-native";
 import React from "react";
-import { colors } from "../../../theme/colors";
+import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context";
+import { KeyboardAvoidingView } from "react-native-keyboard-controller";
 
-interface Props {
+interface Props extends ViewProps {
   children?: React.ReactNode;
-  style?: ViewStyle | any;
+  className?: string;
+  withKeyboard?: boolean;
 }
 
-export default function Screen({ style, children }: Props) {
-  return <SafeAreaView style={{ ...styles.container, ...style }}>{children}</SafeAreaView>;
-}
+export default function Screen({ className = "", withKeyboard = true, children, ...props }: Props) {
+  const insets = useSafeAreaInsets();
 
-const styles = StyleSheet.create({
-  container: {
-    flexGrow: 1,
-    paddingTop: StatusBar.currentHeight || 0,
-    backgroundColor: colors.white,
-  },
-});
+  const content = (
+    <SafeAreaView
+      className={`flex-1 bg-white dark:bg-slate-950 ${className}`}
+      style={{ paddingTop: insets.top }}
+      {...props}
+    >
+      {children}
+    </SafeAreaView>
+  );
+
+  if (withKeyboard) {
+    return (
+      <KeyboardAvoidingView behavior="padding" className="flex-1">
+        {content}
+      </KeyboardAvoidingView>
+    );
+  }
+
+  return content;
+}

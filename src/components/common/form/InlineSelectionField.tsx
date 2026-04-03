@@ -1,59 +1,49 @@
-import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
+import { Text, View, TouchableOpacity } from "react-native";
 import React from "react";
-import textStyles, { flexRow } from "../../../../theme/styles";
-import { colors } from "../../../../theme/colors";
-import {
-  horizontalScale,
-  moderateScale,
-  verticalScale,
-} from "../../../../utils/responsive/metrices";
+import { moderateScale, verticalScale } from "../../../../utils/responsive/metrices";
 
 type SelectionItem = string | { label: string; value: any };
 
 interface Props {
   label: string;
-  data: SelectionItem[];
+  options: SelectionItem[];
   selected?: SelectionItem;
-  onSelect: (item: SelectionItem) => void;
+  onSelect: (option: SelectionItem) => void;
 }
 
-export default function InlineSelectionField({ label, data, selected, onSelect }: Props) {
-  const getLabel = (item: SelectionItem | undefined) => {
-    if (!item) return "";
-    return typeof item === "string" ? item : item.label;
+export default function InlineSelectionField({ label, options, selected, onSelect }: Props) {
+  const getLabel = (option: SelectionItem | undefined) => {
+    if (!option) return "";
+    return typeof option === "string" ? option : option.label;
   };
 
-  const getValue = (item: SelectionItem | undefined) => {
-    if (!item) return undefined;
-    return typeof item === "string" ? item : item.value;
+  const getValue = (option: SelectionItem | undefined) => {
+    if (!option) return undefined;
+    return typeof option === "string" ? option : option.value;
   };
 
   return (
-    <View
-      style={{
-        ...flexRow,
-        alignItems: "center",
-        marginBottom: verticalScale(25),
-      }}
-    >
-      <Text style={{ ...textStyles.textMedium14, color: colors.darkGray, flex: 1 }}>{label}</Text>
-      <View style={styles.inputWrapper}>
-        {data.map((type, index) => {
+    <View className={`flex-row items-center mb-[${verticalScale(25)}px]`}>
+      <Text className="text-[14px] font-medium text-slate-500 dark:text-slate-400 flex-1">
+        {label}
+      </Text>
+      <View
+        className={`h-[${moderateScale(44)}px] rounded-[${moderateScale(5)}px] bg-slate-100 dark:bg-slate-800 flex-row`}
+      >
+        {options.map((type, index) => {
           const active = getValue(selected) === getValue(type);
           return (
             <TouchableOpacity
-              style={{
-                ...styles.button,
-                backgroundColor: active ? colors.secondary : "transparent",
-              }}
+              className={`w-[${moderateScale(89)}px] h-[${moderateScale(44)}px] rounded-[${moderateScale(5)}px] justify-center items-center ${
+                active ? "bg-indigo-600" : "bg-transparent"
+              }`}
               onPress={() => onSelect(type)}
               key={index}
             >
               <Text
-                style={{
-                  ...textStyles.textRegular13,
-                  color: active ? colors.white : colors.lightGray,
-                }}
+                className={`text-[13px] font-normal ${
+                  active ? "text-white" : "text-slate-400 dark:text-slate-500"
+                }`}
               >
                 {getLabel(type)}
               </Text>
@@ -64,20 +54,3 @@ export default function InlineSelectionField({ label, data, selected, onSelect }
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  inputWrapper: {
-    height: moderateScale(44),
-    borderRadius: moderateScale(5),
-    backgroundColor: colors.lightBg,
-    ...flexRow,
-  },
-  button: {
-    width: moderateScale(89),
-    height: moderateScale(44),
-    borderRadius: moderateScale(5),
-    backgroundColor: colors.secondary,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-});

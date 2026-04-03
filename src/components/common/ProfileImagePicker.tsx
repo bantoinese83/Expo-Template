@@ -1,12 +1,9 @@
-import { StyleSheet, Text, View, Image, TouchableHighlight } from "react-native";
-import React, { useEffect } from "react";
-import { flexCenter } from "../../../theme/styles";
-import { moderateScale, verticalScale } from "../../../utils/responsive/metrices";
-import textStyles from "../../../theme/styles";
-import { AntDesign, Entypo } from "@expo/vector-icons";
-import { colors } from "../../../theme/colors";
+import { Text, View, Image, TouchableHighlight } from "react-native";
+import React from "react";
+import { moderateScale } from "../../../utils/responsive/metrices";
+import { Entypo } from "@expo/vector-icons";
 import * as ImagePicker from "expo-image-picker";
-import { useSelector } from "react-redux";
+import { useAuth } from "../../hooks/useAuth";
 
 interface Props {
   onChangeImage: (uri: string) => void;
@@ -14,9 +11,9 @@ interface Props {
 }
 
 export default function ProfileImagePicker({ onChangeImage, image }: Props) {
-  const data = useSelector((state: any) => state?.auth);
+  const { user } = useAuth();
+
   const pickImage = async () => {
-    // Request a file URI instead of base64 so uploads can be sent as file multipart/form-data
     const result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: false,
@@ -26,7 +23,6 @@ export default function ProfileImagePicker({ onChangeImage, image }: Props) {
     });
 
     if (!result.canceled) {
-      // expo-image-picker returns an assets array. Use the uri so the caller can append a file to FormData.
       const picked = result?.assets && result.assets[0];
       if (picked && picked.uri) {
         onChangeImage(picked.uri);
@@ -35,54 +31,28 @@ export default function ProfileImagePicker({ onChangeImage, image }: Props) {
   };
 
   return (
-    <View style={styles.imageWrapper}>
+    <View className={`relative w-[${moderateScale(106)}px] h-[${moderateScale(106)}px]`}>
       {image ? (
         <Image
-          source={{
-            uri: image,
-          }}
-          style={styles.profile}
+          source={{ uri: image }}
+          className={`w-[${moderateScale(106)}px] h-[${moderateScale(106)}px] rounded-full`}
         />
       ) : (
         <View
-          style={{
-            ...styles.profile,
-            backgroundColor: colors.primary,
-            ...flexCenter,
-          }}
+          className={`w-[${moderateScale(106)}px] h-[${moderateScale(106)}px] rounded-full bg-indigo-600 items-center justify-center`}
         >
-          <Text style={{ ...textStyles.textMedium24, color: colors.white }}>
-            {data?.user?.user_name ? data?.user?.user_name.charAt(0).toUpperCase() : "U"}
+          <Text className="text-[24px] font-medium text-white">
+            {user?.name ? user.name.charAt(0).toUpperCase() : "U"}
           </Text>
         </View>
       )}
-      <TouchableHighlight style={styles.pin} onPress={pickImage}>
-        <Entypo name="pencil" size={14} color={colors.primary} />
+      <TouchableHighlight
+        className={`w-[${moderateScale(22)}px] h-[${moderateScale(22)}px] rounded-full bg-white dark:bg-slate-800 absolute border-[0.2px] border-slate-200 bottom-[6px] right-[6px] items-center justify-center`}
+        onPress={pickImage}
+        underlayColor="#f1f5f9"
+      >
+        <Entypo name="pencil" size={14} color="#6366f1" />
       </TouchableHighlight>
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  imageWrapper: {
-    position: "relative",
-    width: moderateScale(106),
-    height: moderateScale(106),
-  },
-  profile: {
-    width: moderateScale(106),
-    height: moderateScale(106),
-    borderRadius: moderateScale(106),
-  },
-  pin: {
-    width: moderateScale(22),
-    height: moderateScale(22),
-    borderRadius: moderateScale(22),
-    backgroundColor: colors.white,
-    position: "absolute",
-    borderWidth: 0.2,
-    bottom: 6,
-    right: 6,
-    ...flexCenter,
-  },
-});

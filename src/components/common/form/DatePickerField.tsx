@@ -1,25 +1,13 @@
-import {
-  Dimensions,
-  Image,
-  StyleSheet,
-  Text,
-  TextInput,
-  View,
-  TouchableOpacity,
-} from "react-native";
+import { Image, Text, View, TouchableOpacity } from "react-native";
 import React, { useState } from "react";
 import {
   horizontalScale,
   moderateScale,
   verticalScale,
 } from "../../../../utils/responsive/metrices";
-import { colors } from "../../../../theme/colors";
-import textStyles, { flexBetween } from "../../../../theme/styles";
 import { mImages } from "../../../../assets/images";
 import ErrorMessage from "../ErrorMessage";
-import DateTimePicker, { DateTimePickerEvent } from "@react-native-community/datetimepicker";
-
-const { width } = Dimensions.get("screen");
+import DateTimePicker from "@react-native-community/datetimepicker";
 
 interface Props {
   placeholder?: string;
@@ -58,20 +46,23 @@ export default function DatePickerField(props: Props) {
 
   return (
     <>
-      <View style={{ marginBottom: verticalScale(8) }}>
+      <View className={`mb-[${verticalScale(8)}px]`}>
         <TouchableOpacity
           onPress={() => showDatepicker()}
-          style={{
-            ...styles.inputWrapper,
-            borderColor: error ? colors.danger : "transparent",
-          }}
+          className={`w-full h-[${moderateScale(50)}px] rounded-[${moderateScale(12)}px] bg-slate-50 dark:bg-slate-800 flex-row items-center px-[${horizontalScale(16)}px] border ${
+            error ? "border-rose-500" : "border-transparent dark:border-slate-700"
+          } mb-[${verticalScale(5)}px]`}
         >
           <Image
             source={date ? mImages.calendarBlack : mImages.calendarGray}
-            style={{ width: moderateScale(17), height: moderateScale(17) }}
+            className={`w-[${moderateScale(17)}px] h-[${moderateScale(17)}px]`}
             resizeMode="contain"
           />
-          <Text style={{ ...styles.input, color: date ? colors.textDark : colors.textLightGray }}>
+          <Text
+            className={`flex-1 ml-[${horizontalScale(10)}px] text-[13px] font-normal ${
+              date ? "text-slate-900 dark:text-slate-100" : "text-slate-400 dark:text-slate-500"
+            }`}
+          >
             {date ? formateDate(date) : placeholder}
           </Text>
         </TouchableOpacity>
@@ -90,23 +81,3 @@ export default function DatePickerField(props: Props) {
     </>
   );
 }
-
-const styles = StyleSheet.create({
-  inputWrapper: {
-    width: "100%",
-    height: moderateScale(50),
-    borderRadius: moderateScale(12),
-    backgroundColor: colors.lightBackground,
-    marginBottom: verticalScale(5),
-    paddingHorizontal: horizontalScale(16),
-    ...flexBetween,
-    borderWidth: 1,
-  },
-  input: {
-    flex: 1,
-    // height: "100%",
-    marginLeft: horizontalScale(10),
-    backgroundColor: "transparent",
-    ...textStyles.textRegular13,
-  },
-});

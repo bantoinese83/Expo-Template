@@ -1,9 +1,7 @@
-import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { TouchableOpacity } from "react-native";
 import React from "react";
 import { moderateScale } from "../../../utils/responsive/metrices";
-import { colors } from "../../../theme/colors";
-import { FontAwesome, Ionicons, Octicons } from "@expo/vector-icons";
-import { mImages } from "../../../assets/images";
+import { FontAwesome } from "@expo/vector-icons";
 
 interface Props {
   checked?: boolean;
@@ -12,30 +10,15 @@ interface Props {
 
 export default function Checkbox({ checked = false, toggleCheckbox }: Props) {
   return (
-    <>
-      <TouchableOpacity
-        style={{
-          ...styles.container,
-          borderColor: checked ? colors.secondary : "#C4C4C4",
-          backgroundColor: checked ? colors.secondary : colors.white,
-        }}
-        onPress={toggleCheckbox}
-      >
-        {checked && <FontAwesome name="check" size={11} color="white" />}
-      </TouchableOpacity>
-    </>
+    <TouchableOpacity
+      className={`w-[${moderateScale(17)}px] h-[${moderateScale(17)}px] rounded-[${moderateScale(
+        4
+      )}px] border-[1.5px] items-center justify-center opacity-70 ${
+        checked ? "border-indigo-600 bg-indigo-600" : "border-[#C4C4C4] bg-white dark:bg-slate-800"
+      }`}
+      onPress={toggleCheckbox}
+    >
+      {checked && <FontAwesome name="check" size={11} color="white" />}
+    </TouchableOpacity>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    width: moderateScale(17),
-    height: moderateScale(17),
-    borderRadius: moderateScale(4),
-    borderWidth: 1.5,
-    opacity: 0.7,
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
-  },
-});

@@ -1,16 +1,11 @@
-import { Dimensions, Image, StyleSheet, Text, TextInput, View } from "react-native";
-import React, { useState } from "react";
+import { Text, TextInput, View } from "react-native";
+import React from "react";
 import {
   horizontalScale,
   moderateScale,
   verticalScale,
 } from "../../../../utils/responsive/metrices";
-import { colors } from "../../../../theme/colors";
-import textStyles, { flexBetween } from "../../../../theme/styles";
-import { mImages } from "../../../../assets/images";
 import ErrorMessage from "../ErrorMessage";
-
-const { width } = Dimensions.get("screen");
 
 interface Props {
   style?: object;
@@ -34,19 +29,18 @@ export default function DescriptionField({
   ...rest
 }: Props) {
   return (
-    <View style={{ marginBottom: verticalScale(20), ...style }}>
-      <Text style={{ ...textStyles.textMedium14, color: colors.darkGray }}>{label}</Text>
+    <View className={`mb-[${verticalScale(20)}px]`} style={style}>
+      <Text className="text-[14px] font-medium text-slate-500 dark:text-slate-400">{label}</Text>
       <View
-        style={{
-          ...styles.inputWrapper,
-        }}
+        className={`w-full py-[${verticalScale(15)}px] px-[${horizontalScale(16)}px] rounded-[${moderateScale(12)}px] bg-slate-50 dark:bg-slate-800 mt-[${verticalScale(8)}px] mb-[${verticalScale(5)}px]`}
       >
         <TextInput
           placeholder={placeholder}
           value={value}
           onChangeText={(text: string) => onChange(text)}
-          style={{ ...styles.input }}
-          placeholderTextColor="#ABABAB"
+          className="flex-1 bg-transparent text-slate-900 dark:text-slate-100 text-[13px] font-normal"
+          style={{ textAlignVertical: "top" }}
+          placeholderTextColor="#94a3b8"
           multiline={true}
           numberOfLines={rows ? rows : 5}
           {...rest}
@@ -56,23 +50,3 @@ export default function DescriptionField({
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  inputWrapper: {
-    width: "100%",
-    paddingVertical: verticalScale(15),
-    borderRadius: moderateScale(12),
-    backgroundColor: colors.lightBg,
-    marginBottom: verticalScale(5),
-    paddingHorizontal: horizontalScale(16),
-    marginTop: verticalScale(8),
-    ...flexBetween,
-  },
-  input: {
-    flex: 1,
-    backgroundColor: "transparent",
-    color: colors.textDark,
-    ...textStyles.textRegular13,
-    textAlignVertical: "top",
-  },
-});

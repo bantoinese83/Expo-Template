@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { View, Text, TouchableOpacity } from "react-native";
 
 interface Props {
@@ -9,34 +9,11 @@ interface Props {
 
 const CustomRadioButton: React.FC<Props> = ({ label, selected, onSelect }) => {
   return (
-    <TouchableOpacity
-      onPress={() => onSelect(!selected)}
-      style={{ flexDirection: "row", alignItems: "center" }}
-    >
-      <View
-        style={{
-          height: 17,
-          width: 17,
-          borderRadius: 12,
-          borderWidth: 2,
-          borderColor: "#4C0182",
-          alignItems: "center",
-          justifyContent: "center",
-          marginRight: 8,
-        }}
-      >
-        {selected ? (
-          <View
-            style={{
-              height: 8,
-              width: 8,
-              borderRadius: 6,
-              backgroundColor: "#4C0182",
-            }}
-          />
-        ) : null}
+    <TouchableOpacity onPress={() => onSelect(!selected)} className="flex-row items-center">
+      <View className="h-[17px] w-[17px] rounded-full border-2 border-indigo-600 items-center justify-center mr-2">
+        {selected && <View className="h-2 w-2 rounded-full bg-indigo-600" />}
       </View>
-      <Text>{label}</Text>
+      <Text className="text-slate-900 dark:text-slate-100">{label}</Text>
     </TouchableOpacity>
   );
 };

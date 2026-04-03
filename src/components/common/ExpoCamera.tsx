@@ -1,9 +1,7 @@
 import React, { useState, useEffect } from "react";
-import { StyleSheet, Text, View, Image, Dimensions, TouchableOpacity } from "react-native";
-import { Camera } from "expo-camera";
-import { AntDesign } from "@expo/vector-icons";
-import { MaterialIcons } from "@expo/vector-icons";
-import { Ionicons } from "@expo/vector-icons";
+import { Text, View, Image, Dimensions, TouchableOpacity } from "react-native";
+import { CameraView, useCameraPermissions, useMicrophonePermissions } from "expo-camera";
+import { AntDesign, MaterialIcons, Ionicons } from "@expo/vector-icons";
 import Animated, { useAnimatedStyle, useSharedValue, interpolate } from "react-native-reanimated";
 import { verticalScale } from "../../../utils/responsive/metrices";
 
@@ -16,12 +14,13 @@ interface ExpoCameraProps {
 }
 
 const ExpoCamera: React.FC<ExpoCameraProps> = ({ visibility, onCLose, callBack }) => {
-  const [hasAudioPermission, setHasAudioPermission] = useState<boolean | null>(null);
-  const [hasCameraPermission, setHasCameraPermission] = useState<boolean | null>(null);
+  const [cameraPermission, requestCameraPermission] = useCameraPermissions();
+  const [microphonePermission, requestMicrophonePermission] = useMicrophonePermissions();
+
   const [camera, setCamera] = useState<any>(null);
   const [isCameraReady, setIsCameraReady] = useState(false);
-  const [type, setType] = useState<any>(null);
-  const [flashmode, setflashmode] = useState<any>(null);
+  const [facing, setFacing] = useState<"back" | "front">("back");
+  const [enableTorch, setEnableTorch] = useState(false);
   const [isPictureTaken, setIsPictureTaken] = useState(false);
   const [capturePicture, setCapturePicture] = useState("");
 
@@ -42,33 +41,19 @@ const ExpoCamera: React.FC<ExpoCameraProps> = ({ visibility, onCLose, callBack }
   }, [r]);
 
   const flipCam = () => {
-    setType((prev: any) =>
-      prev === (Camera as any).Constants?.Type?.back
-        ? (Camera as any).Constants?.Type?.front
-        : (Camera as any).Constants?.Type?.back
-    );
+    setFacing((prev) => (prev === "back" ? "front" : "back"));
   };
 
   const toggleFlash = () => {
-    setflashmode((prev: any) =>
-      prev === (Camera as any).Constants?.FlashMode?.off
-        ? (Camera as any).Constants?.FlashMode?.torch
-        : (Camera as any).Constants?.FlashMode?.off
-    );
+    setEnableTorch((prev) => !prev);
   };
 
   useEffect(() => {
-    (async () => {
-      const cameraStatus = await (Camera as any).requestCameraPermissionsAsync();
-      setHasCameraPermission(cameraStatus.status === "granted");
-
-      const audioStatus = await (Camera as any).requestMicrophonePermissionsAsync();
-      setHasAudioPermission(audioStatus.status === "granted");
-
-      setType((Camera as any).Constants?.Type?.back);
-      setflashmode((Camera as any).Constants?.FlashMode?.off);
-    })();
-  }, []);
+    if (visibility) {
+      requestCameraPermission();
+      requestMicrophonePermission();
+    }
+  }, [visibility]);
 
   const takePicture = async () => {
     if (!camera) return;
@@ -77,7 +62,7 @@ const ExpoCamera: React.FC<ExpoCameraProps> = ({ visibility, onCLose, callBack }
         quality: 0.2,
         base64: true,
       });
-      setCapturePicture(data?.base64 ?? "");
+      setCapturePicture(data?.uri ?? "");
       setTimeout(() => {
         setIsPictureTaken(true);
       }, 500);
@@ -86,97 +71,99 @@ const ExpoCamera: React.FC<ExpoCameraProps> = ({ visibility, onCLose, callBack }
     }
   };
 
-  if (hasCameraPermission === null || hasAudioPermission === null) {
+  if (!cameraPermission || !microphonePermission) {
     return <View />;
   }
-  if (hasCameraPermission === false) {
-    return <Text>No access to camera</Text>;
-  }
-  if (hasAudioPermission === false) {
-    return <Text>No access to Audio</Text>;
+
+  if (!cameraPermission.granted || !microphonePermission.granted) {
+    return (
+      <View className="flex-1 justify-center items-center bg-white dark:bg-slate-950 p-6">
+        <Text className="text-center text-slate-900 dark:text-white mb-4">
+          We need your permission to show the camera
+        </Text>
+        <TouchableOpacity
+          className="bg-indigo-600 px-6 py-3 rounded-xl"
+          onPress={() => {
+            requestCameraPermission();
+            requestMicrophonePermission();
+          }}
+        >
+          <Text className="text-white font-bold">Grant Permission</Text>
+        </TouchableOpacity>
+      </View>
+    );
   }
 
   return (
     visibility && (
-      <View
-        style={{
-          position: "absolute",
-          bottom: 0,
-          width: width,
-          height: height,
-          backgroundColor: "white",
-          zIndex: 9,
-        }}
-      >
-        <View style={{ flex: 1 }}>
+      <View className="absolute inset-0 bg-white dark:bg-slate-950 z-[9]">
+        <View className="flex-1">
           {!isPictureTaken ? (
-            <>
-              <View style={styles.cameraContainer}>
-                <Camera
-                  ref={(ref: any) => setCamera(ref)}
-                  style={styles.fixedRatio}
-                  type={type}
-                  ratio={"4:3"}
-                  flashMode={flashmode}
-                  onCameraReady={() => setIsCameraReady(true)}
-                />
+            <View className="flex-1 relative">
+              <CameraView
+                ref={(ref: any) => setCamera(ref)}
+                className="flex-1"
+                facing={facing}
+                enableTorch={enableTorch}
+                onCameraReady={() => setIsCameraReady(true)}
+              />
 
-                <TouchableOpacity
-                  style={{
-                    position: "absolute",
-                    top: height - 200,
-                    alignSelf: "center",
-                  }}
-                  activeOpacity={0.8}
-                  onPress={() => {
-                    if (isCameraReady) takePicture();
-                  }}
-                >
-                  <Animated.View style={[styles.startButton, circleAnimatedStyle]}>
-                    <Animated.View style={[styles.startButtonChild, innerCircleAnimatedStyle]} />
-                  </Animated.View>
-                </TouchableOpacity>
-                <View style={styles.camTopRow}>
-                  <TouchableOpacity style={styles.closeButtonContainer} onPress={() => onCLose()}>
-                    <AntDesign name="close" size={24} color="white" />
-                  </TouchableOpacity>
-                  <View style={styles.splashtoggleWrapper}>
-                    <TouchableOpacity style={styles.camControls} onPress={() => flipCam()}>
-                      <MaterialIcons name="flip-camera-android" size={24} color="white" />
-                    </TouchableOpacity>
-                    <TouchableOpacity style={styles.camControls} onPress={() => toggleFlash()}>
-                      {flashmode == Camera.Constants.FlashMode.torch ? (
-                        <Ionicons name="flash-off-outline" size={24} color="white" />
-                      ) : (
-                        <Ionicons name="flash-outline" size={24} color="white" />
-                      )}
-                    </TouchableOpacity>
-                  </View>
-                </View>
-              </View>
-            </>
-          ) : (
-            <>
-              <View
-                style={{
-                  position: "relative",
-                  width: width,
-                  height: height,
+              <TouchableOpacity
+                className="absolute bottom-20 align-self-center"
+                style={{ left: width / 2 - 31.5 }}
+                activeOpacity={0.8}
+                onPress={() => {
+                  if (isCameraReady) takePicture();
                 }}
               >
-                <Image
-                  style={{ width: width, height: height }}
-                  source={{
-                    uri: capturePicture,
-                  }}
-                  resizeMode="contain"
-                />
-              </View>
-              <View style={styles.camTopRow}>
+                <Animated.View
+                  className="border-2 border-white rounded-full items-center justify-center relative"
+                  style={[circleAnimatedStyle]}
+                >
+                  <Animated.View
+                    className="bg-rose-500 rounded-full w-[90%] h-[90%]"
+                    style={[innerCircleAnimatedStyle]}
+                  />
+                </Animated.View>
+              </TouchableOpacity>
+
+              <View
+                className={`w-full absolute flex-row items-start justify-between px-5 mt-[${verticalScale(60)}px]`}
+              >
                 <TouchableOpacity
-                  style={styles.closeButtonContainer}
+                  className="h-11 w-11 bg-black/60 rounded-full items-center justify-center"
+                  onPress={onCLose}
+                >
+                  <AntDesign name="close" size={24} color="white" />
+                </TouchableOpacity>
+
+                <View className="bg-black/60 rounded-full items-center py-2 px-1">
+                  <TouchableOpacity className="p-3" onPress={flipCam}>
+                    <MaterialIcons name="flip-camera-android" size={24} color="white" />
+                  </TouchableOpacity>
+                  <TouchableOpacity className="p-3" onPress={toggleFlash}>
+                    <Ionicons
+                      name={enableTorch ? "flash-off-outline" : "flash-outline"}
+                      size={24}
+                      color="white"
+                    />
+                  </TouchableOpacity>
+                </View>
+              </View>
+            </View>
+          ) : (
+            <View className="flex-1 relative">
+              <Image
+                className="w-full h-full"
+                source={{ uri: capturePicture }}
+                resizeMode="contain"
+              />
+              <View
+                className={`w-full absolute flex-row items-start justify-between px-5 mt-[${verticalScale(60)}px]`}
+              >
+                <TouchableOpacity
+                  className="h-11 w-11 bg-black/60 rounded-full items-center justify-center"
                   onPress={() => {
-                    onCLose();
                     setIsPictureTaken(false);
                   }}
                 >
@@ -184,89 +171,22 @@ const ExpoCamera: React.FC<ExpoCameraProps> = ({ visibility, onCLose, callBack }
                 </TouchableOpacity>
 
                 <TouchableOpacity
-                  style={styles.closeButtonContainer}
+                  className="h-11 w-11 bg-black/60 rounded-full items-center justify-center"
                   onPress={() => {
                     callBack(capturePicture);
                     setIsPictureTaken(false);
+                    onCLose();
                   }}
                 >
                   <AntDesign name="check" size={24} color="white" />
                 </TouchableOpacity>
               </View>
-            </>
+            </View>
           )}
         </View>
       </View>
     )
   );
 };
-
-const styles = StyleSheet.create({
-  cameraContainer: {
-    height: height,
-    width: width,
-  },
-  fixedRatio: {
-    flex: 1,
-    aspectRatio: 1,
-  },
-  video: {
-    alignSelf: "center",
-    height: height - 100,
-    width: width,
-  },
-  buttons: {
-    flexDirection: "row",
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  startButton: {
-    borderWidth: 2,
-    borderColor: "white",
-    borderRadius: 500,
-    alignSelf: "center",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    position: "relative",
-  },
-  startButtonChild: {
-    backgroundColor: "#F93030",
-    borderRadius: 500,
-    width: "90%",
-    height: "90%",
-  },
-  camTopRow: {
-    width: width,
-    top: verticalScale(80),
-    position: "absolute",
-    display: "flex",
-    flexDirection: "row",
-    alignItems: "flex-start",
-    justifyContent: "space-between",
-    paddingHorizontal: 20,
-  },
-  closeButtonContainer: {
-    height: 46,
-    width: 46,
-    backgroundColor: "#00000099",
-    borderRadius: 30,
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  splashtoggleWrapper: {
-    backgroundColor: "#00000099",
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "center",
-    borderRadius: 30,
-    paddingVertical: 10,
-  },
-  camControls: {
-    paddingHorizontal: 12,
-    paddingVertical: 12,
-  },
-});
 
 export default ExpoCamera;

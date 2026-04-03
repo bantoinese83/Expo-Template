@@ -12,6 +12,7 @@ import { AppText } from "../../src/components/ui/AppText";
 import { AppCard } from "../../src/components/ui/AppCard";
 import PrimaryButton from "../../src/components/common/PrimaryButton";
 import { useAuth } from "../../src/hooks/useAuth";
+import { ThemeToggle } from "../../src/components/ThemeToggle";
 
 export default function ProfileScreen() {
   const { t } = useTranslation();
@@ -53,8 +54,8 @@ export default function ProfileScreen() {
   };
 
   return (
-    <SafeAreaView className="flex-1 bg-white" edges={["top"]}>
-      <ScrollView contentContainerStyle={{ padding: 24 }}>
+    <SafeAreaView className="flex-1 bg-white dark:bg-slate-950" edges={["top"]}>
+      <ScrollView contentContainerClassName="p-6">
         <View className="flex-row justify-between items-center mb-8">
           <AppText variant="h1">{t("profile")}</AppText>
           <TouchableOpacity
@@ -164,9 +165,19 @@ export default function ProfileScreen() {
           />
         </AppCard>
 
+        {/* Theme Settings */}
+        <View className="mt-8">
+          <AppText variant="h3" className="mb-4 dark:text-white">
+            Appearance
+          </AppText>
+          <ThemeToggle />
+        </View>
+
         {/* Footer Info */}
         <View className="mt-12 items-center opacity-50">
-          <AppText variant="caption">Expo Template 2026 Edition</AppText>
+          <AppText variant="caption" className="dark:text-slate-400">
+            Expo Template 2026 Edition
+          </AppText>
         </View>
       </ScrollView>
     </SafeAreaView>

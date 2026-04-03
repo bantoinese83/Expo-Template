@@ -1,13 +1,10 @@
-import { StyleSheet, Text, View, TouchableOpacity, Image } from "react-native";
+import { Text, View, TouchableOpacity, Image } from "react-native";
 import React, { memo } from "react";
 import {
   horizontalScale,
   moderateScale,
   verticalScale,
 } from "../../../../utils/responsive/metrices";
-import textStyles from "../../../../theme/styles";
-import { colors } from "../../../../theme/colors";
-import { flexRow } from "../../../../theme/styles";
 
 interface LinkItem {
   label: string;
@@ -16,30 +13,25 @@ interface LinkItem {
 }
 
 interface Props {
-  data: LinkItem[];
+  contactList: LinkItem[];
 }
 
-const ContactUsInformation = ({ data }: Props) => {
+const ContactUsInformation = ({ contactList }: Props) => {
   return (
-    <View
-      style={{
-        marginTop: verticalScale(15),
-        alignSelf: "flex-start",
-      }}
-    >
-      <Text style={{ ...textStyles.textMedium15, color: colors.primary }}>Contact US</Text>
-      <View style={{ marginTop: verticalScale(12) }}>
-        {data.map((link, index) => {
+    <View className={`mt-[${verticalScale(15)}px] self-start`}>
+      <Text className="text-[15px] font-medium text-indigo-600 dark:text-indigo-400">
+        Contact US
+      </Text>
+      <View className={`mt-[${verticalScale(12)}px]`}>
+        {contactList.map((link, index) => {
           return (
-            <TouchableOpacity style={{ ...styles.linkRow, height: moderateScale(33) }} key={index}>
-              <View style={{ ...flexRow, gap: 8 }}>
-                <Image source={link.icon} resizeMode="contain" />
-                <Text
-                  style={{
-                    ...textStyles.textRegular13,
-                    color: colors.darkGray,
-                  }}
-                >
+            <TouchableOpacity
+              className={`flex-row items-center justify-between gap-[${horizontalScale(8)}px] h-[${moderateScale(33)}px]`}
+              key={index}
+            >
+              <View className="flex-row items-center gap-2">
+                <Image source={link.icon} resizeMode="contain" className="w-4 h-4" />
+                <Text className="text-[13px] font-normal text-slate-600 dark:text-slate-400">
                   {link.label}
                 </Text>
               </View>
@@ -50,14 +42,5 @@ const ContactUsInformation = ({ data }: Props) => {
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  linkRow: {
-    height: moderateScale(38),
-    ...flexRow,
-    justifyContent: "space-between",
-    gap: horizontalScale(8),
-  },
-});
 
 export default memo(ContactUsInformation);

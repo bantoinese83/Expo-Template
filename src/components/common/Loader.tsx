@@ -1,5 +1,5 @@
 import React from "react";
-import { View, StyleSheet, ActivityIndicator, Dimensions } from "react-native";
+import { View, ActivityIndicator } from "react-native";
 
 interface Props {
   isLoading?: boolean;
@@ -9,26 +9,13 @@ interface Props {
 const Loader: React.FC<Props> = ({ color = "white", isLoading = true }) => {
   if (!isLoading) return null;
   return (
-    <View style={styles.container}>
+    <View
+      className="absolute -top-[10px] -right-[10px] -bottom-[10px] -left-[10px] justify-center items-center bg-black/60 z-[9999]"
+      style={{ elevation: 10 }}
+    >
       <ActivityIndicator size="large" color={color} />
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    position: "absolute",
-    top: -10,
-    right: -10,
-    bottom: -10,
-    left: -10,
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
-    elevation: 10,
-    backgroundColor: "rgba(0,0,0,0.6)",
-    zIndex: 9999,
-  },
-});
 
 export default Loader;

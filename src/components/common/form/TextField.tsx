@@ -1,7 +1,5 @@
-import { StyleSheet, TextInput, TextInputProps, ViewStyle } from "react-native";
+import { TextInput, TextInputProps, ViewStyle } from "react-native";
 import React from "react";
-import { colors } from "../../../../theme/colors";
-import textStyles from "../../../../theme/styles";
 import FormFieldWrapper from "./FormFieldWrapper";
 
 interface Props extends TextInputProps {
@@ -19,20 +17,10 @@ export default function TextField(props: Props) {
         placeholder={placeholder}
         value={value}
         onChangeText={onTextChange}
-        style={styles.input}
-        placeholderTextColor={colors.lightGray}
+        className="flex-1 h-full bg-transparent text-slate-800 dark:text-slate-100 text-[14px] font-normal"
+        placeholderTextColor="#94a3b8"
         {...rest}
       />
     </FormFieldWrapper>
   );
 }
-
-const styles = StyleSheet.create({
-  input: {
-    flex: 1,
-    height: "100%",
-    backgroundColor: "transparent",
-    color: colors.darkGray,
-    ...textStyles.textRegular14,
-  },
-});

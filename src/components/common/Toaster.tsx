@@ -1,203 +1,147 @@
 import React, { useEffect, useRef } from "react";
-import {
-  View,
-  StyleSheet,
-  Dimensions,
-  Text,
-  Animated,
-  Easing,
-  Image,
-  TouchableOpacity,
-} from "react-native";
-import { useDispatch, useSelector } from "react-redux";
-import { mImages } from "../../../assets/images";
-import { AntDesign } from "@expo/vector-icons";
-import textStyles from "../../../theme/styles";
-import { clearToaster } from "../../redux/slices/toast.slice";
-import { SUCCESS_TOAST } from "../../../utils/constants";
+import { View, Dimensions, Text, Animated, Easing, TouchableOpacity } from "react-native";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { create } from "zustand";
 
-const { width, height } = Dimensions.get("screen");
+const { width } = Dimensions.get("screen");
 
 interface ToastMessage {
   id: string | number;
-  type: string;
+  type: "success" | "error";
   message: string;
 }
 
-const CustomToaster = () => {
-  const toastData = useSelector((state: any) => state.toaster);
-  const dispatch = useDispatch();
+interface ToasterState {
+  toasts: ToastMessage[];
+  addToast: (toast: Omit<ToastMessage, "id">) => void;
+  removeToast: (id: string | number) => void;
+  clearToasts: () => void;
+}
 
-  useEffect(() => {
-    if (toastData.length > 0) {
-      setTimeout(() => {
-        dispatch(clearToaster());
-      }, 5000);
-    }
-  }, [toastData, dispatch]);
+export const useToasterStore = create<ToasterState>((set) => ({
+  toasts: [],
+  addToast: (toast) => {
+    const id = Date.now();
+    set((state) => ({ toasts: [...state.toasts, { ...toast, id }] }));
+    setTimeout(() => {
+      set((state) => ({ toasts: state.toasts.filter((t) => t.id !== id) }));
+    }, 5000);
+  },
+  removeToast: (id) => set((state) => ({ toasts: state.toasts.filter((t) => t.id !== id) })),
+  clearToasts: () => set({ toasts: [] }),
+}));
+
+export const useToaster = () => {
+  const addToast = useToasterStore((state) => state.addToast);
+
+  const toastAlert = (message: string, isSuccess: boolean = true) => {
+    addToast({
+      type: isSuccess ? "success" : "error",
+      message,
+    });
+  };
+
+  return { toastAlert };
+};
+
+const CustomToaster = () => {
+  const toasts = useToasterStore((state) => state.toasts);
 
   return (
-    <View style={styles.container}>
-      {toastData.map((message: ToastMessage, index: number) => (
-        <Toaster key={index + String(message.id)} data={message} />
+    <View className="absolute -bottom-[100px] w-full px-5 flex-col">
+      {toasts.map((message: ToastMessage, index: number) => (
+        <Toaster key={message.id} toast={message} />
       ))}
     </View>
   );
 };
 
 interface ToasterProps {
-  data: ToastMessage;
+  toast: ToastMessage;
 }
 
-const Toaster = ({ data }: ToasterProps) => {
-  const dispatch = useDispatch();
-  let isHorizontalTransaltionTriggered = false;
+const Toaster = ({ toast }: ToasterProps) => {
+  const removeToast = useToasterStore((state) => state.removeToast);
   const animationValue = useRef(new Animated.Value(0)).current;
   const horizontalTranslationAnimationValue = useRef(new Animated.Value(0)).current;
+
   const animate = () => {
     Animated.timing(animationValue, {
       toValue: 1,
-      duration: 2000,
+      duration: 1000,
       useNativeDriver: true,
-      easing: Easing.bounce,
-    }).start(({ finished }) => {
-      if (finished) {
-        animateHorizontal();
-      }
-    });
+      easing: Easing.out(Easing.back(1.5)),
+    }).start();
   };
 
-  const animateHorizontal = () => {
+  const dismiss = () => {
     Animated.timing(horizontalTranslationAnimationValue, {
       toValue: 1,
-      duration: isHorizontalTransaltionTriggered ? 1000 : 5000,
+      duration: 500,
       useNativeDriver: true,
     }).start(({ finished }) => {
       if (finished) {
-        dispatch(clearToaster());
+        removeToast(toast.id);
       }
     });
   };
 
   const xTransaltion = horizontalTranslationAnimationValue.interpolate({
-    inputRange: [0, 0.3, 1],
-    outputRange: [0, 0, -2000],
+    inputRange: [0, 1],
+    outputRange: [0, width],
   });
 
   const yTransalation = animationValue.interpolate({
-    inputRange: [0, 0.1, 1],
-    outputRange: [0, -20, -120],
+    inputRange: [0, 1],
+    outputRange: [0, -140],
   });
 
   const opacityValue = animationValue.interpolate({
-    inputRange: [0, 0.9, 1],
-    outputRange: [0, 0.7, 1],
+    inputRange: [0, 1],
+    outputRange: [0, 1],
   });
+
   useEffect(() => {
     animate();
   }, []);
+
+  const isSuccess = toast.type === "success";
+
   return (
     <Animated.View
-      style={[
-        styles.taostContainer,
-        {
-          opacity: opacityValue,
-          transform: [
-            {
-              translateY: yTransalation,
-            },
-            { translateX: xTransaltion },
-          ],
-        },
-      ]}
+      style={{
+        opacity: opacityValue,
+        transform: [{ translateY: yTransalation }, { translateX: xTransaltion }],
+      }}
+      className="self-stretch bg-white dark:bg-slate-900 rounded-xl mb-3 shadow-lg pl-3 py-4 pr-4 border border-slate-100 dark:border-slate-800"
     >
-      <TouchableOpacity
-        style={styles.closebtn}
-        onPress={() => {
-          isHorizontalTransaltionTriggered = true;
-          animateHorizontal();
-        }}
-      >
-        <AntDesign name="close" size={18} color="#545454" />
+      <TouchableOpacity className="absolute right-3 top-2 p-1" onPress={dismiss}>
+        <MaterialCommunityIcons name="close" size={18} color="#94a3b8" />
       </TouchableOpacity>
-      <View style={styles.toasterContentsWrapper}>
+
+      <View className="flex-row items-start">
         <View
-          style={{
-            ...styles.imgWrapper,
-            backgroundColor: data?.type === SUCCESS_TOAST ? "#2FBE352B" : "#FFE2E7",
-          }}
+          className={`h-11 w-11 rounded-lg items-center justify-center mr-3 ${
+            isSuccess ? "bg-emerald-50 dark:bg-emerald-900/20" : "bg-rose-50 dark:bg-rose-900/20"
+          }`}
         >
-          <Image
-            source={data?.type === SUCCESS_TOAST ? mImages?.smile : mImages?.sad}
-            style={{
-              height: 24,
-              width: 24,
-            }}
+          <MaterialCommunityIcons
+            name={isSuccess ? "check-circle" : "alert-circle"}
+            size={24}
+            color={isSuccess ? "#10b981" : "#f43f5e"}
           />
         </View>
-        <View style={{ flex: 1 }}>
-          <Text style={styles.headingText}>
-            {data?.type === SUCCESS_TOAST ? "Success message" : "Error message"}
+        <View className="flex-1 pr-4">
+          <Text className="text-[14px] font-semibold text-slate-900 dark:text-white">
+            {isSuccess ? "Success" : "Error"}
           </Text>
-          <Text style={styles.messageText}>{data?.message}</Text>
+          <Text className="text-[13px] font-normal text-slate-500 dark:text-slate-400">
+            {toast.message}
+          </Text>
         </View>
       </View>
     </Animated.View>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    position: "absolute",
-    bottom: -100,
-    width: width,
-    paddingHorizontal: 19,
-    display: "flex",
-    flexDirection: "column",
-  },
-  taostContainer: {
-    alignSelf: "stretch",
-    backgroundColor: "white",
-    display: "flex",
-    alignItems: "flex-start",
-    borderRadius: 10,
-    marginBottom: 10,
-    elevation: 3,
-    paddingLeft: 11,
-    paddingVertical: 14,
-    paddingRight: 17,
-  },
-  toasterContentsWrapper: {
-    display: "flex",
-    flexDirection: "row",
-    alignItems: "flex-start",
-    justifyContent: "flex-start",
-  },
-  imgWrapper: {
-    height: 46,
-    width: 46,
-    borderRadius: 10,
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    marginRight: 8,
-  },
-  headingText: {
-    ...textStyles?.textMedium15,
-    fontSize: 14,
-    color: "#0C1137",
-  },
-  messageText: {
-    ...textStyles?.textMedium15,
-    color: "#545454",
-    fontSize: 13,
-  },
-  closebtn: {
-    position: "absolute",
-    right: 12,
-    top: 8,
-    padding: 5,
-  },
-});
 
 export default CustomToaster;
