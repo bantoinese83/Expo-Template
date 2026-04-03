@@ -8,6 +8,7 @@ import textStyles, { iosShadow } from "./theme/styles";
 import { moderateScale, verticalScale, horizontalScale } from "./utils/responsive/metrices";
 import AppHeader from "./src/components/AppHeader";
 import PrimaryButton from "./src/components/common/PrimaryButton";
+import { getAvatarUrl } from "./src/utils/avatar";
 
 const FeatureCard = ({ icon, title, desc }: { icon: any; title: string; desc: string }) => (
   <View style={styles.card}>
@@ -28,8 +29,8 @@ export default function App() {
         <SafeAreaView style={styles.safeArea} edges={["top", "left", "right"]}>
           <StatusBar style="dark" />
           <AppHeader
-            userName="Developer"
-            userImage="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=100&q=80"
+            userName="Baheer"
+            userImage={getAvatarUrl("Baheer")}
             greeting="Welcome to"
             onNotificationPress={() => {}}
             notificationCount={3}
@@ -106,9 +107,9 @@ export default function App() {
                 desc="Centralized design system for rapid UI development."
               />
               <FeatureCard
-                icon="rocket-launch-outline"
-                title="Performance"
-                desc="Optimized rendering and optimized asset loading."
+                icon="account-circle-outline"
+                title="Dynamic Avatars"
+                desc="Integrated DiceBear API for consistent, seeded avatars."
               />
             </View>
 

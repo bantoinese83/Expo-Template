@@ -1,18 +1,20 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { View, Image, Text, StyleSheet } from "react-native";
-import { MaterialIcons } from "@expo/vector-icons";
+import { getAvatarUrl } from "../utils/avatar";
 
 interface Props {
   userName: string;
-  userImage: string;
+  userImage?: string;
   greeting?: string;
 }
 
 const UserProfile: React.FC<Props> = ({ userName, userImage, greeting = "Hi 👋" }) => {
   const [imageError, setImageError] = useState(false);
-  console.log("userImage", userImage);
-  const [image, setImage] = useState(null);
-  // Get initials from user name for avatar
+
+  // Generate avatar URL based on userName if no specific image is provided
+  const avatarUri = userImage?.startsWith("http") ? userImage : getAvatarUrl(userName);
+
+  // Get initials from user name for fallback
   const getInitials = (name: string) => {
     if (!name) return "U";
     return name
@@ -28,7 +30,7 @@ const UserProfile: React.FC<Props> = ({ userName, userImage, greeting = "Hi 👋
   };
 
   const renderAvatar = () => {
-    if (!userImage || imageError) {
+    if (imageError) {
       return (
         <View style={styles.avatarContainer}>
           <Text style={styles.avatarText}>{getInitials(userName)}</Text>
@@ -37,13 +39,7 @@ const UserProfile: React.FC<Props> = ({ userName, userImage, greeting = "Hi 👋
     }
 
     return (
-      <Image
-        source={{
-          uri: "https://img.freepik.com/premium-vector/person-with-blue-shirt-that-says-name-person_1029948-7040.jpg",
-        }}
-        style={styles.userImage}
-        onError={handleImageError}
-      />
+      <Image source={{ uri: avatarUri }} style={styles.userImage} onError={handleImageError} />
     );
   };
 
