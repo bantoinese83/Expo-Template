@@ -4,7 +4,6 @@ import React, { useEffect, useState } from "react";
 import { Stack, useRouter, useSegments } from "expo-router";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { SafeAreaProvider } from "react-native-safe-area-context";
-import { KeyboardProvider } from "react-native-keyboard-controller";
 
 import { AuthProvider, useAuth } from "../src/providers/AuthProvider";
 import { ErrorBoundary } from "../src/components/ErrorBoundary";
@@ -61,15 +60,13 @@ function InitialLayout() {
 export default function RootLayout() {
   return (
     <ErrorBoundary>
-      <KeyboardProvider statusBarTranslucent navigationBarTranslucent>
-        <SafeAreaProvider>
-          <QueryClientProvider client={queryClient}>
-            <AuthProvider>
-              <InitialLayout />
-            </AuthProvider>
-          </QueryClientProvider>
-        </SafeAreaProvider>
-      </KeyboardProvider>
+      <SafeAreaProvider>
+        <QueryClientProvider client={queryClient}>
+          <AuthProvider>
+            <InitialLayout />
+          </AuthProvider>
+        </QueryClientProvider>
+      </SafeAreaProvider>
     </ErrorBoundary>
   );
 }

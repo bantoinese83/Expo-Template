@@ -1,7 +1,6 @@
-import { View, ViewProps } from "react-native";
+import { View, ViewProps, KeyboardAvoidingView, Platform } from "react-native";
 import React from "react";
 import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context";
-import { KeyboardAvoidingView } from "react-native-keyboard-controller";
 
 interface Props extends ViewProps {
   children?: React.ReactNode;
@@ -24,7 +23,10 @@ export default function Screen({ className = "", withKeyboard = true, children, 
 
   if (withKeyboard) {
     return (
-      <KeyboardAvoidingView behavior="padding" className="flex-1">
+      <KeyboardAvoidingView
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
+        className="flex-1"
+      >
         {content}
       </KeyboardAvoidingView>
     );
