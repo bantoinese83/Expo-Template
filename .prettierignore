@@ -1,0 +1,8 @@
+node_modules/
+.history/
+.git/
+assets/
+App.js
+index.js
+index.ts
+App.tsx

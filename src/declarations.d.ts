@@ -1,0 +1,32 @@
+declare module "*.png";
+declare module "*.jpg";
+declare module "*.jpeg";
+declare module "*.svg";
+declare module "*.gif";
+
+declare module "@expo/vector-icons";
+declare module "expo-sqlite";
+declare module "expo-camera";
+declare module "expo-image-picker";
+declare module "expo-document-picker";
+declare module "react-native-reanimated";
+declare module "react-native-toast-message";
+declare module "react-redux";
+declare module "react-native-youtube-iframe";
+declare module "react-native-star-rating-widget";
+declare module "react-native-google-places-autocomplete";
+declare module "react-native-maps";
+declare module "expo-location";
+declare module "expo-status-bar";
+declare module "expo-constants";
+declare module "@react-native-community/datetimepicker";
+declare module "react-native-gesture-handler";
+
+declare module "*/useToaster";
+declare module "*/auth.slice";
+declare module "*/toast.slice";
+declare module "*/constants";
+declare module "*/api";
+declare module "*/images";
+declare module "*/hooks/*";
+declare module "*/redux/slices/*";

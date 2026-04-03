@@ -1,0 +1,18 @@
+export const mImages: any = {
+  black_cross: null,
+  avatarSmall: null,
+  logoHorizontal: null,
+  crossRed: null,
+  heartSmall: null,
+  plusSmall: null,
+  messageSmall: null,
+  trash: null,
+  smile: null,
+  sad: null,
+  jpgWhite: null,
+  calendarBlack: null,
+  calendarGray: null,
+  callSmall: null,
+  emailSmall: null,
+  locSmall: null,
+};
