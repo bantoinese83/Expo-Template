@@ -4,4 +4,4 @@ export { default as AppHeader } from "./AppHeader";
 export { ThemeToggle } from "./ThemeToggle";
 export * from "./common";
 export { SplashView } from "./SplashView";
-export { default as ErrorBoundary } from "./ErrorBoundary";
+export { ErrorBoundary } from "./ErrorBoundary";
