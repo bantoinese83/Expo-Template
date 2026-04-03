@@ -39,8 +39,30 @@ export default ts.config(
       "@typescript-eslint/no-explicit-any": "off",
     },
   },
+  {
+    files: ["*.config.js", "babel.config.js"],
+    languageOptions: {
+      globals: {
+        ...globals.node,
+      },
+    },
+    rules: {
+      "@typescript-eslint/no-require-imports": "off",
+    },
+  },
   prettier,
   {
-    ignores: ["node_modules/", ".history/", ".git/", "assets/", "App.js", "index.js", "index.ts", "App.tsx"],
+    ignores: [
+      "node_modules/",
+      ".history/",
+      ".git/",
+      "assets/",
+      "App.js",
+      "index.js",
+      "index.ts",
+      "App.tsx",
+      ".expo/",
+      "dist/",
+    ],
   }
 );

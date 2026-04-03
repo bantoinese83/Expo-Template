@@ -1,43 +1,86 @@
-# Expo Template 
+# 🚀 Ultimate Expo Template (2026 Edition)
 
-A comprehensive, strictly-typed Expo template refactored for performance, maintainability, and clean code.
+A professional, production-ready foundation for building high-fidelity cross-platform apps with Expo and React Native. Designed for 100% type safety, local-first performance, and rapid developer velocity.
 
-## 🚀 Features
+## ✨ Features
 
-- **Strict TypeScript**: 100% type safety with zero `tsc` errors.
-- **Modern ESLint 9**: Flat configuration using `typescript-eslint` and `eslint-plugin-react-native`.
-- **Prettier**: Consistent formatting across the entire codebase.
-- **SOLID & SoC**: Refactored components and logic for better separation of concerns.
-- **DRY Architecture**: Centralized styles and common form field wrappers.
-- **Optimized Performance**: Minimized redundant renders and cleaned dead code.
+### 🏛️ Architecture & Routing
+- **Expo Router (v6+)**: File-based routing with tab management and route protection.
+- **Strict TypeScript**: 100% type coverage with strict-mode enabled.
+- **Design System**: Atomic UI primitives (`AppText`, `AppCard`) powered by **NativeWind v4**.
 
-## 🛠 Tech Stack
+### 🔐 Authentication (Agnostic)
+- **Universal Provider**: Seamlessly switch between **Clerk**, **Supabase**, or **Mock** authentication.
+- **Route Protection**: Automated redirection for unauthenticated users.
 
-- [Expo](https://expo.dev/)
-- [React Native](https://reactnative.dev/)
-- [TypeScript](https://www.typescriptlang.org/)
-- [React Navigation](https://reactnavigation.org/)
-- [ESLint 9](https://eslint.org/)
-- [Prettier](https://prettier.io/)
+### 💾 Data & State
+- **Local-First**: High-speed offline persistence using **Expo SQLite** + **Drizzle ORM**.
+- **Server State**: Efficient caching and synchronization with **TanStack Query (v5)**.
+- **Client State**: Lightweight, persistent store powered by **Zustand**.
 
-## 📂 Project Structure
+### 🌍 Production Extras
+- **Forms & Validation**: Built with `react-hook-form` + `Zod`.
+- **i18n**: Multi-language support with `i18next`.
+- **EAS Optimized**: Standardized `eas.json` profiles for development, preview, and production.
+- **Safe Env**: Strictly typed environment variable validation.
 
-- `src/components`: UI components, including a centralized `common/form` directory.
-- `src/navigation`: Strongly-typed navigators (Stack and Tab).
-- `src/screens`: Organized screen components (Auth, Tabs, Onboarding).
-- `src/utils`: Typed utility functions and local storage management.
-- `theme/`: Centralized `colors`, `fonts`, and `styles`.
+---
 
-## 📜 Available Scripts
+## 🛠️ Getting Started
 
-- `npm run start`: Start the Expo development server.
-- `npm run lint`: Run ESLint to find and fix code quality issues.
-- `npm run format`: Format the codebase using Prettier.
-- `npm run check-types`: Perform a full TypeScript type check.
+### 1. Install Dependencies
+```bash
+npm install
+```
 
-## 🧹 Code Quality
+### 2. Environment Setup
+Create a `.env` file based on your provider:
+```bash
+EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY=pk_test_...
+EXPO_PUBLIC_SUPABASE_URL=https://...
+EXPO_PUBLIC_SUPABASE_ANON_KEY=...
+```
 
-This project adheres to high engineering standards:
-- **No Dead Code**: All commented-out and unused code has been removed.
-- **No Lint Errors**: Passes a clean ESLint run.
-- **Zero Type Errors**: Strict mode enabled with no `any` hacks (where possible).
+### 3. Local Database
+Initialize your local SQLite schema:
+```bash
+npm run db:generate
+npm run db:push
+```
+
+---
+
+## 📖 Key Directories
+
+- `app/`: Routing and layouts (Expo Router).
+- `src/components/`: UI library and business-level components.
+- `src/db/`: SQLite schema and client configuration.
+- `src/hooks/`: Custom hooks for state and domain logic.
+- `src/providers/`: Context providers (Auth, Theme).
+- `src/schemas/`: Zod validation schemas.
+
+---
+
+## 🎨 UI & Design system
+
+We use **NativeWind v4**. You can use Tailwind classes directly on your components:
+```tsx
+<View className="flex-1 bg-white items-center justify-center">
+  <AppText variant="h1" className="text-indigo-600">
+    Hello World
+  </AppText>
+</View>
+```
+
+---
+
+## 🚀 Deployment
+
+Generate a build for internal testing:
+```bash
+eas build --profile preview --platform ios
+```
+
+---
+
+Made with ❤️ for the Expo developer community.

@@ -2,10 +2,10 @@ import { StatusBar } from "expo-status-bar";
 import { View, Text, ScrollView, TouchableOpacity } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { SafeAreaView } from "react-native-safe-area-context";
-import AppHeader from "../src/components/AppHeader";
-import PrimaryButton from "../src/components/common/PrimaryButton";
-import { getAvatarUrl } from "../src/utils/avatar";
-import { useAuth } from "../src/hooks/useAuth";
+import AppHeader from "../../src/components/AppHeader";
+import PrimaryButton from "../../src/components/common/PrimaryButton";
+import { getAvatarUrl } from "../../src/utils/avatar";
+import { useAuth } from "../../src/hooks/useAuth";
 import React from "react";
 
 const FeatureCard = ({ icon, title, desc }: { icon: any; title: string; desc: string }) => (

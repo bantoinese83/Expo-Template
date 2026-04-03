@@ -27,7 +27,7 @@ const AppHeader: React.FC<Props> = ({
     if (onNotificationPress) {
       onNotificationPress();
     } else {
-      // @ts-ignore
+      // @ts-expect-error router push type is dynamic
       router.push("/notifications");
     }
   };

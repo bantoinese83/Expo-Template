@@ -1,31 +1,154 @@
-import React from "react";
-import { View, Text, ScrollView } from "react-native";
+import React, { useState } from "react";
+import { View, Text, ScrollView, TouchableOpacity, Alert } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import PrimaryButton from "../../src/components/common/PrimaryButton";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { useRouter, Link } from "expo-router";
+import { useForm, Controller } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import * as z from "zod";
+
+import PrimaryButton from "../../src/components/common/PrimaryButton";
+import TextField from "../../src/components/common/form/TextField";
+import PasswordField from "../../src/components/common/form/PasswordField";
+import { useAuth } from "../../src/hooks/useAuth";
+import { colors } from "../../theme/colors";
+
+const schema = z
+  .object({
+    name: z.string().min(2, "Name must be at least 2 characters"),
+    email: z.string().email("Invalid email address"),
+    password: z.string().min(6, "Password must be at least 6 characters"),
+    confirmPassword: z.string(),
+  })
+  .refine((data) => data.password === data.confirmPassword, {
+    message: "Passwords don't match",
+    path: ["confirmPassword"],
+  });
+
+type FormData = z.infer<typeof schema>;
 
 export default function SignupScreen() {
+  const router = useRouter();
+  const { signUp } = useAuth();
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const {
+    control,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<FormData>({
+    resolver: zodResolver(schema),
+    defaultValues: {
+      name: "",
+      email: "",
+      password: "",
+      confirmPassword: "",
+    },
+  });
+
+  const onSubmit = async (data: FormData) => {
+    setIsSubmitting(true);
+    try {
+      await signUp(data.email, data.password);
+      Alert.alert("Success", "Account created successfully! Please sign in.", [
+        { text: "OK", onPress: () => router.replace("/login") },
+      ]);
+    } catch (error: any) {
+      Alert.alert("Error", error.message || "Something went wrong");
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
   return (
     <SafeAreaView className="flex-1 bg-white">
-      <ScrollView contentContainerStyle={{ flexGrow: 1, padding: 24, justifyContent: "center" }}>
-        <View className="items-center mb-10">
-          <View className="w-20 h-20 bg-emerald-100 rounded-3xl items-center justify-center mb-6">
-            <MaterialCommunityIcons name="rocket-launch-outline" size={40} color="#10b981" />
+      <ScrollView
+        contentContainerStyle={{ flexGrow: 1, padding: 24 }}
+        showsVerticalScrollIndicator={false}
+      >
+        <View className="items-center mt-4 mb-8">
+          <View className="w-16 h-16 bg-indigo-50 rounded-2xl items-center justify-center mb-4">
+            <MaterialCommunityIcons name="account-plus-outline" size={32} color={colors.primary} />
           </View>
-          <Text className="text-3xl font-bold text-slate-900">Create Account</Text>
-          <Text className="text-slate-500 mt-2 text-center">
-            Zero configuration to get started with Supabase or Clerk.
-          </Text>
+          <Text className="text-2xl font-bold text-slate-900">Create Account</Text>
+          <Text className="text-slate-500 mt-1">Join Monarch Labs today</Text>
         </View>
 
-        <View className="space-y-4">
-          <PrimaryButton title="Get Started with Clerk" onPress={() => {}} />
-          <View className="h-4" />
-          <PrimaryButton
-            title="Get Started with Supabase"
-            onPress={() => {}}
-            className="bg-emerald-600"
+        <View className="mb-6">
+          <Controller
+            control={control}
+            name="name"
+            render={({ field: { onChange, value } }) => (
+              <TextField
+                label="Full Name"
+                placeholder="Enter your name"
+                value={value}
+                onTextChange={onChange}
+                error={errors.name?.message}
+                autoCapitalize="words"
+              />
+            )}
           />
+
+          <Controller
+            control={control}
+            name="email"
+            render={({ field: { onChange, value } }) => (
+              <TextField
+                label="Email Address"
+                placeholder="Enter your email"
+                value={value}
+                onTextChange={onChange}
+                error={errors.email?.message}
+                keyboardType="email-address"
+                autoCapitalize="none"
+              />
+            )}
+          />
+
+          <Controller
+            control={control}
+            name="password"
+            render={({ field: { onChange, value } }) => (
+              <PasswordField
+                label="Password"
+                placeholder="Create a password"
+                value={value}
+                onTextChange={onChange}
+                error={errors.password?.message}
+              />
+            )}
+          />
+
+          <Controller
+            control={control}
+            name="confirmPassword"
+            render={({ field: { onChange, value } }) => (
+              <PasswordField
+                label="Confirm Password"
+                placeholder="Repeat your password"
+                value={value}
+                onTextChange={onChange}
+                error={errors.confirmPassword?.message}
+              />
+            )}
+          />
+        </View>
+
+        <PrimaryButton
+          title="Sign Up"
+          onPress={handleSubmit(onSubmit)}
+          isLoading={isSubmitting}
+          className="mb-6"
+        />
+
+        <View className="flex-row justify-center items-center mt-auto pb-4">
+          <Text className="text-slate-500">Already have an account? </Text>
+          <Link href="/login" asChild>
+            <TouchableOpacity>
+              <Text className="text-indigo-600 font-semibold">Sign In</Text>
+            </TouchableOpacity>
+          </Link>
         </View>
       </ScrollView>
     </SafeAreaView>

@@ -4,6 +4,9 @@
     "ignoreDeprecations": "6.0",
     "strict": true,
     "baseUrl": ".",
+    "jsx": "react-native",
+    "esModuleInterop": true,
+    "skipLibCheck": true,
     "paths": {
       "*": [
         "src/*"
