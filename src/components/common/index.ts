@@ -19,3 +19,4 @@ export { default as ScreenHeader } from "./ScreenHeader";
 export { default as SessionExpiredModal } from "./SessionExpiredModal";
 export { default as CustomToaster } from "./Toaster";
 export { default as VideoComponent } from "./VideoComponent";
+export * from "./Skeleton";

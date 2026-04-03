@@ -19,6 +19,8 @@ interface Props {
   disabled?: boolean;
 }
 
+import * as Haptics from "expo-haptics";
+
 export default function PrimaryButton({
   onPress,
   title,
@@ -29,13 +31,20 @@ export default function PrimaryButton({
   icon,
   disabled,
 }: Props) {
+  const handlePress = () => {
+    if (onPress && !isLoading && !disabled) {
+      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+      onPress();
+    }
+  };
+
   return (
     <TouchableOpacity
       className={`w-full h-12 rounded-xl bg-indigo-600 justify-center items-center flex-row ${
         isLoading || disabled ? "opacity-60" : ""
       } ${className}`}
       style={style}
-      onPress={onPress}
+      onPress={handlePress}
       disabled={isLoading || disabled}
       activeOpacity={0.8}
     >

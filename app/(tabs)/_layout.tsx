@@ -2,9 +2,12 @@ import { Tabs } from "expo-router";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import React from "react";
 import { useTranslation } from "react-i18next";
+import * as Haptics from "expo-haptics";
+import { useTheme } from "../../src/hooks/useTheme";
 
 export default function TabLayout() {
   const { t } = useTranslation();
+  const { isDark } = useTheme();
 
   return (
     <Tabs
@@ -18,6 +21,12 @@ export default function TabLayout() {
           shadowOpacity: 0,
           height: 60,
           paddingBottom: 10,
+          backgroundColor: isDark ? "#020617" : "#ffffff", // slate-950 or white
+        },
+      }}
+      screenListeners={{
+        state: () => {
+          Haptics.selectionAsync();
         },
       }}
     >
