@@ -1,11 +1,12 @@
 import "../global.css";
 import "../src/i18n";
+import React, { useEffect, useState } from "react";
 import { Stack, useRouter, useSegments } from "expo-router";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { SafeAreaProvider } from "react-native-safe-area-context";
+import { KeyboardProvider } from "react-native-keyboard-controller";
+
 import { AuthProvider, useAuth } from "../src/providers/AuthProvider";
-import React, { useEffect, useState } from "react";
-import { ActivityIndicator, View } from "react-native";
 import { ErrorBoundary } from "../src/components/ErrorBoundary";
 import { runMigrations } from "../src/db/migrations";
 import { SplashView } from "../src/components/SplashView";
@@ -20,8 +21,13 @@ function InitialLayout() {
 
   useEffect(() => {
     (async () => {
-      await runMigrations();
-      setIsDbReady(true);
+      try {
+        await runMigrations();
+      } catch (e) {
+        console.error("Migration error:", e);
+      } finally {
+        setIsDbReady(true);
+      }
     })();
   }, []);
 
@@ -37,7 +43,7 @@ function InitialLayout() {
     } else if (isAuthenticated && inAuthGroup) {
       router.replace("/");
     }
-  }, [isAuthenticated, isLoading, segments]);
+  }, [isAuthenticated, isLoading, segments, router]);
 
   if (isLoading) {
     return <SplashView />;
@@ -51,8 +57,6 @@ function InitialLayout() {
     />
   );
 }
-
-import { KeyboardProvider } from "react-native-keyboard-controller";
 
 export default function RootLayout() {
   return (
