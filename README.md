@@ -108,5 +108,5 @@ errorTracking.captureException(error, { category: "payment_flow" });
 
 ---
 
-Made with ❤️ for the Expo developer community.
+Built by Monarch Labs Collective Inc. for the Expo developer community.
 🏆 **100/100 Production Ready.**
