@@ -4,6 +4,7 @@ import React from "react";
 import { useTranslation } from "react-i18next";
 import * as Haptics from "expo-haptics";
 import { useTheme } from "../../src/hooks/useTheme";
+import { TabBarButton } from "../../src/components/ui/TabBarButton";
 
 export default function TabLayout() {
   const { t } = useTranslation();
@@ -52,9 +53,7 @@ export default function TabLayout() {
         name="add-order"
         options={{
           title: "Add",
-          tabBarIcon: ({ color, size }) => (
-            <MaterialCommunityIcons name="plus-circle" size={size + 10} color="#6366f1" />
-          ),
+          tabBarButton: (props) => <TabBarButton {...props} />,
         }}
       />
       <Tabs.Screen

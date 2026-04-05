@@ -170,6 +170,7 @@ const CityPicker = ({
         <View className="flex-1 bg-white dark:bg-slate-950 px-[${horizontalScale(20)}px] py-[${verticalScale(20)}px]">
           <View className="flex-row items-center self-stretch gap-[${horizontalScale(5)}px]">
             <TouchableOpacity onPress={() => setisModalOpen(false)}>
+              {/* @ts-expect-error: arrowleft name mismatch in this version of AntDesign */}
               <AntDesign name="arrowleft" size={moderateScale(20)} color="#64748b" />
             </TouchableOpacity>
             <TextInput

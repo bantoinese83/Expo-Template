@@ -1,6 +1,6 @@
-import React, { createContext, useContext, useEffect, useState } from "react";
-// import * as Clerk from "@clerk/clerk-expo"; // Uncomment to use Clerk
-// import { supabase } from "../utils/supabase"; // Uncomment to use Supabase
+import React, { createContext, useContext, useEffect, useState, useRef, useCallback } from "react";
+// import * as Clerk from "@clerk/clerk-expo"; // Uncomment for Clerk
+// import { supabase } from "../utils/supabase"; // Uncomment for Supabase
 
 interface User {
   id: string;
@@ -13,9 +13,11 @@ interface AuthContextType {
   user: User | null;
   isAuthenticated: boolean;
   isLoading: boolean;
+  error: string | null;
   signIn: (provider?: "clerk" | "supabase" | "mock") => Promise<void>;
   signOut: () => Promise<void>;
   signUp: (email: string, pass: string) => Promise<void>;
+  clearError: () => void;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -23,43 +25,101 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const isMounted = useRef(true);
 
-  // MOCK AUTH INITIALIZATION
   useEffect(() => {
+    isMounted.current = true;
     const initAuth = async () => {
       try {
-        // Here you would check Clerk.useUser() or supabase.auth.getSession()
-        // For now, we simulate a check
-        setTimeout(() => {
-          setIsLoading(false);
+        // Simulation of checking session
+        await new Promise((resolve) => setTimeout(resolve, 800));
+
+        if (isMounted.current) {
+          // Check local storage or provider session here
           // setUser({ id: "1", email: "dev@monarch.com", name: "Modern Developer" });
-        }, 1000);
-      } catch (e) {
-        setIsLoading(false);
+          setIsLoading(false);
+        }
+      } catch (err) {
+        if (isMounted.current) {
+          setError("Failed to initialize authentication");
+          setIsLoading(false);
+        }
       }
     };
+
     initAuth();
+    return () => {
+      isMounted.current = false;
+    };
   }, []);
+
+  const clearError = useCallback(() => setError(null), []);
 
   const signIn = async (provider = "mock") => {
     setIsLoading(true);
-    // Simulate sign in
-    setTimeout(() => {
-      setUser({ id: "1", email: "dev@monarch.com", name: "Modern Developer" });
-      setIsLoading(false);
-    }, 500);
+    setError(null);
+    try {
+      // Branching logic for future providers
+      if (provider === "mock") {
+        await new Promise((resolve) => setTimeout(resolve, 500));
+        if (isMounted.current) {
+          setUser({ id: "1", email: "dev@monarch.com", name: "Modern Developer" });
+        }
+      } else if (provider === "clerk") {
+        // Implement Clerk sign in
+      } else if (provider === "supabase") {
+        // Implement Supabase sign in
+      }
+    } catch (err: any) {
+      if (isMounted.current) {
+        setError(err.message || "An error occurred during sign in");
+      }
+    } finally {
+      if (isMounted.current) {
+        setIsLoading(false);
+      }
+    }
   };
 
   const signOut = async () => {
     setIsLoading(true);
-    setTimeout(() => {
-      setUser(null);
-      setIsLoading(false);
-    }, 500);
+    setError(null);
+    try {
+      await new Promise((resolve) => setTimeout(resolve, 500));
+      if (isMounted.current) {
+        setUser(null);
+      }
+    } catch (err: any) {
+      if (isMounted.current) {
+        setError("Failed to sign out");
+      }
+    } finally {
+      if (isMounted.current) {
+        setIsLoading(false);
+      }
+    }
   };
 
   const signUp = async (email: string, pass: string) => {
-    console.log("Signing up...", email);
+    setIsLoading(true);
+    setError(null);
+    try {
+      console.log("Signing up...", email);
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+      // Simulation: assume successful sign up logs you in
+      if (isMounted.current) {
+        setUser({ id: "2", email, name: email.split("@")[0] });
+      }
+    } catch (err: any) {
+      if (isMounted.current) {
+        setError(err.message || "Failed to sign up");
+      }
+    } finally {
+      if (isMounted.current) {
+        setIsLoading(false);
+      }
+    }
   };
 
   return (
@@ -68,9 +128,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         user,
         isAuthenticated: !!user,
         isLoading,
+        error,
         signIn,
         signOut,
         signUp,
+        clearError,
       }}
     >
       {children}

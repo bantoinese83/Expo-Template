@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { View, ScrollView, TextInput, TouchableOpacity, Image, Alert } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useForm, Controller } from "react-hook-form";
+import { useRouter, Link } from "expo-router";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as ImagePicker from "expo-image-picker";
 import { useTranslation } from "react-i18next";
@@ -15,6 +16,7 @@ import { useAuth } from "../../src/hooks/useAuth";
 import { ThemeToggle } from "../../src/components/ThemeToggle";
 
 export default function ProfileScreen() {
+  const router = useRouter();
   const { t } = useTranslation();
   const { user, signOut } = useAuth();
   const [avatar, setAvatar] = useState<string | null>(user?.avatarUrl || null);
@@ -59,10 +61,10 @@ export default function ProfileScreen() {
         <View className="flex-row justify-between items-center mb-8">
           <AppText variant="h1">{t("profile")}</AppText>
           <TouchableOpacity
-            onPress={signOut}
-            className="w-10 h-10 bg-rose-50 rounded-full items-center justify-center"
+            onPress={() => router.push("/settings")}
+            className="w-10 h-10 bg-slate-100 dark:bg-slate-800 rounded-full items-center justify-center"
           >
-            <MaterialCommunityIcons name="logout" size={20} color="#f43f5e" />
+            <MaterialCommunityIcons name="cog-outline" size={24} color="#64748b" />
           </TouchableOpacity>
         </View>
 

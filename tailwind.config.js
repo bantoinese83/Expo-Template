@@ -15,6 +15,18 @@ module.exports = {
         dark: {
           DEFAULT: "#020617",
         },
+        surface: {
+          light: "#ffffff",
+          dark: "#0f172a", // slate-900
+        },
+        muted: {
+          light: "#64748b", // slate-500
+          dark: "#94a3b8", // slate-400
+        },
+        border: {
+          light: "#e2e8f0", // slate-200
+          dark: "#1e293b", // slate-800
+        },
       },
     },
   },

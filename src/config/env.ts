@@ -6,9 +6,10 @@ import Constants from "expo-constants";
  * Type-safe and fails fast if any key is missing.
  */
 const envSchema = z.object({
-  EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY: z.string().optional(),
-  EXPO_PUBLIC_SUPABASE_URL: z.string().url().optional(),
-  EXPO_PUBLIC_SUPABASE_ANON_KEY: z.string().optional(),
+  EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY: z.string().min(1, "Clerk Publishable Key is required"),
+  EXPO_PUBLIC_SUPABASE_URL: z.string().url("Valid Supabase URL is required"),
+  EXPO_PUBLIC_SUPABASE_ANON_KEY: z.string().min(1, "Supabase Anon Key is required"),
+  EXPO_PUBLIC_SENTRY_DSN: z.string().optional(), // Sentry is optional but recommended
 });
 
 const _env = envSchema.safeParse({
@@ -17,11 +18,14 @@ const _env = envSchema.safeParse({
     process.env.EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY,
   EXPO_PUBLIC_SUPABASE_URL: process.env.EXPO_PUBLIC_SUPABASE_URL,
   EXPO_PUBLIC_SUPABASE_ANON_KEY: process.env.EXPO_PUBLIC_SUPABASE_ANON_KEY,
+  EXPO_PUBLIC_SENTRY_DSN: process.env.EXPO_PUBLIC_SENTRY_DSN,
 });
 
 if (!_env.success) {
   console.error("❌ Invalid environment variables:", _env.error.format());
-  // throw new Error("Invalid environment variables");
+  if (!__DEV__) {
+    throw new Error("Invalid environment variables. Please check your .env file.");
+  }
 }
 
-export const env = _env.data || {};
+export const env = _env.data || ({} as z.infer<typeof envSchema>);

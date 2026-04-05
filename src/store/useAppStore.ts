@@ -7,6 +7,7 @@ interface AppState {
   setTheme: (theme: "light" | "dark" | "system") => void;
   isFirstLaunch: boolean;
   completeOnboarding: () => void;
+  version: number;
 }
 
 export const useAppStore = create<AppState>()(
@@ -16,10 +17,18 @@ export const useAppStore = create<AppState>()(
       setTheme: (theme) => set({ theme }),
       isFirstLaunch: true,
       completeOnboarding: () => set({ isFirstLaunch: false }),
+      version: 1,
     }),
     {
       name: "app-storage",
+      version: 1, // Store version for migrations
       storage: createJSONStorage(() => AsyncStorage),
+      migrate: (persistedState: any, version: number) => {
+        if (version === 0) {
+          // Perform migration logic if needed
+        }
+        return persistedState as AppState;
+      },
     }
   )
 );

@@ -8,7 +8,7 @@ A professional, production-ready foundation for building high-fidelity cross-pla
 
 - **Expo Router (v6+)**: File-based routing with tab management and route protection.
 - **Strict TypeScript**: 100% type coverage with strict-mode enabled.
-- **Design System**: Atomic UI primitives (`AppText`, `AppCard`) powered by **NativeWind v4**.
+- **Design System**: Atomic UI primitives (`AppButton`, `AppInput`, `AppModal`) powered by **NativeWind v4**.
 
 ### 🔐 Authentication (Agnostic)
 
@@ -21,12 +21,11 @@ A professional, production-ready foundation for building high-fidelity cross-pla
 - **Server State**: Efficient caching and synchronization with **TanStack Query (v5)**.
 - **Client State**: Lightweight, persistent store powered by **Zustand**.
 
-### 🌍 Production Extras
+### 🛠️ Tooling & Quality
 
-- **Forms & Validation**: Built with `react-hook-form` + `Zod`.
-- **i18n**: Multi-language support with `i18next`.
-- **EAS Optimized**: Standardized `eas.json` profiles for development, preview, and production.
-- **Safe Env**: Strictly typed environment variable validation.
+- **Automated Testing**: Integrated **Jest** setup for unit and component testing.
+- **CI/CD**: GitHub Actions for automated linting, type-checking, and formatting.
+- **Error Tracking**: Global `ErrorBoundary` with recovery support via `expo-updates`.
 
 ---
 
@@ -35,17 +34,15 @@ A professional, production-ready foundation for building high-fidelity cross-pla
 ### 1. Install Dependencies
 
 ```bash
-npm install
+npm install --legacy-peer-deps
 ```
 
 ### 2. Environment Setup
 
-Create a `.env` file based on your provider:
+Create a `.env` file based on `.env.example`:
 
 ```bash
-EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY=pk_test_...
-EXPO_PUBLIC_SUPABASE_URL=https://...
-EXPO_PUBLIC_SUPABASE_ANON_KEY=...
+cp .env.example .env
 ```
 
 ### 3. Local Database
@@ -57,40 +54,60 @@ npm run db:generate
 npm run db:push
 ```
 
+### 4. Start Development
+
+```bash
+npm run ios # or npm run android
+```
+
 ---
 
 ## 📖 Key Directories
 
-- `app/`: Routing and layouts (Expo Router).
-- `src/components/`: UI library and business-level components.
-- `src/db/`: SQLite schema and client configuration.
-- `src/hooks/`: Custom hooks for state and domain logic.
-- `src/providers/`: Context providers (Auth, Theme).
-- `src/schemas/`: Zod validation schemas.
+- `app/`: Routing and layouts (Expo Router). Use `(auth)` for login flow and `(tabs)` for the main app.
+- `src/components/ui/`: Atomic UI kit. High-fidelity, haptic-enabled primitives.
+- `src/db/`: SQLite schema (`schema.ts`) and Drizzle client.
+- `src/hooks/`: Custom hooks (Auth, Theme, etc.).
+- `src/providers/`: Global context providers.
+- `src/store/`: Zustand persistent state.
 
 ---
 
-## 🎨 UI & Design system
+## 🏗️ Architecture Best Practices
 
-We use **NativeWind v4**. You can use Tailwind classes directly on your components:
+### Adding a New Screen
 
-```tsx
-<View className="flex-1 bg-white items-center justify-center">
-  <AppText variant="h1" className="text-indigo-600">
-    Hello World
-  </AppText>
-</View>
-```
+1. Create a new file in `app/`.
+2. Wrap your content in a `View` with `flex-1`.
+3. Use `AppText` and `AppButton` from the UI kit for consistency.
+
+### Updating Database Schema
+
+1. Modify `src/db/schema.ts`.
+2. Run `npm run db:generate` to create a migration.
+3. Run `npm run db:push` to apply changes to your local DB.
+
+### Handling API Calls
+
+1. Define a service function in `src/services/`.
+2. Use `useQuery` or `useMutation` from `@tanstack/react-query` in your components.
 
 ---
 
-## 🚀 Deployment
+## 🚀 Quality & Deployment
 
-Generate a build for internal testing:
+### Run All Checks
+
+Before pushing, ensure all checks pass:
 
 ```bash
-eas build --profile preview --platform ios
+npm run check-all
 ```
+
+### Deployment Strategy
+
+- **Preview**: `eas build --profile preview` (Internal testing).
+- **Production**: `eas build --profile production` (App Store / Play Store).
 
 ---
 

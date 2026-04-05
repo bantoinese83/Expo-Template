@@ -1,29 +1,36 @@
-import { StatusBar } from "expo-status-bar";
-import { View, Text, ScrollView, TouchableOpacity } from "react-native";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { SafeAreaView } from "react-native-safe-area-context";
-import AppHeader from "../../src/components/AppHeader";
-import PrimaryButton from "../../src/components/common/PrimaryButton";
-import { getAvatarUrl } from "../../src/utils/avatar";
-import { useAuth } from "../../src/hooks/useAuth";
 import React from "react";
+import { View, Text, TouchableOpacity } from "react-native";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { useRouter } from "expo-router";
+
+import AppHeader from "../../src/components/AppHeader";
+import { AppButton } from "../../src/components/ui/AppButton";
+import { AppText } from "../../src/components/ui/AppText";
+import { AppCard } from "../../src/components/ui/AppCard";
+import { ScreenWrapper } from "../../src/components/ui/ScreenWrapper";
+import { useAuth } from "../../src/hooks/useAuth";
+import { getAvatarUrl } from "../../src/utils/avatar";
 
 const FeatureCard = ({ icon, title, desc }: { icon: any; title: string; desc: string }) => (
-  <View className="w-[47%] bg-white dark:bg-slate-900 rounded-2xl p-4 mb-4 border border-slate-200 dark:border-slate-800 shadow-sm">
-    <View className="w-10 h-10 rounded-lg bg-indigo-50 dark:bg-indigo-900/30 items-center justify-center">
+  <AppCard className="w-[48%] mb-4" padding="md">
+    <View className="w-10 h-10 rounded-lg bg-primary/10 dark:bg-primary/20 items-center justify-center">
       <MaterialCommunityIcons name={icon} size={24} color="#6366f1" />
     </View>
-    <Text className="text-slate-900 dark:text-white font-semibold text-base mt-3">{title}</Text>
-    <Text className="text-slate-500 dark:text-slate-400 text-xs mt-1 leading-4">{desc}</Text>
-  </View>
+    <AppText variant="h3" className="mt-3 text-base">
+      {title}
+    </AppText>
+    <AppText variant="body" className="text-slate-500 dark:text-slate-400 text-xs mt-1 leading-4">
+      {desc}
+    </AppText>
+  </AppCard>
 );
 
 export default function Home() {
   const { user, signOut } = useAuth();
+  const router = useRouter();
 
   return (
-    <SafeAreaView className="flex-1 bg-white dark:bg-slate-950" edges={["top", "left", "right"]}>
-      <StatusBar style="auto" />
+    <ScreenWrapper scrollable padding={false}>
       <AppHeader
         userName={user?.name || "Developer"}
         userImage={getAvatarUrl(user?.name || "Dev")}
@@ -32,54 +39,57 @@ export default function Home() {
         notificationCount={3}
       />
 
-      <ScrollView showsVerticalScrollIndicator={false} contentContainerClassName="pb-10">
+      <View className="px-5 pb-10">
         {/* Hero Section */}
-        <View className="px-6 py-8 items-center">
-          <Text className="text-center font-bold text-2xl leading-9 dark:text-white">
+        <View className="py-8 items-center">
+          <AppText variant="h1" className="text-center text-3xl">
             The Ultimate Expo{"\n"}
-            <Text className="text-indigo-600">TypeScript Template</Text>
-          </Text>
-          <Text className="text-center text-slate-500 dark:text-slate-400 mt-4 text-sm leading-5 px-2">
+            <Text className="text-primary">TypeScript Template</Text>
+          </AppText>
+          <AppText
+            variant="body"
+            className="text-center text-slate-500 dark:text-slate-400 mt-4 text-sm leading-5 px-4"
+          >
             Enterprise-ready foundation with strict typing, clean architecture, and modern styling
             powered by NativeWind.
-          </Text>
-          <View className="mt-6 w-[60%] h-12">
-            <PrimaryButton
-              title="Sign Out (Demo)"
-              onPress={signOut}
-              className="bg-rose-50 dark:bg-rose-900/20"
-              textClassName="text-rose-600"
-            />
-          </View>
+          </AppText>
         </View>
 
         {/* Stats Row */}
-        <View className="flex-row bg-indigo-50/50 dark:bg-indigo-900/10 mx-6 rounded-2xl py-4 items-center justify-around">
+        <View className="flex-row bg-primary/5 dark:bg-primary/10 rounded-2xl py-5 items-center justify-around">
           <View className="items-center">
-            <Text className="font-bold text-lg text-indigo-600">0</Text>
-            <Text className="text-[11px] text-slate-500 dark:text-slate-400">Type Errors</Text>
+            <Text className="font-bold text-xl text-primary">0</Text>
+            <Text className="text-[11px] font-medium text-slate-500 dark:text-slate-400">
+              Type Errors
+            </Text>
           </View>
           <View className="w-[1px] h-3/5 bg-slate-200 dark:bg-slate-800" />
           <View className="items-center">
-            <Text className="font-bold text-lg text-emerald-500">100%</Text>
-            <Text className="text-[11px] text-slate-500 dark:text-slate-400">Strict Mode</Text>
+            <Text className="font-bold text-xl text-emerald-500">100%</Text>
+            <Text className="text-[11px] font-medium text-slate-500 dark:text-slate-400">
+              Strict Mode
+            </Text>
           </View>
           <View className="w-[1px] h-3/5 bg-slate-200 dark:bg-slate-800" />
           <View className="items-center">
-            <Text className="font-bold text-lg text-sky-400">v2026</Text>
-            <Text className="text-[11px] text-slate-500 dark:text-slate-400">Stability</Text>
+            <Text className="font-bold text-xl text-sky-400">v2026</Text>
+            <Text className="text-[11px] font-medium text-slate-500 dark:text-slate-400">
+              Stability
+            </Text>
           </View>
         </View>
 
-        {/* Features Grid */}
-        <View className="flex-row justify-between items-center px-6 mt-8 mb-4">
-          <Text className="font-semibold text-lg dark:text-white">Core Features</Text>
-          <TouchableOpacity>
-            <Text className="font-medium text-sm text-indigo-600">See All</Text>
+        {/* Features Content */}
+        <View className="flex-row justify-between items-center mt-10 mb-4">
+          <AppText variant="h2" className="text-lg">
+            Core Features
+          </AppText>
+          <TouchableOpacity onPress={() => router.push("/orders")}>
+            <Text className="font-medium text-sm text-primary">Explore App</Text>
           </TouchableOpacity>
         </View>
 
-        <View className="flex-row flex-wrap px-4 justify-between">
+        <View className="flex-row flex-wrap justify-between">
           <FeatureCard
             icon="shield-check"
             title="Type Safety"
@@ -87,7 +97,7 @@ export default function Home() {
           />
           <FeatureCard
             icon="layers-outline"
-            title="Clean Architecture"
+            title="Architecture"
             desc="Separation of concerns using hooks and services."
           />
           <FeatureCard
@@ -102,14 +112,24 @@ export default function Home() {
           />
         </View>
 
-        {/* Footer */}
-        <View className="mt-10 items-center">
-          <Text className="text-slate-400 text-xs">Made with ❤️ by</Text>
-          <Text className="font-semibold text-sm text-slate-900 dark:text-white mt-1">
-            Monarch Labs
-          </Text>
+        {/* Footer & Actions */}
+        <View className="mt-8 space-y-4">
+          <AppButton
+            title="Demo Account Sign Out"
+            onPress={signOut}
+            variant="outline"
+            className="border-rose-100 dark:border-rose-900/30"
+            textClassName="text-rose-600"
+          />
+
+          <View className="pt-8 items-center">
+            <AppText variant="body" className="text-slate-400 text-xs text-center">
+              Made with ❤️ for the Expo developer community.{"\n"}
+              <Text className="font-semibold text-slate-900 dark:text-white">Monarch Labs</Text>
+            </AppText>
+          </View>
         </View>
-      </ScrollView>
-    </SafeAreaView>
+      </View>
+    </ScreenWrapper>
   );
 }

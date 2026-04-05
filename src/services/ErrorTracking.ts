@@ -1,9 +1,10 @@
+import * as Sentry from "@sentry/react-native";
 import { logger } from "../utils/logger";
+import { env } from "../config/env";
 
 /**
- * Agnostic Error Tracking Service.
- * This acts as a wrapper for services like Sentry, Bugsnag, or Datadog.
- * In a production app, initialize your tracking SDK here.
+ * Agnostic Error Tracking Service (Sentry Implementation).
+ * This acts as a wrapper for Sentry.
  */
 class ErrorTrackingService {
   private isInitialized: boolean = false;
@@ -11,21 +12,29 @@ class ErrorTrackingService {
   init() {
     if (this.isInitialized) return;
 
-    // TODO: Initialize Sentry or other service
-    // Sentry.init({ dsn: 'YOUR_DSN' });
-
-    this.isInitialized = true;
-    logger.info("Error Tracking Service initialized (Mocked)");
+    if (env.EXPO_PUBLIC_SENTRY_DSN) {
+      Sentry.init({
+        dsn: env.EXPO_PUBLIC_SENTRY_DSN,
+        debug: __DEV__,
+        environment: __DEV__ ? "development" : "production",
+      });
+      this.isInitialized = true;
+      logger.info("Sentry Tracking Service initialized");
+    } else {
+      logger.warn("Sentry DSN missing. Error tracking is disabled.");
+    }
   }
 
   /**
-   * Captures an exception and sends it to the configured tracking service.
+   * Captures an exception and sends it to Sentry.
    */
   captureException(error: Error | unknown, context?: Record<string, any>) {
-    logger.error("Capturing Exception", error, context);
+    if (__DEV__) {
+      logger.error("Capturing Exception (Sentry Mock)", error, context);
+    }
 
     if (this.isInitialized) {
-      // Sentry.captureException(error, { extra: context });
+      Sentry.captureException(error, { extra: context });
     }
   }
 
@@ -34,7 +43,7 @@ class ErrorTrackingService {
    */
   setUser(userId: string, email?: string) {
     if (this.isInitialized) {
-      // Sentry.setUser({ id: userId, email });
+      Sentry.setUser({ id: userId, email });
     }
   }
 
@@ -43,7 +52,7 @@ class ErrorTrackingService {
    */
   addBreadcrumb(message: string, category?: string) {
     if (this.isInitialized) {
-      // Sentry.addBreadcrumb({ message, category });
+      Sentry.addBreadcrumb({ message, category });
     }
   }
 }

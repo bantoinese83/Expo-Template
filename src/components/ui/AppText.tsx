@@ -21,8 +21,22 @@ export const AppText: React.FC<AppTextProps> = ({
     caption: "text-sm text-slate-400 dark:text-slate-500",
   };
 
+  // Maps variants to accessibility roles
+  const accessibilityRoles: Record<string, any> = {
+    h1: "header",
+    h2: "header",
+    h3: "header",
+    body: "text",
+    caption: "text",
+  };
+
   return (
-    <Text className={`${variantStyles[variant]} ${className}`} style={style} {...props}>
+    <Text
+      className={`${variantStyles[variant]} ${className}`}
+      style={style}
+      accessibilityRole={accessibilityRoles[variant]}
+      {...props}
+    >
       {children}
     </Text>
   );

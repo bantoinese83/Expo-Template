@@ -1,8 +1,7 @@
 import React from "react";
-import { PanGestureHandler, GestureHandlerRootView } from "react-native-gesture-handler";
+import { Gesture, GestureDetector, GestureHandlerRootView } from "react-native-gesture-handler";
 
 import Animated, {
-  useAnimatedGestureHandler,
   useAnimatedStyle,
   useSharedValue,
   withSpring,
@@ -16,47 +15,45 @@ interface Props {
 
 const DrageableWrapper = ({ children, onThresholdReached }: Props) => {
   const y = useSharedValue(0);
+  const contextY = useSharedValue(0);
 
-  const workletFunction = (args: number) => {
-    if (args > 200) {
-      onThresholdReached();
-    }
+  const triggerThreshold = () => {
+    onThresholdReached();
   };
 
-  const panGestureEvent = useAnimatedGestureHandler({
-    onStart: (_: any, context: any) => {
-      context.y = y.value;
-    },
-    onActive: (event: any, context: any) => {
-      runOnJS(workletFunction)(y.value);
-      if (y.value > -5) {
-        y.value = event.translationY + context.y;
+  const panGesture = Gesture.Pan()
+    .onStart(() => {
+      contextY.value = y.value;
+    })
+    .onUpdate((event) => {
+      y.value = event.translationY + contextY.value;
+      if (y.value > 200) {
+        runOnJS(triggerThreshold)();
       }
-    },
-    onEnd: () => {
+    })
+    .onEnd(() => {
       if (y.value > 200) {
         y.value = withSpring(400);
       } else {
         y.value = withSpring(0);
       }
-    },
-  });
+    });
 
   const panStyle = useAnimatedStyle(() => {
     return {
       transform: [
         {
-          translateY: y.value,
+          translateY: Math.max(0, y.value), // Prevent dragging upwards
         },
       ],
     };
-  }, [y]);
+  });
 
   return (
     <GestureHandlerRootView>
-      <PanGestureHandler onGestureEvent={panGestureEvent}>
+      <GestureDetector gesture={panGesture}>
         <Animated.View style={[panStyle]}>{children}</Animated.View>
-      </PanGestureHandler>
+      </GestureDetector>
     </GestureHandlerRootView>
   );
 };

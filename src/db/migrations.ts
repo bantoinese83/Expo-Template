@@ -1,23 +1,32 @@
+import { migrate } from "drizzle-orm/expo-sqlite/migrator";
+import { db } from "./client";
+import migrations from "../../drizzle/migrations";
 import { logger } from "../utils/logger";
+import { errorTracking } from "../services/ErrorTracking";
 
 /**
- * Runs database migrations.
- * This should be called during the app's initialization phase.
+ * Runs database migrations automatically.
+ * This is called during the app's initialization phase in app/_layout.tsx.
  */
 export async function runMigrations() {
+  const startTime = Date.now();
   try {
-    // In many Expo environments, you won't have migrations generated yet.
-    // We check for valid migrations before attempting to run them.
-    logger.info("Checking database state...");
+    logger.info("Database: Checking for migrations...");
 
-    // In a template, we can't easily include the generated migrations.js
-    // until the user runs `npm run db:generate`.
-    // We'll provide a helpful log instead of crashing.
+    // This will execute any pending migrations in the drizzle/ directory
+    await migrate(db, migrations);
 
-    // For now, we skip the automated call if we are in a fresh template state
-    // but keep the infrastructure ready.
-    logger.info("Database is ready (Sync). Run 'npm run db:generate' to use migrations.");
+    const duration = Date.now() - startTime;
+    logger.info(`Database: Migrations completed successfully in ${duration}ms.`);
   } catch (error) {
-    logger.error("Migration failed", error);
+    logger.error("Database: Migration failed critically", error);
+
+    // Track the migration failure for production monitoring
+    errorTracking.captureException(error, {
+      context: "db_migration",
+      timestamp: new Date().toISOString(),
+    });
+
+    throw error;
   }
 }

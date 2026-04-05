@@ -15,7 +15,8 @@
     },
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.monarch.expotemplate"
+      "bundleIdentifier": "com.monarch.expotemplate",
+      "associatedDomains": ["applinks:your-domain.com"]
     },
     "android": {
       "adaptiveIcon": {
@@ -24,7 +25,20 @@
         "backgroundImage": "./assets/android-icon-background.png",
         "monochromeImage": "./assets/android-icon-monochrome.png"
       },
-      "package": "com.monarch.expotemplate"
+      "package": "com.monarch.expotemplate",
+      "intentFilters": [
+        {
+          "action": "VIEW",
+          "data": [
+            {
+              "scheme": "https",
+              "host": "your-domain.com",
+              "pathPrefix": "/deep"
+            }
+          ],
+          "category": ["BROWSABLE", "DEFAULT"]
+        }
+      ]
     },
     "web": {
       "favicon": "./assets/favicon.png",
