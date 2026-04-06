@@ -1,5 +1,21 @@
 import "@testing-library/jest-native/extend-expect";
 
+jest.mock("@react-native-community/netinfo", () => {
+  const unsub = jest.fn();
+  return {
+    __esModule: true,
+    default: {
+      addEventListener: jest.fn(() => unsub),
+      fetch: jest.fn(() =>
+        Promise.resolve({
+          isConnected: true,
+          isInternetReachable: true,
+        })
+      ),
+    },
+  };
+});
+
 // Mocking Expo constants and modules
 jest.mock("expo-constants", () => ({
   default: {

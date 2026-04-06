@@ -36,10 +36,10 @@ export default function LoginScreen() {
     },
   });
 
-  const onSubmit = async (_data: FormData) => {
+  const onSubmit = async (data: FormData) => {
     setIsSubmitting(true);
     try {
-      await signIn("mock");
+      await signIn("mock", { email: data.email, password: data.password });
     } catch (error: any) {
       Alert.alert("Error", error.message || "Invalid credentials");
     } finally {

@@ -1,7 +1,8 @@
 import * as SQLite from "expo-sqlite";
 
-// Database configuration
-const DB_NAME = "etailor.db";
+import { SQLITE_DATABASE_FILE_NAME } from "../db/sqliteDatabase";
+
+const DB_NAME = SQLITE_DATABASE_FILE_NAME;
 const DB_VERSION = 2; // Incremented for suit_images table
 
 // Initialize database
@@ -785,12 +786,12 @@ export const CustomerStorage = {
       }
 
       // Check if customer has any orders
-      const orders: any[] = await db.getAllAsync(
+      const countRow: { count: number } | null = await db.getFirstAsync(
         "SELECT COUNT(*) as count FROM orders WHERE customer_id = ?",
         [customerId]
       );
 
-      if (orders[0].count > 0) {
+      if ((countRow?.count ?? 0) > 0) {
         throw new Error("Cannot delete customer with existing orders");
       }
 

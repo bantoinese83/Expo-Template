@@ -26,8 +26,8 @@ export default function TabLayout() {
         },
       }}
       screenListeners={{
-        state: () => {
-          Haptics.selectionAsync();
+        tabPress: () => {
+          void Haptics.selectionAsync();
         },
       }}
     >

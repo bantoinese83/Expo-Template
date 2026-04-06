@@ -48,10 +48,9 @@ export default function SignupScreen() {
   const onSubmit = async (data: FormData) => {
     setIsSubmitting(true);
     try {
-      await signUp(data.email, data.password);
-      Alert.alert("Success", "Account created successfully! Please sign in.", [
-        { text: "OK", onPress: () => router.replace("/login") },
-      ]);
+      await signUp(data.email, data.password, data.name);
+      router.replace("/");
+      Alert.alert("Welcome", "Your account is ready.");
     } catch (error: any) {
       Alert.alert("Error", error.message || "Something went wrong");
     } finally {

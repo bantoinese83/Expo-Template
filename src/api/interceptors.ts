@@ -1,18 +1,20 @@
 import { AxiosError, InternalAxiosRequestConfig, AxiosResponse } from "axios";
 import { logger } from "../utils/logger";
 import { errorTracking } from "../services/ErrorTracking";
+import { getSessionAccessToken } from "../services/sessionToken";
 
 /**
  * Request Interceptor: Adds Auth tokens and logs requests in DEV.
  */
-export const requestInterceptor = (config: InternalAxiosRequestConfig) => {
+export const requestInterceptor = async (config: InternalAxiosRequestConfig) => {
   if (__DEV__) {
     logger.info(`[API Request] ${config.method?.toUpperCase()} ${config.url}`);
   }
 
-  // Example: Add Auth token from SecureStore or state
-  // const token = await SecureStore.getItemAsync('auth_token');
-  // if (token) config.headers.Authorization = `Bearer ${token}`;
+  const token = getSessionAccessToken();
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`;
+  }
 
   return config;
 };

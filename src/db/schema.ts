@@ -25,17 +25,3 @@ export const settings = sqliteTable(
     return [index("key_idx").on(table.key)];
   }
 );
-
-export const orders = sqliteTable(
-  "orders",
-  {
-    id: integer("id").primaryKey({ autoIncrement: true }),
-    customerName: text("customer_name").notNull(),
-    amount: text("amount").notNull(),
-    status: text("status").$default(() => "pending"),
-    createdAt: integer("created_at", { mode: "timestamp" }).$defaultFn(() => new Date()),
-  },
-  (table) => {
-    return [index("customer_name_idx").on(table.customerName)];
-  }
-);

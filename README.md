@@ -36,13 +36,17 @@ npm install --legacy-peer-deps
 
 ### 2. Environment Setup
 
-Create your `.env` file. **Important**: The app uses strict Zod validation and will fail-fast on boot if required keys are missing.
+Create your `.env` file from the example. **Mock-only development** works with no Clerk or Supabase keys: leave those variables unset or empty. When you add a provider, set the keys for that provider; if you use Supabase, set **both** `EXPO_PUBLIC_SUPABASE_URL` and `EXPO_PUBLIC_SUPABASE_ANON_KEY`. In code, call `isClerkConfigured()` / `isSupabaseConfigured()` from `src/config/env.ts` before initializing those SDKs.
 
 ```bash
 cp .env.example .env
 ```
 
+Invalid values (for example a malformed URL) still fail validation. In production builds, bad configuration throws at startup so misconfiguration is not silent.
+
 ### 3. Database Initialization
+
+The app uses a **single SQLite file** (`app.sqlite`, see `src/db/sqliteDatabase.ts`) for Drizzle migrations and for optional legacy storage helpers such as `src/utils/orderStorage.ts`, so schemas stay in one place. The Drizzle demo `orders` table was removed to avoid colliding with CRM-style `orders` from `orderStorage`.
 
 ```bash
 npm run db:generate
@@ -54,6 +58,8 @@ npm run db:push
 ```bash
 npm start
 ```
+
+For PRs and local conventions, see [CONTRIBUTING.md](./CONTRIBUTING.md). TanStack Query is wired to **network status** (`@react-native-community/netinfo`) and **app foreground** so queries pause offline and can **refetch on reconnect**; Axios reads the session token from `src/services/sessionToken.ts` (updated from `AuthProvider`).
 
 ---
 

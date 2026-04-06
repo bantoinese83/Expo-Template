@@ -1,5 +1,5 @@
 import React, { ErrorInfo, ReactNode } from "react";
-import { View, TouchableOpacity, ScrollView, StyleSheet } from "react-native";
+import { View, TouchableOpacity, ScrollView, StyleSheet, Alert } from "react-native";
 import { AlertCircle, RefreshCw, ChevronRight } from "lucide-react-native";
 import * as Updates from "expo-updates";
 import { LinearGradient } from "expo-linear-gradient";
@@ -18,21 +18,25 @@ interface State {
   hasError: boolean;
   error: Error | null;
   showDetails: boolean;
+  reportReference: string | null;
 }
 
 export class ErrorBoundary extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
-    this.state = { hasError: false, error: null, showDetails: false };
+    this.state = { hasError: false, error: null, showDetails: false, reportReference: null };
   }
 
   static getDerivedStateFromError(error: Error): State {
-    return { hasError: true, error, showDetails: false };
+    return { hasError: true, error, showDetails: false, reportReference: null };
   }
 
   componentDidCatch(error: Error, errorInfo: ErrorInfo) {
     logger.error("Global Error Caught", error, errorInfo);
     errorTracking.captureException(error, { errorInfo });
+    const reportReference =
+      `REF-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 6)}`.toUpperCase();
+    this.setState({ reportReference });
   }
 
   handleRestart = async () => {
@@ -40,8 +44,18 @@ export class ErrorBoundary extends React.Component<Props, State> {
       await Updates.reloadAsync();
     } catch (_e) {
       // Fallback reload if Updates fails
-      this.setState({ hasError: false, error: null });
+      this.setState({ hasError: false, error: null, reportReference: null, showDetails: false });
     }
+  };
+
+  handleSendReport = () => {
+    const { error } = this.state;
+    if (!error) return;
+    errorTracking.captureException(error, {
+      user_reported: true,
+      report_reference: this.state.reportReference ?? undefined,
+    });
+    Alert.alert("Thank you", "Your report was sent. We will use it to improve stability.");
   };
 
   render() {
@@ -77,7 +91,7 @@ export class ErrorBoundary extends React.Component<Props, State> {
 
               <AppButton
                 title="Send Error Report"
-                onPress={() => {}}
+                onPress={this.handleSendReport}
                 variant="outline"
                 className="w-full border-slate-200"
               />
@@ -117,7 +131,9 @@ export class ErrorBoundary extends React.Component<Props, State> {
 
           <View className="pb-10 items-center">
             <AppText variant="caption" className="text-slate-300">
-              Error Hash: {Math.random().toString(36).substring(7).toUpperCase()}
+              {this.state.reportReference
+                ? `Reference: ${this.state.reportReference}`
+                : "Preparing reference..."}
             </AppText>
           </View>
         </View>

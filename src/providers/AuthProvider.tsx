@@ -2,6 +2,8 @@ import React, { createContext, useContext, useEffect, useState, useRef, useCallb
 // import * as Clerk from "@clerk/clerk-expo"; // Uncomment for Clerk
 // import { supabase } from "../utils/supabase"; // Uncomment for Supabase
 
+import { setSessionAccessToken } from "../services/sessionToken";
+
 interface User {
   id: string;
   email: string;
@@ -9,14 +11,19 @@ interface User {
   avatarUrl?: string;
 }
 
+export type SignInCredentials = { email?: string; password?: string };
+
 interface AuthContextType {
   user: User | null;
   isAuthenticated: boolean;
   isLoading: boolean;
   error: string | null;
-  signIn: (provider?: "clerk" | "supabase" | "mock") => Promise<void>;
+  signIn: (
+    provider?: "clerk" | "supabase" | "mock",
+    credentials?: SignInCredentials
+  ) => Promise<void>;
   signOut: () => Promise<void>;
-  signUp: (email: string, pass: string) => Promise<void>;
+  signUp: (email: string, pass: string, name?: string) => Promise<void>;
   clearError: () => void;
 }
 
@@ -54,9 +61,17 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     };
   }, []);
 
+  useEffect(() => {
+    if (user) {
+      setSessionAccessToken(`template_mock_${user.id}`);
+    } else {
+      setSessionAccessToken(null);
+    }
+  }, [user]);
+
   const clearError = useCallback(() => setError(null), []);
 
-  const signIn = async (provider = "mock") => {
+  const signIn = async (provider = "mock", credentials?: SignInCredentials) => {
     setIsLoading(true);
     setError(null);
     try {
@@ -64,12 +79,14 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       if (provider === "mock") {
         await new Promise((resolve) => setTimeout(resolve, 500));
         if (isMounted.current) {
-          setUser({ id: "1", email: "dev@monarch.com", name: "Modern Developer" });
+          const email = credentials?.email?.trim() || "dev@monarch.com";
+          const localPart = email.includes("@") ? email.split("@")[0] : email;
+          setUser({ id: "1", email, name: localPart || "Developer" });
         }
       } else if (provider === "clerk") {
-        // Implement Clerk sign in
+        throw new Error("Clerk sign-in is not configured in this template yet.");
       } else if (provider === "supabase") {
-        // Implement Supabase sign in
+        throw new Error("Supabase sign-in is not configured in this template yet.");
       }
     } catch (err: any) {
       if (isMounted.current) {
@@ -101,15 +118,16 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   };
 
-  const signUp = async (email: string, _pass: string) => {
+  const signUp = async (email: string, _pass: string, name?: string) => {
     setIsLoading(true);
     setError(null);
     try {
-      console.log("Signing up...", email);
       await new Promise((resolve) => setTimeout(resolve, 1000));
       // Simulation: assume successful sign up logs you in
       if (isMounted.current) {
-        setUser({ id: "2", email, name: email.split("@")[0] });
+        const trimmed = email.trim();
+        const displayName = (name?.trim() || trimmed.split("@")[0] || "Member").slice(0, 80);
+        setUser({ id: "2", email: trimmed, name: displayName });
       }
     } catch (err: any) {
       if (isMounted.current) {

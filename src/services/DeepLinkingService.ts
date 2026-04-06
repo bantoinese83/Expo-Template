@@ -34,10 +34,19 @@ class DeepLinkingService {
       //   router.push({ pathname: '/(auth)/reset-password', params: parsed.queryParams });
       // }
 
-      if (parsed.path) {
-        // Fallback: attempt to route directly if path exists
-        router.push(parsed.path as any);
+      const rawPath = parsed.path?.trim();
+      if (!rawPath || rawPath === "/") {
+        return;
       }
+
+      // Avoid blindly pushing unknown hosts or schemes into the in-app router
+      const path = rawPath.startsWith("/") ? rawPath : `/${rawPath}`;
+      if (path.includes("..")) {
+        logger.warn("[Linking] Ignored path with parent segments", path);
+        return;
+      }
+
+      router.push(path as Parameters<typeof router.push>[0]);
     } catch (error) {
       logger.error("[Linking] Failed to parse URL", error);
     }

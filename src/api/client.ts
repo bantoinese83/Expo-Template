@@ -7,7 +7,7 @@ import { requestInterceptor, responseInterceptor, errorInterceptor } from "./int
  * Optimized for React Query, typed responses, and centralized error handling.
  */
 const apiClient = axios.create({
-  baseURL: (env as any).EXPO_PUBLIC_API_URL || "https://api.example.com",
+  baseURL: env.EXPO_PUBLIC_API_URL ?? "https://api.example.com",
   timeout: 15000,
   headers: {
     "Content-Type": "application/json",
