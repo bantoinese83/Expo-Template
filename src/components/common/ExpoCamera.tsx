@@ -5,7 +5,7 @@ import { AntDesign, MaterialIcons, Ionicons } from "@expo/vector-icons";
 import Animated, { useAnimatedStyle, useSharedValue, interpolate } from "react-native-reanimated";
 import { verticalScale } from "../../../utils/responsive/metrices";
 
-const { width, height } = Dimensions.get("screen");
+const { width } = Dimensions.get("screen");
 
 interface ExpoCameraProps {
   visibility: boolean;

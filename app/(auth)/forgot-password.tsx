@@ -1,5 +1,5 @@
 import React from "react";
-import { View, ScrollView } from "react-native";
+import { ScrollView } from "react-native";
 import { AppText } from "../../src/components/ui/AppText";
 import { SafeAreaView } from "react-native-safe-area-context";
 import PrimaryButton from "../../src/components/common/PrimaryButton";

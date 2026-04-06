@@ -40,7 +40,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           // setUser({ id: "1", email: "dev@monarch.com", name: "Modern Developer" });
           setIsLoading(false);
         }
-      } catch (err) {
+      } catch (_err) {
         if (isMounted.current) {
           setError("Failed to initialize authentication");
           setIsLoading(false);
@@ -90,7 +90,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       if (isMounted.current) {
         setUser(null);
       }
-    } catch (err: any) {
+    } catch (_err: any) {
       if (isMounted.current) {
         setError("Failed to sign out");
       }
@@ -101,7 +101,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   };
 
-  const signUp = async (email: string, pass: string) => {
+  const signUp = async (email: string, _pass: string) => {
     setIsLoading(true);
     setError(null);
     try {

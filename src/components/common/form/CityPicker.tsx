@@ -1,14 +1,5 @@
 import React, { useState, useEffect, memo } from "react";
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  Modal,
-  Dimensions,
-  TextInput,
-  ScrollView,
-  Image,
-} from "react-native";
+import { View, Text, TouchableOpacity, Modal, TextInput, ScrollView, Image } from "react-native";
 import { AntDesign, Feather, MaterialIcons, Entypo } from "@expo/vector-icons";
 import {
   horizontalScale,
@@ -16,8 +7,6 @@ import {
   verticalScale,
 } from "../../../../utils/responsive/metrices";
 import ErrorMessage from "../ErrorMessage";
-
-const { width, height } = Dimensions.get("screen");
 
 interface PickerItem {
   label: string;

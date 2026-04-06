@@ -35,7 +35,14 @@ export default ts.config(
       "react/react-in-jsx-scope": "off",
       "react-native/no-inline-styles": "off",
       "react-native/no-raw-text": "off",
-      "@typescript-eslint/no-unused-vars": "off",
+      "@typescript-eslint/no-unused-vars": [
+        "error",
+        {
+          argsIgnorePattern: "^_",
+          varsIgnorePattern: "^_",
+          caughtErrorsIgnorePattern: "^_",
+        },
+      ],
       "@typescript-eslint/no-explicit-any": "off",
     },
   },
@@ -57,6 +64,7 @@ export default ts.config(
       ".history/",
       ".git/",
       "assets/",
+      "coverage/",
       "App.js",
       "index.js",
       "index.ts",

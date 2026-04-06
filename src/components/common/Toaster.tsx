@@ -49,7 +49,7 @@ const CustomToaster = () => {
 
   return (
     <View className="absolute -bottom-[100px] w-full px-5 flex-col">
-      {toasts.map((message: ToastMessage, index: number) => (
+      {toasts.map((message: ToastMessage) => (
         <Toaster key={message.id} toast={message} />
       ))}
     </View>

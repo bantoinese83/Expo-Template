@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from "react";
-import { TouchableOpacity, View, Platform, GestureResponderEvent, Animated } from "react-native";
+import { TouchableOpacity, Platform, GestureResponderEvent, Animated } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import * as Haptics from "expo-haptics";
 

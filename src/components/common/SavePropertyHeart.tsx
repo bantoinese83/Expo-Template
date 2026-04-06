@@ -1,7 +1,6 @@
-import { Text, TouchableOpacity, ActivityIndicator } from "react-native";
+import { TouchableOpacity, ActivityIndicator } from "react-native";
 import React, { useState } from "react";
 import { AntDesign } from "@expo/vector-icons";
-import { useAuth } from "../../hooks/useAuth";
 import { useToaster } from "../../hooks/useToaster";
 
 interface Props {
@@ -10,10 +9,9 @@ interface Props {
   onRefresh: () => void;
 }
 
-export default function SavePropertyHeart({ isFav, id, onRefresh }: Props) {
+export default function SavePropertyHeart({ isFav, id: _id, onRefresh }: Props) {
   const { toastAlert } = useToaster();
   const [loading, setLoading] = useState(false);
-  const { user } = useAuth();
 
   const addToFav = async () => {
     // Mock API call since API.post might not be available/configured the same way

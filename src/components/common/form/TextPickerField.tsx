@@ -1,10 +1,9 @@
-import React, { useState, useEffect, memo, useCallback, useMemo } from "react";
+import React, { useState, memo, useCallback, useMemo } from "react";
 import {
   View,
   Text,
   TouchableOpacity,
   Modal,
-  Dimensions,
   TextInput,
   Image,
   Platform,
@@ -21,8 +20,6 @@ import {
   verticalScale,
 } from "../../../../utils/responsive/metrices";
 import ErrorMessage from "../ErrorMessage";
-
-const { height: SCREEN_HEIGHT } = Dimensions.get("window");
 
 export interface PickerItem {
   label: string;

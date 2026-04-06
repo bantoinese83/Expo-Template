@@ -1,9 +1,6 @@
 import React from "react";
 import { View, ScrollView, StyleSheet } from "react-native";
 import { useRouter } from "expo-router";
-import { useTranslation } from "react-i18next";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
-
 import { AppText } from "../../src/components/ui/AppText";
 import { AppCard } from "../../src/components/ui/AppCard";
 import { SettingItem } from "../../src/components/ui/SettingItem";
@@ -16,7 +13,6 @@ import { useAuth } from "../../src/hooks/useAuth";
  */
 export default function SettingsScreen() {
   const router = useRouter();
-  const { t } = useTranslation();
   const { signOut, user } = useAuth();
 
   const navigateToLegal = (type: string) => {

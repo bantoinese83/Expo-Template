@@ -15,7 +15,7 @@ import MenuUserInfo from "./MenuUserInfo";
 import { useMenuLinks } from "./useMenuLinks";
 import { useAuth } from "../../../hooks/useAuth";
 
-const { width, height } = Dimensions.get("screen");
+const { width } = Dimensions.get("screen");
 
 export default function SideBarMenu() {
   const router = useRouter();

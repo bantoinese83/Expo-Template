@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { View, ScrollView, TextInput, TouchableOpacity, Image, Alert } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useForm, Controller } from "react-hook-form";
-import { useRouter, Link } from "expo-router";
+import { useRouter } from "expo-router";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as ImagePicker from "expo-image-picker";
 import { useTranslation } from "react-i18next";
@@ -18,7 +18,7 @@ import { ThemeToggle } from "../../src/components/ThemeToggle";
 export default function ProfileScreen() {
   const router = useRouter();
   const { t } = useTranslation();
-  const { user, signOut } = useAuth();
+  const { user } = useAuth();
   const [avatar, setAvatar] = useState<string | null>(user?.avatarUrl || null);
 
   const {

@@ -46,7 +46,7 @@ export default function AddOrderScreen() {
       toastAlert("Order created successfully!", true);
       reset();
       router.push("/orders");
-    } catch (error) {
+    } catch (_error) {
       toastAlert("Failed to create order", false);
     }
   };

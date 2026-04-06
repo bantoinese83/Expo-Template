@@ -1,4 +1,4 @@
-import { View, ViewProps, KeyboardAvoidingView, Platform } from "react-native";
+import { ViewProps, KeyboardAvoidingView, Platform } from "react-native";
 import React from "react";
 import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context";
 

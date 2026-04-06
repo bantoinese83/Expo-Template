@@ -38,7 +38,7 @@ export class ErrorBoundary extends React.Component<Props, State> {
   handleRestart = async () => {
     try {
       await Updates.reloadAsync();
-    } catch (e) {
+    } catch (_e) {
       // Fallback reload if Updates fails
       this.setState({ hasError: false, error: null });
     }
