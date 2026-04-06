@@ -1,0 +1,18 @@
+import { QueryClient } from "@tanstack/react-query";
+
+export const appQueryDefaultOptions = {
+  staleTime: 1000 * 60 * 5,
+  gcTime: 1000 * 60 * 60 * 24,
+  retry: 2,
+  refetchOnReconnect: true,
+  refetchOnWindowFocus: false,
+} as const;
+
+/** Factory so tests can create isolated clients without shared module state. */
+export function createAppQueryClient(): QueryClient {
+  return new QueryClient({
+    defaultOptions: {
+      queries: { ...appQueryDefaultOptions },
+    },
+  });
+}

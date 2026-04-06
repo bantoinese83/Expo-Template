@@ -1,3 +1,2 @@
-import { useAuth } from "../providers/AuthProvider";
-
-export { useAuth };
+export { useAuth } from "@/features/auth";
+export type { AuthContextValue, AuthUser, SignInCredentials } from "@/features/auth";

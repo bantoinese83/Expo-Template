@@ -9,6 +9,7 @@ A battle-hardened, 100/100 quality foundation for building high-fidelity cross-p
 ### 🏛️ Architecture & Routing
 
 - **Expo Router (v6+)**: Type-safe, file-based routing with deep link and universal link support.
+- **Modular shell**: `src/app/` composes providers and `RootGate`; `src/features/` holds testable slices (auth, navigation rules, DB migrations, deep links).
 - **Strict TypeScript**: 100% coverage with zero `any` types and strict validation.
 - **Design System**: Atomic UI Kit (`AppButton`, `AppInput`, `AppCard`) powered by **NativeWind v4** and **Reanimated 4**.
 

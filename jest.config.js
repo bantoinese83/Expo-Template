@@ -9,5 +9,6 @@ module.exports = {
   collectCoverageFrom: ["src/**/*.{ts,tsx}", "!src/**/*.test.{ts,tsx}", "!src/test/**/*.{ts,tsx}"],
   moduleNameMapper: {
     "^axios$": require.resolve("axios"),
+    "^@/(.*)$": "<rootDir>/src/$1",
   },
 };

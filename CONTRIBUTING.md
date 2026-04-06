@@ -20,6 +20,15 @@ npm run check-all
 
 This runs ESLint, TypeScript (`tsc`), Prettier, and Jest.
 
+## Architecture
+
+- **`src/app/`** — Shell composition: `bootstrapAppShell`, `AppProviders`, `RootGate`, and the persisted `QueryClient` singleton (override `queryClient` in `AppProviders` for tests).
+- **`src/features/*`** — Vertical slices with focused hooks and types (`auth`, `navigation`, `database`, `linking`). Prefer adding behavior here instead of growing `app/_layout.tsx`.
+- **`src/query/`** — TanStack Query factory (`createAppQueryClient`), persistence helper, and NetInfo / focus wiring.
+- **`src/components/`**, **`src/services/`**, **`src/db/`** — Shared UI, integrations, and local data.
+
+Pure routing rules live in `src/features/navigation/authRedirect.ts` with unit tests alongside.
+
 ## Imports
 
 Prefer the `@/` alias for anything under `src/` (for example `@/components/AppHeader` instead of long `../../` paths). `tsconfig.json` and `babel.config.js` are configured for Metro and tests.
