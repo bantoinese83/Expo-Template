@@ -12,7 +12,7 @@ export type AsyncStorageLike = {
 };
 
 /**
- * Persists the TanStack Query cache to AsyncStorage. Call once per `QueryClient` instance.
+ * Persists the TanStack Query cache to storage. Call once per `QueryClient` instance.
  */
 export function setupQueryPersistence(queryClient: QueryClient, storage: AsyncStorageLike): void {
   const persister = createAsyncStoragePersister({

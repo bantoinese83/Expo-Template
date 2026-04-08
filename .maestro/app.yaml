@@ -1,0 +1,7 @@
+appId: com.monarch.expotemplate
+---
+- launchApp
+- assertVisible: "Settings"
+- assertVisible: "Home"
+- tapOn: "Settings"
+- assertVisible: "Theme"
