@@ -1,6 +1,21 @@
 import { create } from "zustand";
-import { persist, createJSONStorage } from "zustand/middleware";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import { persist, createJSONStorage, StateStorage } from "zustand/middleware";
+import { createMMKV } from "react-native-mmkv";
+
+const storage = createMMKV();
+
+const zustandStorage: StateStorage = {
+  setItem: (name, value) => {
+    return storage.set(name, value);
+  },
+  getItem: (name) => {
+    const value = storage.getString(name);
+    return value ?? null;
+  },
+  removeItem: (name) => {
+    storage.remove(name);
+  },
+};
 
 interface AppState {
   theme: "light" | "dark" | "system";
@@ -22,7 +37,7 @@ export const useAppStore = create<AppState>()(
     {
       name: "app-storage",
       version: 1, // Store version for migrations
-      storage: createJSONStorage(() => AsyncStorage),
+      storage: createJSONStorage(() => zustandStorage),
       migrate: (persistedState: any, version: number) => {
         if (version === 0) {
           // Perform migration logic if needed
