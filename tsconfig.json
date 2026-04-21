@@ -7,10 +7,9 @@
     "esModuleInterop": true,
     "skipLibCheck": true,
     "paths": {
-      "@/*": ["src/*"],
-      "*": ["src/*"]
+      "@/*": ["src/*"]
     },
     "types": ["jest"]
   },
-  "include": ["**/*.ts", "**/*.tsx", ".expo/types/**/*.ts", "expo-env.d.ts", "nativewind-env.d.ts"]
+  "include": [".expo/types/**/*.ts", "expo-env.d.ts", "**/*.ts", "**/*.tsx", "nativewind-env.d.ts"]
 }

@@ -1,22 +1,36 @@
-import { useEffect } from "react";
-import { useColorScheme as useNativeWindColorScheme } from "nativewind";
+import { useEffect, useMemo } from "react";
+import { colorScheme as nativewindColorScheme } from "nativewind";
 import { useAppStore } from "../store/useAppStore";
 import { useColorScheme as useDeviceColorScheme } from "react-native";
 
+/**
+ * Theme persistence (Zustand) + NativeWind / RN appearance.
+ *
+ * Do **not** use NativeWind's `useColorScheme()` hook here: it subscribes to css-interop observables and
+ * can synchronously flush updates during render/commit. That has been observed to trip React Navigation's
+ * context ("Couldn't find a navigation context") when toggling scheme from screens like Profile.
+ *
+ * The imperative `colorScheme` API from NativeWind updates `Appearance` without hook subscriptions.
+ */
 export const useTheme = () => {
-  const { colorScheme, setColorScheme } = useNativeWindColorScheme();
   const theme = useAppStore((state) => state.theme);
   const setTheme = useAppStore((state) => state.setTheme);
   const deviceColorScheme = useDeviceColorScheme();
 
-  // Sync with NativeWind on theme change
+  const resolvedScheme = useMemo<"light" | "dark">(() => {
+    if (theme === "system") {
+      return deviceColorScheme === "dark" ? "dark" : "light";
+    }
+    return theme;
+  }, [theme, deviceColorScheme]);
+
   useEffect(() => {
     if (theme === "system") {
-      setColorScheme(deviceColorScheme ?? "light");
+      nativewindColorScheme.set("system");
     } else {
-      setColorScheme(theme);
+      nativewindColorScheme.set(resolvedScheme);
     }
-  }, [theme, deviceColorScheme, setColorScheme]);
+  }, [theme, resolvedScheme]);
 
   const toggleTheme = (newTheme: "light" | "dark" | "system") => {
     setTheme(newTheme);
@@ -25,7 +39,7 @@ export const useTheme = () => {
   return {
     theme,
     toggleTheme,
-    colorScheme, // The actual active color scheme (light or dark)
-    isDark: colorScheme === "dark",
+    colorScheme: resolvedScheme,
+    isDark: resolvedScheme === "dark",
   };
 };

@@ -1,5 +1,5 @@
 import React from "react";
-import { View, TouchableOpacity, Switch, StyleSheet } from "react-native";
+import { View, TouchableOpacity, Switch } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { AppText } from "./AppText";
 
@@ -23,10 +23,14 @@ export const SettingItem: React.FC<SettingItemProps> = React.memo(
     const isDanger = type === "danger";
 
     const content = (
-      <View style={styles.container}>
-        <View style={styles.leftContent}>
+      <View className="flex-row items-center justify-between py-[14px] px-md bg-transparent">
+        <View className="flex-row items-center">
           {icon && (
-            <View style={[styles.iconContainer, isDanger && styles.dangerIconContainer]}>
+            <View
+              className={`w-8 h-8 rounded-sm items-center justify-center mr-3 ${
+                isDanger ? "bg-rose-50 dark:bg-rose-900/20" : "bg-slate-100 dark:bg-slate-800"
+              }`}
+            >
               <MaterialCommunityIcons
                 name={icon as any}
                 size={20}
@@ -44,7 +48,7 @@ export const SettingItem: React.FC<SettingItemProps> = React.memo(
           </AppText>
         </View>
 
-        <View style={styles.rightContent}>
+        <View className="flex-row items-center">
           {isToggle ? (
             <Switch
               value={!!value}
@@ -79,34 +83,3 @@ export const SettingItem: React.FC<SettingItemProps> = React.memo(
     );
   }
 );
-
-const styles = StyleSheet.create({
-  container: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-    paddingVertical: 14,
-    paddingHorizontal: 16,
-    backgroundColor: "transparent",
-  },
-  leftContent: {
-    flexDirection: "row",
-    alignItems: "center",
-  },
-  iconContainer: {
-    width: 32,
-    height: 32,
-    borderRadius: 8,
-    backgroundColor: "#f1f5f9",
-    alignItems: "center",
-    justifyContent: "center",
-    marginRight: 12,
-  },
-  dangerIconContainer: {
-    backgroundColor: "#fef2f2",
-  },
-  rightContent: {
-    flexDirection: "row",
-    alignItems: "center",
-  },
-});

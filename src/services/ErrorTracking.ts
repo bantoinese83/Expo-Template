@@ -1,5 +1,4 @@
 import * as Sentry from "@sentry/react-native";
-import { logger } from "../utils/logger";
 import { env } from "../config/env";
 
 /**
@@ -19,9 +18,9 @@ class ErrorTrackingService {
         environment: __DEV__ ? "development" : "production",
       });
       this.isInitialized = true;
-      logger.info("Sentry Tracking Service initialized");
+      console.info("[ErrorTracking]: Sentry Tracking Service initialized");
     } else {
-      logger.warn("Sentry DSN missing. Error tracking is disabled.");
+      console.warn("[ErrorTracking]: Sentry DSN missing. Error tracking is disabled.");
     }
   }
 
@@ -30,7 +29,7 @@ class ErrorTrackingService {
    */
   captureException(error: Error | unknown, context?: Record<string, any>) {
     if (__DEV__) {
-      logger.error("Capturing Exception (Sentry Mock)", error, context);
+      console.error("[ErrorTracking] Capturing Exception:", error, context);
     }
 
     if (this.isInitialized) {

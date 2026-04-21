@@ -3,10 +3,8 @@ import { View } from "react-native";
 import { FlashList } from "@shopify/flash-list";
 const TypedFlashList = FlashList as any;
 
-import { AppText } from "../../src/components/ui/AppText";
-import { AppCard } from "../../src/components/ui/AppCard";
-import { ScreenWrapper } from "../../src/components/ui/ScreenWrapper";
-import { AppCardSkeleton } from "../../src/components/ui/AppSkeleton";
+import { AppText, AppCard, ScreenWrapper, AppCardSkeleton, EmptyState } from "@/components/ui";
+import { Users } from "lucide-react-native";
 
 type Customer = {
   id: string;
@@ -32,7 +30,7 @@ export default function CustomersScreen() {
   }, []);
 
   const renderItem = ({ item }: { item: Customer }) => (
-    <AppCard className="mb-4">
+    <AppCard className="mb-md">
       <AppText variant="h3">{item.name}</AppText>
       <AppText variant="body" className="text-slate-500">
         {item.email}
@@ -42,11 +40,11 @@ export default function CustomersScreen() {
 
   return (
     <ScreenWrapper>
-      <View className="py-4">
-        <AppText variant="h1" className="mb-2">
+      <View className="py-md">
+        <AppText variant="h1" className="mb-xs">
           Customers
         </AppText>
-        <AppText variant="body" className="text-slate-500 mb-6">
+        <AppText variant="body" className="text-slate-500 mb-lg">
           Your client directory and contact information.
         </AppText>
       </View>
@@ -64,11 +62,11 @@ export default function CustomersScreen() {
           estimatedItemSize={85}
           showsVerticalScrollIndicator={false}
           ListEmptyComponent={
-            <View className="items-center justify-center mt-10">
-              <AppText variant="body" className="text-slate-400">
-                No customers found.
-              </AppText>
-            </View>
+            <EmptyState
+              title="No customers found"
+              description="Your client list will appear here."
+              Icon={Users}
+            />
           }
         />
       )}

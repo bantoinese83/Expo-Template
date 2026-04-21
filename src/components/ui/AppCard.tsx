@@ -21,16 +21,16 @@ export const AppCard: React.FC<AppCardProps> = React.memo(
 
     const paddings = {
       none: "p-0",
-      sm: "p-3",
-      md: "p-4",
-      lg: "p-6",
+      sm: "p-sm",
+      md: "p-md",
+      lg: "p-lg",
     };
 
     const Container = onPress ? Pressable : (View as any);
 
     return (
       <Container
-        className={`rounded-2xl ${variants[variant]} ${paddings[padding]} ${className}`}
+        className={`rounded-lg ${variants[variant]} ${paddings[padding]} ${className}`}
         onPress={onPress}
         {...(onPress ? { android_ripple: { color: "#e2e8f0" } } : {})}
         {...props}

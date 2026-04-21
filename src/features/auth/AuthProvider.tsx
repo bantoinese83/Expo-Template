@@ -1,122 +1,59 @@
-import React, { createContext, useCallback, useContext, useEffect, useRef, useState } from "react";
+import React, { createContext, useCallback, useContext, useEffect, useState } from "react";
 
-import { setSessionAccessToken } from "@/services/sessionToken";
+import { initSession, onSessionExpired, setSessionAccessToken } from "@/services/sessionToken";
 
-import type { AuthContextValue, AuthProviderId, AuthUser, SignInCredentials } from "./auth.types";
+import type { AuthContextValue } from "./auth.types";
+
+import { useMockAuth } from "./hooks/useMockAuth";
 
 const AuthContext = createContext<AuthContextValue | undefined>(undefined);
 
+/**
+ * Global Authentication Provider.
+ * Modularized to separate UI context from provider-specific logic.
+ */
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [user, setUser] = useState<AuthUser | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  const isMounted = useRef(true);
+  const {
+    user,
+    isLoading: isAuthLoading,
+    error: authError,
+    signIn,
+    signUp,
+    signOut,
+    setError,
+  } = useMockAuth();
+  const [isInitializing, setIsInitializing] = useState(true);
 
   useEffect(() => {
-    isMounted.current = true;
-    const initAuth = async () => {
-      try {
-        await new Promise((resolve) => setTimeout(resolve, 800));
-
-        if (isMounted.current) {
-          setIsLoading(false);
-        }
-      } catch (_err) {
-        if (isMounted.current) {
-          setError("Failed to initialize authentication");
-          setIsLoading(false);
-        }
-      }
+    // Initial boot check (e.g., check secure store for tokens)
+    const init = async () => {
+      await initSession();
+      // Simulating a small delay for demo purposes
+      await new Promise((resolve) => setTimeout(resolve, 500));
+      setIsInitializing(false);
     };
-
-    initAuth();
-    return () => {
-      isMounted.current = false;
-    };
+    init();
   }, []);
 
   useEffect(() => {
-    if (user) {
-      setSessionAccessToken(`template_mock_${user.id}`);
-    } else {
-      setSessionAccessToken(null);
-    }
+    // Sync the token module with the current auth state
+    setSessionAccessToken(user ? `template_mock_${user.id}` : null);
   }, [user]);
 
-  const clearError = useCallback(() => setError(null), []);
+  useEffect(() => {
+    // Listen for global session expiration events (e.g. from API interceptors)
+    return onSessionExpired(() => {
+      signOut();
+    });
+  }, [signOut]);
 
-  const signIn = async (provider: AuthProviderId = "mock", credentials?: SignInCredentials) => {
-    setIsLoading(true);
-    setError(null);
-    try {
-      if (provider === "mock") {
-        await new Promise((resolve) => setTimeout(resolve, 500));
-        if (isMounted.current) {
-          const email = credentials?.email?.trim() || "dev@monarch.com";
-          const localPart = email.includes("@") ? email.split("@")[0] : email;
-          setUser({ id: "1", email, name: localPart || "Developer" });
-        }
-      } else if (provider === "clerk") {
-        throw new Error("Clerk sign-in is not configured in this template yet.");
-      } else if (provider === "supabase") {
-        throw new Error("Supabase sign-in is not configured in this template yet.");
-      }
-    } catch (err: unknown) {
-      if (isMounted.current) {
-        setError(err instanceof Error ? err.message : "An error occurred during sign in");
-      }
-    } finally {
-      if (isMounted.current) {
-        setIsLoading(false);
-      }
-    }
-  };
-
-  const signOut = async () => {
-    setIsLoading(true);
-    setError(null);
-    try {
-      await new Promise((resolve) => setTimeout(resolve, 500));
-      if (isMounted.current) {
-        setUser(null);
-      }
-    } catch (_err: unknown) {
-      if (isMounted.current) {
-        setError("Failed to sign out");
-      }
-    } finally {
-      if (isMounted.current) {
-        setIsLoading(false);
-      }
-    }
-  };
-
-  const signUp = async (email: string, _pass: string, name?: string) => {
-    setIsLoading(true);
-    setError(null);
-    try {
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-      if (isMounted.current) {
-        const trimmed = email.trim();
-        const displayName = (name?.trim() || trimmed.split("@")[0] || "Member").slice(0, 80);
-        setUser({ id: "2", email: trimmed, name: displayName });
-      }
-    } catch (err: unknown) {
-      if (isMounted.current) {
-        setError(err instanceof Error ? err.message : "Failed to sign up");
-      }
-    } finally {
-      if (isMounted.current) {
-        setIsLoading(false);
-      }
-    }
-  };
+  const clearError = useCallback(() => setError(null), [setError]);
 
   const value: AuthContextValue = {
     user,
     isAuthenticated: !!user,
-    isLoading,
-    error,
+    isLoading: isInitializing || isAuthLoading,
+    error: authError,
     signIn,
     signOut,
     signUp,

@@ -7,7 +7,7 @@ import { SafeAreaProvider } from "react-native-safe-area-context";
 import { AuthProvider } from "@/features/auth";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
 
-import { getOrCreateQueryClient } from "./queryClientSingleton";
+import { getOrCreateQueryClient } from "@/query/queryClientSingleton";
 
 export type AppProvidersProps = {
   children: React.ReactNode;

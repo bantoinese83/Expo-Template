@@ -43,16 +43,16 @@ export const AppModal: React.FC<AppModalProps> = ({
                 animate={{ translateY: 0 }}
                 exit={{ translateY: SCREEN_HEIGHT }}
                 transition={{ type: "spring", damping: 20, stiffness: 100 }}
-                className="bg-white dark:bg-slate-900 rounded-t-3xl px-6 pt-4 pb-12 w-full"
+                className="bg-white dark:bg-slate-900 rounded-t-xl px-lg pt-md pb-xxl w-full"
               >
                 {/* Handle for drag indicator style */}
-                <View className="items-center mb-4">
+                <View className="items-center mb-md">
                   <View className="w-12 h-1.5 bg-slate-200 dark:bg-slate-800 rounded-full" />
                 </View>
 
                 {/* Header */}
                 {(title || showCloseButton) && (
-                  <View className="flex-row items-center justify-between mb-6">
+                  <View className="flex-row items-center justify-between mb-lg">
                     {title ? (
                       <AppText variant="h2" className="flex-1">
                         {title}
@@ -64,7 +64,7 @@ export const AppModal: React.FC<AppModalProps> = ({
                     {showCloseButton && (
                       <TouchableOpacity
                         onPress={onClose}
-                        className="p-2 bg-slate-100 dark:bg-slate-800 rounded-full"
+                        className="p-xs bg-slate-100 dark:bg-slate-800 rounded-full"
                       >
                         <X size={20} color="#94a3b8" />
                       </TouchableOpacity>

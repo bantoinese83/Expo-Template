@@ -2,9 +2,10 @@ import { Tabs } from "expo-router";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import React from "react";
 import { useTranslation } from "react-i18next";
-import * as Haptics from "expo-haptics";
-import { useTheme } from "../../src/hooks/useTheme";
-import { TabBarButton } from "../../src/components/ui/TabBarButton";
+import { useTheme } from "@/hooks/useTheme";
+import { TabBarButton } from "@/components/ui/TabBarButton";
+import { colors } from "@/theme/tokens";
+import { hapticService } from "@/services/HapticService";
 
 export default function TabLayout() {
   const { t } = useTranslation();
@@ -14,20 +15,20 @@ export default function TabLayout() {
     <Tabs
       screenOptions={{
         headerShown: false,
-        tabBarActiveTintColor: "#6366f1",
-        tabBarInactiveTintColor: "#94a3b8",
+        tabBarActiveTintColor: colors.primary,
+        tabBarInactiveTintColor: colors.slate[400],
         tabBarStyle: {
           borderTopWidth: 0,
           elevation: 0,
           shadowOpacity: 0,
           height: 60,
           paddingBottom: 10,
-          backgroundColor: isDark ? "#020617" : "#ffffff", // slate-950 or white
+          backgroundColor: isDark ? colors.background.dark : colors.background.light,
         },
       }}
       screenListeners={{
         tabPress: () => {
-          void Haptics.selectionAsync();
+          hapticService.selection();
         },
       }}
     >

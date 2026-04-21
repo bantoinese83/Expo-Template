@@ -1,7 +1,9 @@
 import "../global.css";
 import "@/i18n";
 
-import { AppProviders, bootstrapAppShell, RootGate } from "@/app";
+import { bootstrapAppShell } from "@/bootstrap";
+import { AppProviders } from "@/providers/AppProviders";
+import { RootGate } from "@/providers/RootGate";
 
 bootstrapAppShell();
 

@@ -3,13 +3,10 @@ import { View } from "react-native";
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-import { useRouter } from "expo-router";
+import { useRouter, Href } from "expo-router";
 
-import { AppText } from "../../src/components/ui/AppText";
-import { AppInput } from "../../src/components/ui/AppInput";
-import { AppButton } from "../../src/components/ui/AppButton";
-import { ScreenWrapper } from "../../src/components/ui/ScreenWrapper";
-import { useToaster } from "../../src/hooks/useToaster";
+import { AppText, AppInput, AppButton, ScreenWrapper, AppCard } from "@/components/ui";
+import { useToaster } from "@/hooks/useToaster";
 
 const orderSchema = z.object({
   customerName: z.string().min(2, "Customer name is required"),
@@ -37,15 +34,12 @@ export default function AddOrderScreen() {
     },
   });
 
-  const onSubmit = async (data: OrderFormData) => {
+  const onSubmit = async (_data: OrderFormData) => {
     try {
-      // Simulate DB save
       await new Promise((resolve) => setTimeout(resolve, 1000));
-      console.log("Order data:", data);
-
       toastAlert("Order created successfully!", true);
       reset();
-      router.push("/orders");
+      router.push("/orders" as Href);
     } catch (_error) {
       toastAlert("Failed to create order", false);
     }
@@ -53,54 +47,56 @@ export default function AddOrderScreen() {
 
   return (
     <ScreenWrapper scrollable title="New Order">
-      <View className="py-4">
-        <AppText variant="h1" className="mb-2">
+      <View className="py-md">
+        <AppText variant="h1" className="mb-xs">
           Create New Order
         </AppText>
-        <AppText variant="body" className="text-slate-500 mb-8">
+        <AppText variant="body" className="text-slate-500 mb-lg">
           Fill in the details below to register a new transaction.
         </AppText>
 
-        <View className="gap-y-4">
-          <Controller
-            control={control}
-            name="customerName"
-            render={({ field: { onChange, value, onBlur } }) => (
-              <AppInput
-                label="Customer Name"
-                placeholder="e.g. John Doe"
-                value={value}
-                onChangeText={onChange}
-                onBlur={onBlur}
-                error={errors.customerName?.message}
-                autoCapitalize="words"
-              />
-            )}
-          />
+        <AppCard padding="lg">
+          <View className="gap-y-4">
+            <Controller
+              control={control}
+              name="customerName"
+              render={({ field: { onChange, value, onBlur } }) => (
+                <AppInput
+                  label="Customer Name"
+                  placeholder="e.g. John Doe"
+                  value={value}
+                  onChangeText={onChange}
+                  onBlur={onBlur}
+                  error={errors.customerName?.message}
+                  autoCapitalize="words"
+                />
+              )}
+            />
 
-          <Controller
-            control={control}
-            name="amount"
-            render={({ field: { onChange, value, onBlur } }) => (
-              <AppInput
-                label="Order Amount ($)"
-                placeholder="0.00"
-                value={value}
-                onChangeText={onChange}
-                onBlur={onBlur}
-                error={errors.amount?.message}
-                keyboardType="numeric"
-              />
-            )}
-          />
-        </View>
+            <Controller
+              control={control}
+              name="amount"
+              render={({ field: { onChange, value, onBlur } }) => (
+                <AppInput
+                  label="Order Amount ($)"
+                  placeholder="0.00"
+                  value={value}
+                  onChangeText={onChange}
+                  onBlur={onBlur}
+                  error={errors.amount?.message}
+                  keyboardType="numeric"
+                />
+              )}
+            />
+          </View>
 
-        <AppButton
-          title="Create Order"
-          onPress={handleSubmit(onSubmit)}
-          loading={isSubmitting}
-          className="mt-10"
-        />
+          <AppButton
+            title="Create Order"
+            onPress={handleSubmit(onSubmit)}
+            loading={isSubmitting}
+            className="mt-xl"
+          />
+        </AppCard>
       </View>
     </ScreenWrapper>
   );

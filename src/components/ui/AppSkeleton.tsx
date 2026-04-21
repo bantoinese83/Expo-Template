@@ -58,9 +58,9 @@ export const AppSkeleton: React.FC<AppSkeletonProps> = ({
 };
 
 export const AppCardSkeleton = () => (
-  <View className="mb-4 bg-white dark:bg-slate-900 p-4 rounded-xl border border-slate-100 dark:border-slate-800">
-    <AppSkeleton width="60%" height={20} borderRadius={4} />
-    <View className="mt-2" />
-    <AppSkeleton width="40%" height={14} borderRadius={4} />
+  <View className="mb-md bg-white dark:bg-slate-900 p-md rounded-lg border border-slate-100 dark:border-slate-800">
+    <AppSkeleton width="60%" height={24} borderRadius={4} />
+    <View className="mt-sm" />
+    <AppSkeleton width="40%" height={16} borderRadius={4} />
   </View>
 );

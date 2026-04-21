@@ -1,14 +1,19 @@
 import React, { ErrorInfo, ReactNode } from "react";
-import { View, TouchableOpacity, ScrollView, StyleSheet, Alert } from "react-native";
+import {
+  View,
+  TouchableOpacity,
+  ScrollView,
+  StyleSheet,
+  Alert,
+  Text,
+  Pressable,
+} from "react-native";
 import { AlertCircle, RefreshCw, ChevronRight } from "lucide-react-native";
 import * as Updates from "expo-updates";
 import { LinearGradient } from "expo-linear-gradient";
 
 import { errorTracking } from "../services/ErrorTracking";
 import { logger } from "../utils/logger";
-import { AppText } from "./ui/AppText";
-import { AppButton } from "./ui/AppButton";
-import { AppCard } from "./ui/AppCard";
 
 interface Props {
   children: ReactNode;
@@ -32,11 +37,14 @@ export class ErrorBoundary extends React.Component<Props, State> {
   }
 
   componentDidCatch(error: Error, errorInfo: ErrorInfo) {
-    logger.error("Global Error Caught", error, errorInfo);
     errorTracking.captureException(error, { errorInfo });
     const reportReference =
       `REF-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 6)}`.toUpperCase();
-    this.setState({ reportReference });
+    // Defer logger + follow-up state so Zustand subscribers are not notified mid–error-boundary commit.
+    queueMicrotask(() => {
+      logger.error("Global Error Caught", error, errorInfo);
+      this.setState({ reportReference });
+    });
   }
 
   handleRestart = async () => {
@@ -64,77 +72,63 @@ export class ErrorBoundary extends React.Component<Props, State> {
         <View style={styles.container}>
           <LinearGradient colors={["#ffffff", "#f8fafc"]} style={StyleSheet.absoluteFill} />
 
-          <View className="flex-1 items-center justify-center p-8">
-            <View className="w-24 h-24 bg-rose-50 dark:bg-rose-900/20 rounded-full items-center justify-center mb-8 shadow-sm">
+          <View style={styles.centerContent}>
+            <View style={styles.iconCircle}>
               <AlertCircle size={48} color="#f43f5e" />
             </View>
 
-            <AppText variant="h1" className="text-center mb-3">
-              Application Error
-            </AppText>
+            <Text style={styles.title}>Application Error</Text>
 
-            <AppText
-              variant="body"
-              className="text-center mb-10 text-slate-500 dark:text-slate-400"
-            >
-              Something unexpected happened. We've recorded the error and our team will look into
+            <Text style={styles.subtitle}>
+              Something unexpected happened. We have recorded the error and our team will look into
               it.
-            </AppText>
+            </Text>
 
-            <View className="w-full space-y-4">
-              <AppButton
-                title="Restart Application"
+            <View style={styles.actions}>
+              <Pressable
                 onPress={this.handleRestart}
-                leftIcon={<RefreshCw size={18} color="white" />}
-                className="w-full"
-              />
+                style={({ pressed }) => [styles.btnPrimary, pressed && styles.btnPressed]}
+              >
+                <RefreshCw size={18} color="#ffffff" />
+                <Text style={styles.btnPrimaryText}>Restart Application</Text>
+              </Pressable>
 
-              <AppButton
-                title="Send Error Report"
+              <Pressable
                 onPress={this.handleSendReport}
-                variant="outline"
-                className="w-full border-slate-200"
-              />
+                style={({ pressed }) => [styles.btnOutline, pressed && styles.btnPressed]}
+              >
+                <Text style={styles.btnOutlineText}>Send Error Report</Text>
+              </Pressable>
             </View>
 
             <TouchableOpacity
               onPress={() => this.setState({ showDetails: !this.state.showDetails })}
-              className="flex-row items-center py-4 mt-6"
+              style={styles.detailsToggle}
             >
-              <AppText variant="caption" className="text-slate-400 font-medium">
-                Technical details
-              </AppText>
-              <View className={`ml-1 ${this.state.showDetails ? "rotate-90" : ""}`}>
+              <Text style={styles.detailsLabel}>Technical details</Text>
+              <View style={this.state.showDetails ? styles.chevronOpen : styles.chevronClosed}>
                 <ChevronRight size={14} color="#94a3b8" />
               </View>
             </TouchableOpacity>
 
             {this.state.showDetails && (
-              <AppCard className="mt-2 w-full bg-slate-50 border-slate-100" padding="sm">
-                <ScrollView className="max-h-48">
-                  <AppText
-                    variant="caption"
-                    className="font-mono text-xs text-rose-600 dark:text-rose-400"
-                  >
+              <View style={styles.detailsCard}>
+                <ScrollView style={styles.detailsScroll}>
+                  <Text style={styles.detailsError}>
                     {this.state.error?.name}: {this.state.error?.message}
-                  </AppText>
-                  <AppText
-                    variant="caption"
-                    className="font-mono text-[10px] mt-2 text-slate-400 leading-4"
-                  >
-                    {this.state.error?.stack}
-                  </AppText>
+                  </Text>
+                  <Text style={styles.detailsStack}>{this.state.error?.stack}</Text>
                 </ScrollView>
-              </AppCard>
+              </View>
             )}
           </View>
 
-          <View className="pb-10 items-center">
-            <AppText variant="caption" className="text-slate-300">
+          <View style={styles.footer}>
+            <Text style={styles.footerText}>
               {this.state.reportReference
                 ? `Reference: ${this.state.reportReference}`
                 : "Preparing reference..."}
-            </AppText>
+            </Text>
           </View>
         </View>
       );
@@ -148,5 +142,130 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#ffffff",
+  },
+  centerContent: {
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "center",
+    padding: 32,
+  },
+  iconCircle: {
+    width: 96,
+    height: 96,
+    borderRadius: 48,
+    backgroundColor: "#fff1f2",
+    alignItems: "center",
+    justifyContent: "center",
+    marginBottom: 32,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.06,
+    shadowRadius: 4,
+    elevation: 2,
+  },
+  title: {
+    fontSize: 30,
+    fontWeight: "700",
+    color: "#020617",
+    textAlign: "center",
+    marginBottom: 12,
+  },
+  subtitle: {
+    fontSize: 16,
+    lineHeight: 24,
+    color: "#64748b",
+    textAlign: "center",
+    marginBottom: 40,
+    maxWidth: 340,
+  },
+  actions: {
+    width: "100%",
+    maxWidth: 400,
+    gap: 16,
+  },
+  btnPrimary: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    gap: 8,
+    backgroundColor: "#6366f1",
+    paddingVertical: 14,
+    paddingHorizontal: 20,
+    borderRadius: 12,
+  },
+  btnPrimaryText: {
+    color: "#ffffff",
+    fontSize: 16,
+    fontWeight: "600",
+  },
+  btnOutline: {
+    alignItems: "center",
+    justifyContent: "center",
+    paddingVertical: 14,
+    paddingHorizontal: 20,
+    borderRadius: 12,
+    borderWidth: 1,
+    borderColor: "#e2e8f0",
+    backgroundColor: "#ffffff",
+  },
+  btnOutlineText: {
+    color: "#6366f1",
+    fontSize: 16,
+    fontWeight: "600",
+  },
+  btnPressed: {
+    opacity: 0.88,
+  },
+  detailsToggle: {
+    flexDirection: "row",
+    alignItems: "center",
+    paddingVertical: 16,
+    marginTop: 24,
+  },
+  detailsLabel: {
+    fontSize: 14,
+    fontWeight: "500",
+    color: "#94a3b8",
+  },
+  chevronClosed: {
+    marginLeft: 4,
+  },
+  chevronOpen: {
+    marginLeft: 4,
+    transform: [{ rotate: "90deg" }],
+  },
+  detailsCard: {
+    marginTop: 8,
+    width: "100%",
+    maxWidth: 400,
+    maxHeight: 192,
+    backgroundColor: "#f8fafc",
+    borderRadius: 12,
+    borderWidth: 1,
+    borderColor: "#f1f5f9",
+    padding: 12,
+  },
+  detailsScroll: {
+    maxHeight: 168,
+  },
+  detailsError: {
+    fontFamily: "Menlo",
+    fontSize: 12,
+    color: "#e11d48",
+  },
+  detailsStack: {
+    fontFamily: "Menlo",
+    fontSize: 10,
+    lineHeight: 16,
+    color: "#94a3b8",
+    marginTop: 8,
+  },
+  footer: {
+    paddingBottom: 40,
+    alignItems: "center",
+  },
+  footerText: {
+    fontSize: 12,
+    color: "#cbd5e1",
   },
 });

@@ -1,17 +1,15 @@
 import React, { useState } from "react";
-import { View, Text, ScrollView, TouchableOpacity, Alert } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
+import { View, ScrollView, TouchableOpacity, Alert } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { Link } from "expo-router";
+import { Link, Href } from "expo-router";
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 
-import PrimaryButton from "../../src/components/common/PrimaryButton";
-import TextField from "../../src/components/common/form/TextField";
-import PasswordField from "../../src/components/common/form/PasswordField";
-import { useAuth } from "../../src/hooks/useAuth";
-import Logo from "../../src/components/common/Logo";
+import { AppText, AppInput, AppButton, ScreenWrapper } from "@/components/ui";
+import { useAuth } from "@/hooks/useAuth";
+import { useTheme } from "@/hooks/useTheme";
+import Logo from "@/components/common/Logo";
 
 const schema = z.object({
   email: z.string().email("Invalid email address"),
@@ -22,6 +20,7 @@ type FormData = z.infer<typeof schema>;
 
 export default function LoginScreen() {
   const { signIn } = useAuth();
+  const { isDark } = useTheme();
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const {
@@ -48,26 +47,29 @@ export default function LoginScreen() {
   };
 
   return (
-    <SafeAreaView className="flex-1 bg-white dark:bg-slate-950">
-      <ScrollView contentContainerClassName="flex-grow p-6" showsVerticalScrollIndicator={false}>
-        <View className="items-center mt-12 mb-10">
-          <Logo size={80} className="mb-6 shadow-lg" />
-          <Text className="text-3xl font-bold text-slate-900 dark:text-white">Welcome Back</Text>
-          <Text className="text-slate-500 dark:text-slate-400 mt-2 font-medium">
+    <ScreenWrapper scrollable>
+      <ScrollView contentContainerClassName="flex-grow p-lg" showsVerticalScrollIndicator={false}>
+        <View className="items-center mt-xl mb-lg">
+          <Logo size={80} className="mb-md shadow-lg" />
+          <AppText variant="h1" className="text-3xl text-center">
+            Welcome Back
+          </AppText>
+          <AppText variant="body" className="text-slate-500 dark:text-slate-400 mt-2 text-center">
             Sign in to your account
-          </Text>
+          </AppText>
         </View>
 
-        <View className="mb-6">
+        <View className="mb-8">
           <Controller
             control={control}
             name="email"
-            render={({ field: { onChange, value } }) => (
-              <TextField
+            render={({ field: { onChange, onBlur, value } }) => (
+              <AppInput
                 label="Email Address"
                 placeholder="Enter your email"
                 value={value}
-                onTextChange={onChange}
+                onBlur={onBlur}
+                onChangeText={onChange}
                 error={errors.email?.message}
                 keyboardType="email-address"
                 autoCapitalize="none"
@@ -75,69 +77,69 @@ export default function LoginScreen() {
             )}
           />
 
-          <Controller
-            control={control}
-            name="password"
-            render={({ field: { onChange, value } }) => (
-              <PasswordField
-                label="Password"
-                placeholder="Enter your password"
-                value={value}
-                onTextChange={onChange}
-                error={errors.password?.message}
-              />
-            )}
-          />
+          <View className="mt-md">
+            <Controller
+              control={control}
+              name="password"
+              render={({ field: { onChange, onBlur, value } }) => (
+                <AppInput
+                  label="Password"
+                  type="password"
+                  placeholder="Enter your password"
+                  value={value}
+                  onBlur={onBlur}
+                  onChangeText={onChange}
+                  error={errors.password?.message}
+                />
+              )}
+            />
+          </View>
 
-          <Link href="/forgot-password" asChild>
-            <TouchableOpacity className="self-end -mt-2 mb-6">
-              <Text className="text-indigo-600 dark:text-indigo-400 font-medium text-right">
-                Forgot Password?
-              </Text>
+          <Link href={"/forgot-password" as Href} asChild>
+            <TouchableOpacity className="self-end mt-sm mb-md px-1">
+              <AppText className="text-primary font-medium text-right">Forgot Password?</AppText>
             </TouchableOpacity>
           </Link>
         </View>
 
-        <PrimaryButton
+        <AppButton
           title="Sign In"
           onPress={handleSubmit(onSubmit)}
-          isLoading={isSubmitting}
-          className="mb-6"
+          loading={isSubmitting}
+          className="mb-lg"
         />
 
-        <View className="flex-row items-center my-6">
+        <View className="flex-row items-center my-lg">
           <View className="flex-1 h-[1px] bg-slate-200 dark:bg-slate-800" />
-          <Text className="mx-4 text-slate-400 text-xs font-medium uppercase">
+          <AppText
+            variant="caption"
+            className="mx-4 text-slate-400 uppercase tracking-widest font-bold"
+          >
             or continue with
-          </Text>
+          </AppText>
           <View className="flex-1 h-[1px] bg-slate-200 dark:bg-slate-800" />
         </View>
 
-        <View className="flex-row justify-between mb-8">
-          <TouchableOpacity className="w-[48%] h-12 border border-slate-200 dark:border-slate-800 rounded-xl items-center justify-center flex-row">
+        <View className="flex-row justify-between mb-8 gap-x-4">
+          <TouchableOpacity className="flex-1 h-[52px] border-2 border-slate-100 dark:border-slate-800 rounded-md items-center justify-center flex-row active:bg-slate-50 dark:active:bg-slate-900 transition-colors">
             <MaterialCommunityIcons name="google" size={20} color="#EA4335" />
-            <Text className="ml-2 font-semibold text-slate-700 dark:text-slate-300">Google</Text>
+            <AppText className="ml-2 font-semibold">Google</AppText>
           </TouchableOpacity>
-          <TouchableOpacity className="w-[48%] h-12 border border-slate-200 dark:border-slate-800 rounded-xl items-center justify-center flex-row">
-            <MaterialCommunityIcons
-              name="apple"
-              size={20}
-              color="#000000"
-              className="dark:text-white"
-            />
-            <Text className="ml-2 font-semibold text-slate-700 dark:text-slate-300">Apple</Text>
+          <TouchableOpacity className="flex-1 h-[52px] border-2 border-slate-100 dark:border-slate-800 rounded-md items-center justify-center flex-row active:bg-slate-50 dark:active:bg-slate-900 transition-colors">
+            <MaterialCommunityIcons name="apple" size={20} color={isDark ? "white" : "black"} />
+            <AppText className="ml-2 font-semibold">Apple</AppText>
           </TouchableOpacity>
         </View>
 
-        <View className="flex-row justify-center items-center mt-auto pb-4">
-          <Text className="text-slate-500 dark:text-slate-400">Don't have an account? </Text>
-          <Link href="/signup" asChild>
+        <View className="flex-row justify-center items-center mt-auto pb-md">
+          <AppText className="text-slate-500 dark:text-slate-400">Don't have an account? </AppText>
+          <Link href={"/signup" as Href} asChild>
             <TouchableOpacity>
-              <Text className="text-indigo-600 dark:text-indigo-400 font-semibold">Sign Up</Text>
+              <AppText className="text-primary font-bold">Sign Up</AppText>
             </TouchableOpacity>
           </Link>
         </View>
       </ScrollView>
-    </SafeAreaView>
+    </ScreenWrapper>
   );
 }

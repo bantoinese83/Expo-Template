@@ -1,7 +1,7 @@
 import { AxiosError, InternalAxiosRequestConfig, AxiosResponse } from "axios";
 import { logger } from "../utils/logger";
 import { errorTracking } from "../services/ErrorTracking";
-import { getSessionAccessToken } from "../services/sessionToken";
+import { getSessionAccessToken, emitSessionExpired } from "../services/sessionToken";
 
 /**
  * Request Interceptor: Adds Auth tokens and logs requests in DEV.
@@ -54,7 +54,7 @@ export const errorInterceptor = (error: AxiosError) => {
 
   // Handle 401 Unauthorized (Token expired)
   if (status === 401) {
-    // Trigger global logout or token refresh
+    emitSessionExpired();
   }
 
   return Promise.reject(error);

@@ -14,3 +14,31 @@
     --foreground: 210 40% 98%;
   }
 }
+
+@layer utilities {
+  /* Premium Glassmorphism */
+  .glass {
+    @apply bg-white/70 dark:bg-slate-900/70 border border-white/20 dark:border-slate-800/40;
+  }
+
+  .glass-dark {
+    @apply bg-slate-900/80 border border-slate-800/50;
+  }
+
+  .glass-light {
+    @apply bg-white/80 border border-white/50 shadow-sm;
+  }
+
+  /* Interaction feedback */
+  .active-scale {
+    @apply active:scale-95 transition-transform;
+  }
+
+  /* Safe Area paddings for standard layouts */
+  .safe-pt {
+    padding-top: env(safe-area-inset-top);
+  }
+  .safe-pb {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+}

@@ -1,3 +1,6 @@
+import { errorTracking } from "../services/ErrorTracking";
+import { useLogStore } from "../store/useLogStore";
+
 /**
  * A standardized logging utility for the 2026 Expo Template.
  * Supports levels: info, warn, error, and debug.
@@ -23,6 +26,17 @@ class Logger {
     const timestamp = new Date().toISOString();
     const formattedMessage = `[${timestamp}] [${level.toUpperCase()}]: ${message}`;
 
+    // Leave a breadcrumb for observability in production crashes
+    if (level !== "debug") {
+      errorTracking.addBreadcrumb(message, level);
+    }
+
+    // Defer so logging never runs synchronous Zustand updates during React commit/error recovery,
+    // which can trigger "state update on a component that hasn't mounted yet" (e.g. ErrorBoundary).
+    queueMicrotask(() => {
+      useLogStore.getState().addLog(level, message, data);
+    });
+
     switch (level) {
       case "debug":
         console.debug(formattedMessage, data ?? "");
@@ -35,7 +49,8 @@ class Logger {
         break;
       case "error":
         console.error(formattedMessage, data ?? "");
-        // In a real app, you would call your ErrorTracking service here
+        // Automatically report errors to our tracking service
+        errorTracking.captureException(data?.error ?? message, data);
         break;
     }
   }

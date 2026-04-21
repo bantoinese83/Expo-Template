@@ -1,16 +1,14 @@
 import React, { useState } from "react";
-import { View, Text, ScrollView, TouchableOpacity, Alert } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
+import { View, ScrollView, TouchableOpacity, Alert } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { useRouter, Link } from "expo-router";
+import { useRouter, Link, Href } from "expo-router";
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 
-import PrimaryButton from "../../src/components/common/PrimaryButton";
-import TextField from "../../src/components/common/form/TextField";
-import PasswordField from "../../src/components/common/form/PasswordField";
-import { useAuth } from "../../src/hooks/useAuth";
+import { AppText, AppInput, AppButton, ScreenWrapper } from "@/components/ui";
+import { useAuth } from "@/hooks/useAuth";
+import { colors } from "@/theme/tokens";
 
 const schema = z
   .object({
@@ -59,26 +57,31 @@ export default function SignupScreen() {
   };
 
   return (
-    <SafeAreaView className="flex-1 bg-white dark:bg-slate-950">
+    <ScreenWrapper scrollable className="bg-white dark:bg-slate-950">
       <ScrollView contentContainerClassName="flex-grow p-6" showsVerticalScrollIndicator={false}>
         <View className="items-center mt-4 mb-8">
-          <View className="w-16 h-16 bg-indigo-50 dark:bg-indigo-900/20 rounded-2xl items-center justify-center mb-4">
-            <MaterialCommunityIcons name="account-plus-outline" size={32} color="#6366f1" />
+          <View className="w-16 h-16 bg-primary/10 dark:bg-primary/20 rounded-2xl items-center justify-center mb-md">
+            <MaterialCommunityIcons name="account-plus-outline" size={32} color={colors.primary} />
           </View>
-          <Text className="text-2xl font-bold text-slate-900 dark:text-white">Create Account</Text>
-          <Text className="text-slate-500 dark:text-slate-400 mt-1">Join Expo Template today</Text>
+          <AppText variant="h1" className="text-3xl text-center">
+            Create Account
+          </AppText>
+          <AppText variant="body" className="text-slate-500 dark:text-slate-400 mt-1 text-center">
+            Join Expo Template today
+          </AppText>
         </View>
 
-        <View className="mb-6">
+        <View className="mb-lg gap-y-4">
           <Controller
             control={control}
             name="name"
-            render={({ field: { onChange, value } }) => (
-              <TextField
+            render={({ field: { onChange, onBlur, value } }) => (
+              <AppInput
                 label="Full Name"
                 placeholder="Enter your name"
                 value={value}
-                onTextChange={onChange}
+                onBlur={onBlur}
+                onChangeText={onChange}
                 error={errors.name?.message}
                 autoCapitalize="words"
               />
@@ -88,12 +91,13 @@ export default function SignupScreen() {
           <Controller
             control={control}
             name="email"
-            render={({ field: { onChange, value } }) => (
-              <TextField
+            render={({ field: { onChange, onBlur, value } }) => (
+              <AppInput
                 label="Email Address"
                 placeholder="Enter your email"
                 value={value}
-                onTextChange={onChange}
+                onBlur={onBlur}
+                onChangeText={onChange}
                 error={errors.email?.message}
                 keyboardType="email-address"
                 autoCapitalize="none"
@@ -104,12 +108,14 @@ export default function SignupScreen() {
           <Controller
             control={control}
             name="password"
-            render={({ field: { onChange, value } }) => (
-              <PasswordField
+            render={({ field: { onChange, onBlur, value } }) => (
+              <AppInput
                 label="Password"
+                type="password"
                 placeholder="Create a password"
                 value={value}
-                onTextChange={onChange}
+                onBlur={onBlur}
+                onChangeText={onChange}
                 error={errors.password?.message}
               />
             )}
@@ -118,34 +124,38 @@ export default function SignupScreen() {
           <Controller
             control={control}
             name="confirmPassword"
-            render={({ field: { onChange, value } }) => (
-              <PasswordField
+            render={({ field: { onChange, onBlur, value } }) => (
+              <AppInput
                 label="Confirm Password"
+                type="password"
                 placeholder="Repeat your password"
                 value={value}
-                onTextChange={onChange}
+                onBlur={onBlur}
+                onChangeText={onChange}
                 error={errors.confirmPassword?.message}
               />
             )}
           />
         </View>
 
-        <PrimaryButton
+        <AppButton
           title="Sign Up"
           onPress={handleSubmit(onSubmit)}
-          isLoading={isSubmitting}
-          className="mb-6"
+          loading={isSubmitting}
+          className="mb-lg"
         />
 
         <View className="flex-row justify-center items-center mt-auto pb-4">
-          <Text className="text-slate-500 dark:text-slate-400">Already have an account? </Text>
-          <Link href="/login" asChild>
+          <AppText className="text-slate-500 dark:text-slate-400">
+            Already have an account?{" "}
+          </AppText>
+          <Link href={"/login" as Href} asChild>
             <TouchableOpacity>
-              <Text className="text-indigo-600 dark:text-indigo-400 font-semibold">Sign In</Text>
+              <AppText className="text-primary font-bold">Sign In</AppText>
             </TouchableOpacity>
           </Link>
         </View>
       </ScrollView>
-    </SafeAreaView>
+    </ScreenWrapper>
   );
 }

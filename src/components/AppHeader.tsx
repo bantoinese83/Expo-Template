@@ -3,6 +3,7 @@ import { View, TouchableOpacity, Text } from "react-native";
 import { MaterialIcons } from "@expo/vector-icons";
 import UserProfile from "./UserProfile";
 import { useRouter } from "expo-router";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 import Logo from "./common/Logo";
 
 interface Props {
@@ -22,6 +23,7 @@ const AppHeader: React.FC<Props> = ({
   notificationCount = 0,
   showShadow = true,
 }) => {
+  const insets = useSafeAreaInsets();
   const router = useRouter();
 
   const handleNotificationPress = () => {
@@ -34,7 +36,8 @@ const AppHeader: React.FC<Props> = ({
 
   return (
     <View
-      className={`flex-row justify-between items-center px-4 pt-10 pb-3 bg-white dark:bg-slate-950 ${
+      style={{ paddingTop: Math.max(insets.top, 16) }}
+      className={`flex-row justify-between items-center px-md pb-sm bg-white dark:bg-slate-950 ${
         showShadow ? "shadow-sm" : ""
       }`}
     >

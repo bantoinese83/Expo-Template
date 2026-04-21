@@ -1,5 +1,11 @@
 import React from "react";
-import { TouchableOpacity, TouchableOpacityProps, ActivityIndicator, View } from "react-native";
+import {
+  TouchableOpacity,
+  TouchableOpacityProps,
+  ActivityIndicator,
+  View,
+  GestureResponderEvent,
+} from "react-native";
 import * as Haptics from "expo-haptics";
 import { AppText } from "./AppText";
 
@@ -26,9 +32,12 @@ export const AppButton: React.FC<AppButtonProps> = ({
   textClassName = "",
   disabled,
   onPress,
+  accessibilityLabel,
+  accessibilityRole,
+  accessibilityState,
   ...props
 }) => {
-  const handlePress = (e: any) => {
+  const handlePress = (e: GestureResponderEvent) => {
     if (loading || disabled) return;
     if (haptic) {
       Haptics.impactAsync(haptic);
@@ -56,9 +65,9 @@ export const AppButton: React.FC<AppButtonProps> = ({
   };
 
   const sizes = {
-    sm: "px-3 py-1.5 rounded-lg",
-    md: "px-5 py-3 rounded-xl",
-    lg: "px-8 py-4 rounded-2xl",
+    sm: "px-sm py-xs rounded-sm",
+    md: "px-md py-sm rounded-md",
+    lg: "px-lg py-md rounded-lg",
   };
 
   const textSizes = {
@@ -71,6 +80,9 @@ export const AppButton: React.FC<AppButtonProps> = ({
     <TouchableOpacity
       onPress={handlePress}
       disabled={disabled || loading}
+      accessibilityRole={accessibilityRole || "button"}
+      accessibilityState={accessibilityState || { disabled: !!(disabled || loading) }}
+      accessibilityLabel={accessibilityLabel || title}
       className={`flex-row items-center justify-center ${variants[variant]} ${sizes[size]} ${
         disabled || loading ? "opacity-50" : ""
       } ${className}`}
