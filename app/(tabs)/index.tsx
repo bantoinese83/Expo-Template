@@ -11,6 +11,8 @@ import { getAvatarUrl } from "@/utils/avatar";
 
 import { DashboardHero, DashboardStats } from "@/features/dashboard/components/DashboardHero";
 import { FeatureGrid } from "@/features/dashboard/components/FeatureGrid";
+import { GlassCard } from "premium-ui";
+import { Platform } from "react-native";
 
 /**
  * Main Application Dashboard.
@@ -33,6 +35,17 @@ export default function Home() {
       <View className="px-lg pb-xl">
         {/* Hero Section */}
         <DashboardHero />
+
+        {/* Glass Card Demo (Native SwiftUI - iOS only) */}
+        {Platform.OS === "ios" && (
+          <View className="my-lg">
+            <GlassCard
+              title="Native SwiftUI Experience"
+              content="This glassmorphic card uses a real-time system blur material via the new Expo UI extension system. Smooth, fast, and premium."
+              style={{ height: 160 }}
+            />
+          </View>
+        )}
 
         {/* Stats Row */}
         <DashboardStats />

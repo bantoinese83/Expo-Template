@@ -1,24 +1,6 @@
 import type { QueryClient } from "@tanstack/react-query";
-import { createMMKV } from "react-native-mmkv";
-
 import { createAppQueryClient, setupQueryPersistence } from "@/query";
-
-const storage = createMMKV();
-
-const clientStorage = {
-  setItem: (name: string, value: string) => {
-    storage.set(name, value);
-    return Promise.resolve();
-  },
-  getItem: (name: string) => {
-    const value = storage.getString(name);
-    return Promise.resolve(value ?? null);
-  },
-  removeItem: (name: string) => {
-    storage.remove(name);
-    return Promise.resolve();
-  },
-};
+import { queryStorage } from "@/services/storage";
 
 let client: QueryClient | null = null;
 
@@ -28,7 +10,7 @@ let client: QueryClient | null = null;
 export function getOrCreateQueryClient(): QueryClient {
   if (!client) {
     client = createAppQueryClient();
-    setupQueryPersistence(client, clientStorage);
+    setupQueryPersistence(client, queryStorage);
   }
   return client;
 }

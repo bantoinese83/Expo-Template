@@ -19,8 +19,19 @@ export const ThemeToggle = () => {
           key={t.value}
           onPress={() => toggleTheme(t.value)}
           className={`flex-1 flex-row items-center justify-center py-2 px-3 rounded-lg ${
-            theme === t.value ? "bg-white dark:bg-slate-700 shadow-sm" : ""
+            theme === t.value ? "bg-white dark:bg-slate-700" : ""
           }`}
+          style={
+            theme === t.value
+              ? {
+                  shadowColor: "#000",
+                  shadowOffset: { width: 0, height: 1 },
+                  shadowOpacity: 0.1,
+                  shadowRadius: 1,
+                  elevation: 1,
+                }
+              : undefined
+          }
         >
           <MaterialCommunityIcons
             name={t.icon}

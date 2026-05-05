@@ -45,3 +45,8 @@ coverage/
 # generated native folders
 /ios
 /android
+
+# local files
+.env
+.vscode/
+autolink-result*.json

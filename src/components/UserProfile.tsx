@@ -1,5 +1,6 @@
 import React, { useState } from "react";
-import { View, Image, Text } from "react-native";
+import { View, Text } from "react-native";
+import { Image } from "expo-image";
 import { getAvatarUrl } from "../utils/avatar";
 
 interface Props {

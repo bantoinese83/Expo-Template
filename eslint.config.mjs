@@ -2,6 +2,7 @@ import js from "@eslint/js";
 import ts from "typescript-eslint";
 import react from "eslint-plugin-react";
 import reactNative from "eslint-plugin-react-native";
+import reactCompiler from "eslint-plugin-react-compiler";
 import prettier from "eslint-config-prettier";
 import globals from "globals";
 
@@ -13,6 +14,7 @@ export default ts.config(
     plugins: {
       react,
       "react-native": reactNative,
+      "react-compiler": reactCompiler,
     },
     languageOptions: {
       parserOptions: {
@@ -32,6 +34,7 @@ export default ts.config(
       },
     },
     rules: {
+      "react-compiler/react-compiler": "error",
       "react/react-in-jsx-scope": "off",
       "react-native/no-inline-styles": "off",
       "react-native/no-raw-text": "off",

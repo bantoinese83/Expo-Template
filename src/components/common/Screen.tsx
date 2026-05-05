@@ -1,6 +1,6 @@
 import { ViewProps, KeyboardAvoidingView, Platform } from "react-native";
 import React from "react";
-import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 interface Props extends ViewProps {
   children?: React.ReactNode;
@@ -9,14 +9,8 @@ interface Props extends ViewProps {
 }
 
 export default function Screen({ className = "", withKeyboard = true, children, ...props }: Props) {
-  const insets = useSafeAreaInsets();
-
   const content = (
-    <SafeAreaView
-      className={`flex-1 bg-white dark:bg-slate-950 ${className}`}
-      style={{ paddingTop: insets.top }}
-      {...props}
-    >
+    <SafeAreaView className={`flex-1 bg-white dark:bg-slate-950 ${className}`} {...props}>
       {children}
     </SafeAreaView>
   );

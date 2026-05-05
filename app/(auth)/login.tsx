@@ -30,8 +30,8 @@ export default function LoginScreen() {
   } = useForm<FormData>({
     resolver: zodResolver(schema),
     defaultValues: {
-      email: "",
-      password: "",
+      email: "dev@monarch.com",
+      password: "password",
     },
   });
 

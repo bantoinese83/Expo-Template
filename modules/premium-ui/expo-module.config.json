@@ -1,0 +1,7 @@
+{
+  "name": "premium-ui",
+  "platforms": ["apple", "android"],
+  "apple": {
+    "modules": ["GlassCardModule"]
+  }
+}
