@@ -1,6 +1,6 @@
 import { Text, View, TouchableOpacity } from "react-native";
 import React, { memo } from "react";
-import { horizontalScale, moderateScale } from "../../../../utils/responsive/metrices";
+import { horizontalScale, moderateScale } from "@/utils/responsive/metrices";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 interface Props {

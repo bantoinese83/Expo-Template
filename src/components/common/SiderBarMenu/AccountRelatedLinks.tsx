@@ -1,10 +1,7 @@
-import { Text, View, TouchableOpacity, Image } from "react-native";
+import { Text, View, TouchableOpacity } from "react-native";
+import { Image } from "expo-image";
 import React, { memo } from "react";
-import {
-  horizontalScale,
-  moderateScale,
-  verticalScale,
-} from "../../../../utils/responsive/metrices";
+import { horizontalScale, moderateScale, verticalScale } from "@/utils/responsive/metrices";
 import MenuLogout from "./MenuLogout";
 import { useAuth } from "../../../hooks/useAuth";
 
@@ -36,7 +33,7 @@ const AccountRelatedLinks = ({ links, onPress, onLogout }: Props) => {
           >
             <View className="flex-row items-center gap-2">
               {typeof link.icon === "number" ? (
-                <Image source={link.icon} className="w-4 h-4" resizeMode="contain" />
+                <Image source={link.icon} className="w-4 h-4" contentFit="contain" />
               ) : (
                 link.icon
               )}

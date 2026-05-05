@@ -1,6 +1,6 @@
 import { Text, View, TouchableOpacity } from "react-native";
 import React from "react";
-import { horizontalScale, moderateScale, verticalScale } from "../../../utils/responsive/metrices";
+import { horizontalScale, moderateScale, verticalScale } from "@/utils/responsive/metrices";
 import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 

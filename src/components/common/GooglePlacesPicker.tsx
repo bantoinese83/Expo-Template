@@ -1,7 +1,7 @@
 import React, { useRef } from "react";
 import { View, Text } from "react-native";
 import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
-import { moderateScale, verticalScale, horizontalScale } from "../../../utils/responsive/metrices";
+import { moderateScale, verticalScale, horizontalScale } from "@/utils/responsive/metrices";
 
 interface Props {
   callback: (address?: string, location?: any) => void;

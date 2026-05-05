@@ -1,24 +1,36 @@
+import PostHog from "posthog-react-native";
+import { env } from "../config/env";
+
 /**
- * Agnostic Analytics Service.
- * Provides a unified interface for different analytics providers (e.g., Mixpanel, Amplitude, Firebase).
+ * Agnostic Analytics Service with PostHog Implementation.
+ * Provides a unified interface for analytics and feature flags.
  */
 class AnalyticsService {
   private isInitialized: boolean = false;
+  private posthog: PostHog | null = null;
 
   /**
-   * Initializes the analytics provider(s).
+   * Initializes the PostHog provider.
    */
   async init() {
     if (this.isInitialized) return;
 
-    // TODO: Initialize your chosen analytics provider here
-    // Example: Mixpanel.init(env.MIXPANEL_TOKEN);
+    if (env.EXPO_PUBLIC_POSTHOG_API_KEY) {
+      this.posthog = new PostHog(env.EXPO_PUBLIC_POSTHOG_API_KEY, {
+        host: env.EXPO_PUBLIC_POSTHOG_HOST || "https://app.posthog.com",
+      });
 
-    if (__DEV__) {
-      console.info("[AnalyticsService]: Analytics Service initialized (Mock Mode)");
+      await this.posthog.ready();
+      this.isInitialized = true;
+
+      if (__DEV__) {
+        console.info("[AnalyticsService]: PostHog Analytics initialized");
+      }
+    } else {
+      if (__DEV__) {
+        console.warn("[AnalyticsService]: PostHog Key missing. Running in Mock Mode.");
+      }
     }
-
-    this.isInitialized = true;
   }
 
   /**
@@ -29,8 +41,8 @@ class AnalyticsService {
       console.info(`[AnalyticsService] Track: ${eventName}`, properties);
     }
 
-    if (this.isInitialized) {
-      // TODO: Call provider-specific track method
+    if (this.posthog) {
+      this.posthog.capture(eventName, properties);
     }
   }
 
@@ -42,8 +54,8 @@ class AnalyticsService {
       console.info(`[AnalyticsService] Identify: ${userId}`, traits);
     }
 
-    if (this.isInitialized) {
-      // TODO: Call provider-specific identify method
+    if (this.posthog) {
+      this.posthog.identify(userId, traits);
     }
   }
 
@@ -55,9 +67,26 @@ class AnalyticsService {
       console.info("[AnalyticsService] Reset");
     }
 
-    if (this.isInitialized) {
-      // TODO: Call provider-specific reset method
+    if (this.posthog) {
+      this.posthog.reset();
     }
+  }
+
+  /**
+   * Checks if a feature flag is enabled.
+   */
+  isFeatureEnabled(flag: string): boolean {
+    if (this.posthog) {
+      return !!this.posthog.isFeatureEnabled(flag);
+    }
+    return false;
+  }
+
+  /**
+   * Returns the underlying PostHog instance for advanced usage.
+   */
+  getPostHog() {
+    return this.posthog;
   }
 }
 

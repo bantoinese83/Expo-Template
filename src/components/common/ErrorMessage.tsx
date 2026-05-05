@@ -1,6 +1,6 @@
 import React from "react";
 import { View, Text } from "react-native";
-import { verticalScale } from "../../../utils/responsive/metrices";
+import { verticalScale } from "@/utils/responsive/metrices";
 
 interface Props {
   message: string;

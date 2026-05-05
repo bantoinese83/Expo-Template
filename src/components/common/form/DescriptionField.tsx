@@ -1,10 +1,6 @@
 import { Text, TextInput, View } from "react-native";
 import React from "react";
-import {
-  horizontalScale,
-  moderateScale,
-  verticalScale,
-} from "../../../../utils/responsive/metrices";
+import { horizontalScale, moderateScale, verticalScale } from "@/utils/responsive/metrices";
 import ErrorMessage from "../ErrorMessage";
 
 interface Props {

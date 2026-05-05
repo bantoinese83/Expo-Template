@@ -1,6 +1,6 @@
 import React from "react";
 import { View, Text, ViewStyle, StyleProp } from "react-native";
-import { verticalScale } from "../../../../utils/responsive/metrices";
+import { verticalScale } from "@/utils/responsive/metrices";
 import ErrorMessage from "../ErrorMessage";
 
 interface FormFieldWrapperProps {

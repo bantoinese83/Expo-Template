@@ -49,20 +49,31 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const clearError = useCallback(() => setError(null), [setError]);
 
-  const value: AuthContextValue = {
-    user,
-    isAuthenticated: !!user,
-    isLoading: isInitializing || isAuthLoading,
-    error: authError,
-    signIn,
-    signOut,
-    signUp,
-    clearError,
-  };
+  const value = React.useMemo<AuthContextValue>(
+    () => ({
+      user,
+      isAuthenticated: !!user,
+      isLoading: isInitializing || isAuthLoading,
+      error: authError,
+      signIn,
+      signOut,
+      signUp,
+      clearError,
+    }),
+    [user, isInitializing, isAuthLoading, authError, signIn, signOut, signUp, clearError]
+  );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };
 
+/**
+ * Hook to access the current authentication state and actions.
+ * @returns {AuthContextValue} Object containing user, isAuthenticated, loading state, and auth methods.
+ * @throws {Error} If used outside of an AuthProvider.
+ *
+ * @example
+ * const { user, signIn, signOut } = useAuth();
+ */
 export function useAuth(): AuthContextValue {
   const context = useContext(AuthContext);
   if (!context) {

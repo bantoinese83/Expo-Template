@@ -5,4 +5,7 @@ export default defineConfig({
   out: "./drizzle",
   dialect: "sqlite",
   driver: "expo",
+  dbCredentials: {
+    url: "app.sqlite",
+  },
 });

@@ -22,6 +22,8 @@ const envSchema = z
     EXPO_PUBLIC_SUPABASE_ANON_KEY: optionalNonEmpty,
     EXPO_PUBLIC_SENTRY_DSN: z.preprocess(emptyToUndefined, z.string().optional()),
     EXPO_PUBLIC_API_URL: optionalApiUrl,
+    EXPO_PUBLIC_POSTHOG_API_KEY: optionalNonEmpty,
+    EXPO_PUBLIC_POSTHOG_HOST: optionalUrl,
   })
   .superRefine((data, ctx) => {
     const hasUrl = Boolean(data.EXPO_PUBLIC_SUPABASE_URL);
@@ -44,6 +46,8 @@ const _env = envSchema.safeParse({
   EXPO_PUBLIC_SUPABASE_ANON_KEY: process.env.EXPO_PUBLIC_SUPABASE_ANON_KEY,
   EXPO_PUBLIC_SENTRY_DSN: process.env.EXPO_PUBLIC_SENTRY_DSN,
   EXPO_PUBLIC_API_URL: process.env.EXPO_PUBLIC_API_URL,
+  EXPO_PUBLIC_POSTHOG_API_KEY: process.env.EXPO_PUBLIC_POSTHOG_API_KEY,
+  EXPO_PUBLIC_POSTHOG_HOST: process.env.EXPO_PUBLIC_POSTHOG_HOST,
 });
 
 if (!_env.success) {
@@ -65,6 +69,8 @@ export const env: AppEnv = _env.success
       EXPO_PUBLIC_SUPABASE_ANON_KEY: undefined,
       EXPO_PUBLIC_SENTRY_DSN: undefined,
       EXPO_PUBLIC_API_URL: undefined,
+      EXPO_PUBLIC_POSTHOG_API_KEY: undefined,
+      EXPO_PUBLIC_POSTHOG_HOST: undefined,
     } satisfies AppEnv);
 
 export function isClerkConfigured(): boolean {

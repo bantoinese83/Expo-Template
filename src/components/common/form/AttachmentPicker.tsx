@@ -4,11 +4,7 @@ import * as Haptics from "expo-haptics";
 import * as DocumentPicker from "expo-document-picker";
 import { Entypo } from "@expo/vector-icons";
 
-import {
-  horizontalScale,
-  moderateScale,
-  verticalScale,
-} from "../../../../utils/responsive/metrices";
+import { horizontalScale, moderateScale, verticalScale } from "@/utils/responsive/metrices";
 import ErrorMessage from "../ErrorMessage";
 import { useToaster } from "../../../hooks/useToaster";
 

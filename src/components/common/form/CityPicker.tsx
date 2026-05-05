@@ -1,11 +1,8 @@
 import React, { useState, useEffect, memo } from "react";
-import { View, Text, TouchableOpacity, Modal, TextInput, ScrollView, Image } from "react-native";
+import { View, Text, TouchableOpacity, Modal, TextInput, ScrollView } from "react-native";
+import { Image } from "expo-image";
 import { AntDesign, Feather, MaterialIcons, Entypo } from "@expo/vector-icons";
-import {
-  horizontalScale,
-  moderateScale,
-  verticalScale,
-} from "../../../../utils/responsive/metrices";
+import { horizontalScale, moderateScale, verticalScale } from "@/utils/responsive/metrices";
 import ErrorMessage from "../ErrorMessage";
 
 interface PickerItem {

@@ -73,18 +73,21 @@ export const BaseBottomSheet = forwardRef<BaseBottomSheetRef, BaseBottomSheetPro
           borderTopRightRadius: 32,
         }}
       >
-        <BottomSheetView style={styles.contentContainer}>
+        <BottomSheetView style={styles.contentContainer} accessibilityRole="none">
           {title && (
             <View
               className="py-4 border-b border-slate-50 dark:border-slate-800/50"
               style={styles.header}
+              accessibilityRole="header"
             >
               <AppText variant="h3" className="text-center text-[18px] tracking-tight">
                 {title}
               </AppText>
             </View>
           )}
-          <View className="flex-1 px-6 pt-4">{children}</View>
+          <View className="flex-1 px-6 pt-4" accessibilityRole="none">
+            {children}
+          </View>
         </BottomSheetView>
       </BottomSheet>
     );

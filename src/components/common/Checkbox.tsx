@@ -1,6 +1,6 @@
 import { TouchableOpacity } from "react-native";
 import React from "react";
-import { moderateScale } from "../../../utils/responsive/metrices";
+import { moderateScale } from "@/utils/responsive/metrices";
 import { FontAwesome } from "@expo/vector-icons";
 
 interface Props {

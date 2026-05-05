@@ -8,10 +8,19 @@ interface AppCardProps extends ViewProps {
   padding?: "none" | "sm" | "md" | "lg";
   onPress?: PressableProps["onPress"];
   className?: string;
+  accessibilityLabel?: string;
 }
 
 export const AppCard: React.FC<AppCardProps> = React.memo(
-  ({ children, variant = "elevated", padding = "md", onPress, className = "", ...props }) => {
+  ({
+    children,
+    variant = "elevated",
+    padding = "md",
+    onPress,
+    className = "",
+    accessibilityLabel,
+    ...props
+  }) => {
     const variants = {
       elevated:
         "bg-white dark:bg-slate-900 border border-slate-100/50 dark:border-slate-800/50 shadow-md",
@@ -34,6 +43,8 @@ export const AppCard: React.FC<AppCardProps> = React.memo(
           onPress ? "active:scale-[0.98] transition-transform" : ""
         } ${className}`}
         onPress={onPress}
+        accessibilityRole={onPress ? "button" : "none"}
+        accessibilityLabel={accessibilityLabel}
         {...(onPress ? { android_ripple: { color: "#e2e8f0" } } : {})}
         {...props}
       >

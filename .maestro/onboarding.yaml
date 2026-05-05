@@ -1,0 +1,6 @@
+appId: com.monarch.expotemplate
+---
+- launchApp
+- assertVisible: "Welcome to Expo Template"
+- tapOn: "Get Started"
+- assertVisible: "Welcome Back"

@@ -14,11 +14,7 @@ import { FlashList } from "@shopify/flash-list";
 const TypedFlashList = FlashList as any;
 import * as Haptics from "expo-haptics";
 
-import {
-  horizontalScale,
-  moderateScale,
-  verticalScale,
-} from "../../../../utils/responsive/metrices";
+import { horizontalScale, moderateScale, verticalScale } from "@/utils/responsive/metrices";
 import ErrorMessage from "../ErrorMessage";
 
 export interface PickerItem {

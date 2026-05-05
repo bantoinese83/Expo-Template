@@ -1,10 +1,7 @@
-import { Image, Text, View, TouchableOpacity } from "react-native";
+import { Text, View, TouchableOpacity } from "react-native";
+import { Image } from "expo-image";
 import React, { useState } from "react";
-import {
-  horizontalScale,
-  moderateScale,
-  verticalScale,
-} from "../../../../utils/responsive/metrices";
+import { horizontalScale, moderateScale, verticalScale } from "@/utils/responsive/metrices";
 import { mImages } from "../../../../assets/images";
 import ErrorMessage from "../ErrorMessage";
 import DateTimePicker from "@react-native-community/datetimepicker";
@@ -56,7 +53,7 @@ export default function DatePickerField(props: Props) {
           <Image
             source={date ? mImages.calendarBlack : mImages.calendarGray}
             className={`w-[${moderateScale(17)}px] h-[${moderateScale(17)}px]`}
-            resizeMode="contain"
+            contentFit="contain"
           />
           <Text
             className={`flex-1 ml-[${horizontalScale(10)}px] text-[13px] font-normal ${

@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from "react";
-import { Text, View, Image, Dimensions, TouchableOpacity } from "react-native";
+import { Text, View, Dimensions, TouchableOpacity } from "react-native";
+import { Image } from "expo-image";
 import { CameraView, useCameraPermissions, useMicrophonePermissions } from "expo-camera";
 import { AntDesign, MaterialIcons, Ionicons } from "@expo/vector-icons";
 import Animated, { useAnimatedStyle, useSharedValue, interpolate } from "react-native-reanimated";
-import { verticalScale } from "../../../utils/responsive/metrices";
+import { verticalScale } from "@/utils/responsive/metrices";
 
 const { width } = Dimensions.get("screen");
 
@@ -156,7 +157,7 @@ const ExpoCamera: React.FC<ExpoCameraProps> = ({ visibility, onCLose, callBack }
               <Image
                 className="w-full h-full"
                 source={{ uri: capturePicture }}
-                resizeMode="contain"
+                contentFit="contain"
               />
               <View
                 className={`w-full absolute flex-row items-start justify-between px-5 mt-[${verticalScale(60)}px]`}

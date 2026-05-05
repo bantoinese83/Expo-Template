@@ -1,10 +1,6 @@
 import { Text, View, TouchableOpacity, Dimensions, ScrollView } from "react-native";
 import React, { useState } from "react";
-import {
-  horizontalScale,
-  moderateScale,
-  verticalScale,
-} from "../../../../utils/responsive/metrices";
+import { horizontalScale, moderateScale, verticalScale } from "@/utils/responsive/metrices";
 import { Octicons } from "@expo/vector-icons";
 import ModalWrapper from "../Modal/ModalWrapper";
 import { useRouter } from "expo-router";

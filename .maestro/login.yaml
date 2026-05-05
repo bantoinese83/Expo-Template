@@ -1,0 +1,11 @@
+appId: com.monarch.expotemplate
+---
+- launchApp
+- tapOn: "Get Started"
+- assertVisible: "Welcome Back"
+- tapOn: "Email Address"
+- inputText: "dev@monarch.com"
+- tapOn: "Password"
+- inputText: "password"
+- tapOn: "Sign In"
+- assertVisible: "Welcome to"

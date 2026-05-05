@@ -1,6 +1,7 @@
-import { Text, View, Image, TouchableHighlight } from "react-native";
+import { Text, View, TouchableHighlight } from "react-native";
+import { Image } from "expo-image";
 import React from "react";
-import { moderateScale } from "../../../utils/responsive/metrices";
+import { moderateScale } from "@/utils/responsive/metrices";
 import { Entypo } from "@expo/vector-icons";
 import * as ImagePicker from "expo-image-picker";
 import { useAuth } from "../../hooks/useAuth";

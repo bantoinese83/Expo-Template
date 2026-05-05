@@ -1,10 +1,6 @@
 import { Text, View, TouchableOpacity, ScrollView } from "react-native";
 import React from "react";
-import {
-  horizontalScale,
-  moderateScale,
-  verticalScale,
-} from "../../../../utils/responsive/metrices";
+import { horizontalScale, moderateScale, verticalScale } from "@/utils/responsive/metrices";
 
 type SelectionItem = string | { label: string; value: any };
 

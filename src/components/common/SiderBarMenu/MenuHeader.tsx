@@ -1,6 +1,6 @@
 import { View, Text, TouchableOpacity, Platform } from "react-native";
 import React, { memo } from "react";
-import { moderateScale } from "../../../../utils/responsive/metrices";
+import { moderateScale } from "@/utils/responsive/metrices";
 import { Ionicons } from "@expo/vector-icons";
 
 interface Props {

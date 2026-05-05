@@ -11,20 +11,21 @@ interface AppInputProps extends TextInputProps {
   containerStyle?: string;
 }
 
-export const AppInput: React.FC<AppInputProps> = ({
-  label,
-  error,
-  showSearchIcon,
-  type = "text",
-  containerStyle = "",
-  className = "",
-  secureTextEntry,
-  ...props
-}) => {
-  const [isFocused, setIsFocused] = useState(false);
-  const [isPasswordVisible, setIsPasswordVisible] = useState(secureTextEntry);
+export const AppInput: React.FC<AppInputProps> = React.memo(
+  ({
+    label,
+    error,
+    showSearchIcon,
+    type = "text",
+    containerStyle = "",
+    className = "",
+    secureTextEntry,
+    ...props
+  }) => {
+    const [isFocused, setIsFocused] = useState(false);
+    const [isPasswordVisible, setIsPasswordVisible] = useState(secureTextEntry);
 
-  const inputClasses = `
+    const inputClasses = `
     w-full px-4 py-[14px] rounded-xl border bg-slate-50 dark:bg-slate-900/50 
     ${
       isFocused
@@ -38,65 +39,66 @@ export const AppInput: React.FC<AppInputProps> = ({
     ${className}
   `;
 
-  return (
-    <View className={`w-full mb-5 ${containerStyle}`}>
-      {label && (
-        <AppText
-          variant="caption"
-          className="mb-2 ml-1 text-[13px] font-semibold tracking-tight text-slate-500 dark:text-slate-500 uppercase"
-        >
-          {label}
-        </AppText>
-      )}
-
-      <View className="relative shadow-sm shadow-slate-100 dark:shadow-none">
-        {showSearchIcon && (
-          <View
-            className="absolute left-[15px] z-10 top-[15px]"
-            accessibilityElementsHidden={true}
-            importantForAccessibility="no-hide-descendants"
+    return (
+      <View className={`w-full mb-5 ${containerStyle}`}>
+        {label && (
+          <AppText
+            variant="caption"
+            className="mb-2 ml-1 text-[13px] font-semibold tracking-tight text-slate-500 dark:text-slate-500 uppercase"
           >
-            <Search size={19} color={isFocused ? "#6366f1" : "#cbd5e1"} />
-          </View>
+            {label}
+          </AppText>
         )}
 
-        <TextInput
-          className={inputClasses}
-          onFocus={() => setIsFocused(true)}
-          onBlur={() => setIsFocused(false)}
-          placeholderTextColor="#cbd5e1"
-          secureTextEntry={isPasswordVisible}
-          accessibilityLabel={label || props.placeholder}
-          accessibilityHint={error || props.accessibilityHint}
-          accessibilityState={{ disabled: props.editable === false }}
-          {...props}
-        />
+        <View className="relative shadow-sm shadow-slate-100 dark:shadow-none">
+          {showSearchIcon && (
+            <View
+              className="absolute left-[15px] z-10 top-[15px]"
+              accessibilityElementsHidden={true}
+              importantForAccessibility="no-hide-descendants"
+            >
+              <Search size={19} color={isFocused ? "#6366f1" : "#cbd5e1"} />
+            </View>
+          )}
 
-        {type === "password" && (
-          <TouchableOpacity
-            className="absolute right-[15px] top-[15px] p-0.5"
-            onPress={() => setIsPasswordVisible(!isPasswordVisible)}
-            accessibilityRole="button"
-            accessibilityLabel={isPasswordVisible ? "Show password" : "Hide password"}
+          <TextInput
+            className={inputClasses}
+            onFocus={() => setIsFocused(true)}
+            onBlur={() => setIsFocused(false)}
+            placeholderTextColor="#cbd5e1"
+            secureTextEntry={isPasswordVisible}
+            accessibilityLabel={label || props.placeholder}
+            accessibilityHint={error || props.accessibilityHint}
+            accessibilityState={{ disabled: props.editable === false }}
+            {...props}
+          />
+
+          {type === "password" && (
+            <TouchableOpacity
+              className="absolute right-[15px] top-[15px] p-0.5"
+              onPress={() => setIsPasswordVisible(!isPasswordVisible)}
+              accessibilityRole="button"
+              accessibilityLabel={isPasswordVisible ? "Show password" : "Hide password"}
+            >
+              {isPasswordVisible ? (
+                <Eye size={19} color="#cbd5e1" />
+              ) : (
+                <EyeOff size={19} color="#cbd5e1" />
+              )}
+            </TouchableOpacity>
+          )}
+        </View>
+
+        {error && (
+          <AppText
+            variant="caption"
+            className="mt-1 ml-1 text-danger font-medium"
+            accessibilityRole="alert"
           >
-            {isPasswordVisible ? (
-              <Eye size={19} color="#cbd5e1" />
-            ) : (
-              <EyeOff size={19} color="#cbd5e1" />
-            )}
-          </TouchableOpacity>
+            {error}
+          </AppText>
         )}
       </View>
-
-      {error && (
-        <AppText
-          variant="caption"
-          className="mt-1 ml-1 text-danger font-medium"
-          accessibilityRole="alert"
-        >
-          {error}
-        </AppText>
-      )}
-    </View>
-  );
-};
+    );
+  }
+);

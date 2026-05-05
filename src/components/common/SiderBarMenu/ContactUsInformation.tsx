@@ -1,10 +1,7 @@
-import { Text, View, TouchableOpacity, Image } from "react-native";
+import { Text, View, TouchableOpacity } from "react-native";
+import { Image } from "expo-image";
 import React, { memo } from "react";
-import {
-  horizontalScale,
-  moderateScale,
-  verticalScale,
-} from "../../../../utils/responsive/metrices";
+import { horizontalScale, moderateScale, verticalScale } from "@/utils/responsive/metrices";
 
 interface LinkItem {
   label: string;
@@ -30,7 +27,7 @@ const ContactUsInformation = ({ contactList }: Props) => {
               key={index}
             >
               <View className="flex-row items-center gap-2">
-                <Image source={link.icon} resizeMode="contain" className="w-4 h-4" />
+                <Image source={link.icon} contentFit="contain" className="w-4 h-4" />
                 <Text className="text-[13px] font-normal text-slate-600 dark:text-slate-400">
                   {link.label}
                 </Text>

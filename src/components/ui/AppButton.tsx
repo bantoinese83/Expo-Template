@@ -20,91 +20,93 @@ interface AppButtonProps extends TouchableOpacityProps {
   textClassName?: string;
 }
 
-export const AppButton: React.FC<AppButtonProps> = ({
-  title,
-  variant = "primary",
-  size = "md",
-  loading = false,
-  leftIcon,
-  rightIcon,
-  haptic = Haptics.ImpactFeedbackStyle.Light,
-  className = "",
-  textClassName = "",
-  disabled,
-  onPress,
-  accessibilityLabel,
-  accessibilityRole,
-  accessibilityState,
-  ...props
-}) => {
-  const handlePress = (e: GestureResponderEvent) => {
-    if (loading || disabled) return;
-    if (haptic) {
-      Haptics.impactAsync(haptic);
-    }
-    if (onPress) {
-      onPress(e);
-    }
-  };
+export const AppButton: React.FC<AppButtonProps> = React.memo(
+  ({
+    title,
+    variant = "primary",
+    size = "md",
+    loading = false,
+    leftIcon,
+    rightIcon,
+    haptic = Haptics.ImpactFeedbackStyle.Light,
+    className = "",
+    textClassName = "",
+    disabled,
+    onPress,
+    accessibilityLabel,
+    accessibilityRole,
+    accessibilityState,
+    ...props
+  }) => {
+    const handlePress = (e: GestureResponderEvent) => {
+      if (loading || disabled) return;
+      if (haptic) {
+        Haptics.impactAsync(haptic);
+      }
+      if (onPress) {
+        onPress(e);
+      }
+    };
 
-  const variants = {
-    primary: "bg-primary active:bg-indigo-700 shadow-sm shadow-indigo-200 dark:shadow-none",
-    secondary: "bg-slate-100 dark:bg-slate-800 active:bg-slate-200 dark:active:bg-slate-700",
-    danger: "bg-danger active:bg-red-600",
-    ghost: "bg-transparent active:bg-slate-50 dark:active:bg-slate-900",
-    outline:
-      "bg-transparent border border-slate-200 dark:border-slate-800 active:bg-slate-50 dark:active:bg-slate-900",
-  };
+    const variants = {
+      primary: "bg-primary active:bg-indigo-700 shadow-sm shadow-indigo-200 dark:shadow-none",
+      secondary: "bg-slate-100 dark:bg-slate-800 active:bg-slate-200 dark:active:bg-slate-700",
+      danger: "bg-danger active:bg-red-600",
+      ghost: "bg-transparent active:bg-slate-50 dark:active:bg-slate-900",
+      outline:
+        "bg-transparent border border-slate-200 dark:border-slate-800 active:bg-slate-50 dark:active:bg-slate-900",
+    };
 
-  const textVariants = {
-    primary: "text-white font-semibold",
-    secondary: "text-slate-900 dark:text-white font-semibold",
-    danger: "text-white font-semibold",
-    ghost: "text-primary dark:text-indigo-400 font-semibold",
-    outline: "text-slate-900 dark:text-slate-100 font-semibold",
-  };
+    const textVariants = {
+      primary: "text-white font-semibold",
+      secondary: "text-slate-900 dark:text-white font-semibold",
+      danger: "text-white font-semibold",
+      ghost: "text-primary dark:text-indigo-400 font-semibold",
+      outline: "text-slate-900 dark:text-slate-100 font-semibold",
+    };
 
-  const sizes = {
-    sm: "px-4 py-2 rounded-lg",
-    md: "px-6 py-3 rounded-xl",
-    lg: "px-8 py-4 rounded-2xl",
-  };
+    const sizes = {
+      sm: "px-4 py-2 rounded-lg",
+      md: "px-6 py-3 rounded-xl",
+      lg: "px-8 py-4 rounded-2xl",
+    };
 
-  const textSizes = {
-    sm: "caption",
-    md: "body",
-    lg: "h3",
-  } as const;
+    const textSizes = {
+      sm: "caption",
+      md: "body",
+      lg: "h3",
+    } as const;
 
-  return (
-    <TouchableOpacity
-      onPress={handlePress}
-      disabled={disabled || loading}
-      accessibilityRole={accessibilityRole || "button"}
-      accessibilityState={accessibilityState || { disabled: !!(disabled || loading) }}
-      accessibilityLabel={accessibilityLabel || title}
-      className={`flex-row items-center justify-center ${variants[variant]} ${sizes[size]} ${
-        disabled || loading ? "opacity-50" : ""
-      } ${className}`}
-      {...props}
-    >
-      {loading ? (
-        <ActivityIndicator
-          color={variant === "primary" || variant === "danger" ? "white" : "#6366f1"}
-          size="small"
-        />
-      ) : (
-        <View className="flex-row items-center justify-center">
-          {leftIcon && <View className="mr-2">{leftIcon}</View>}
-          <AppText
-            variant={textSizes[size]}
-            className={`${textVariants[variant]} ${textClassName}`}
-          >
-            {title}
-          </AppText>
-          {rightIcon && <View className="ml-2">{rightIcon}</View>}
-        </View>
-      )}
-    </TouchableOpacity>
-  );
-};
+    return (
+      <TouchableOpacity
+        onPress={handlePress}
+        disabled={disabled || loading}
+        accessibilityRole={accessibilityRole || "button"}
+        accessibilityState={accessibilityState || { disabled: !!(disabled || loading) }}
+        accessibilityLabel={accessibilityLabel || title}
+        className={`flex-row items-center justify-center ${variants[variant]} ${sizes[size]} ${
+          disabled || loading ? "opacity-50" : ""
+        } ${className}`}
+        {...props}
+      >
+        {loading ? (
+          <ActivityIndicator
+            color={variant === "primary" || variant === "danger" ? "white" : "#6366f1"}
+            size="small"
+          />
+        ) : (
+          <View className="flex-row items-center justify-center">
+            {leftIcon && <View className="mr-2">{leftIcon}</View>}
+            <AppText
+              variant={textSizes[size]}
+              className={`${textVariants[variant]} ${textClassName}`}
+            >
+              {title}
+            </AppText>
+            {rightIcon && <View className="ml-2">{rightIcon}</View>}
+          </View>
+        )}
+      </TouchableOpacity>
+    );
+  }
+);

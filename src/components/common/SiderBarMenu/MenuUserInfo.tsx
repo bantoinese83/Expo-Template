@@ -1,7 +1,8 @@
-import { Text, View, Image, TouchableOpacity } from "react-native";
+import { Text, View, TouchableOpacity } from "react-native";
+import { Image } from "expo-image";
 import React, { memo } from "react";
 import PrimaryButton from "../PrimaryButton";
-import { moderateScale, verticalScale } from "../../../../utils/responsive/metrices";
+import { moderateScale, verticalScale } from "@/utils/responsive/metrices";
 import { useRouter } from "expo-router";
 import { useAuth } from "../../../hooks/useAuth";
 

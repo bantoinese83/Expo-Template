@@ -1,6 +1,6 @@
 import { TouchableOpacity, View } from "react-native";
 import React from "react";
-import { moderateScale } from "../../../utils/responsive/metrices";
+import { moderateScale } from "@/utils/responsive/metrices";
 
 interface Props {
   checked?: boolean;
