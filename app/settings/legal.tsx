@@ -3,7 +3,7 @@ import { View, ScrollView, StyleSheet } from "react-native";
 import { useLocalSearchParams, useNavigation } from "expo-router";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 
-import { AppText } from "../../src/components/ui/AppText";
+import { AppText } from "@/components/ui/AppText";
 
 /**
  * Dynamic Legal Screen.

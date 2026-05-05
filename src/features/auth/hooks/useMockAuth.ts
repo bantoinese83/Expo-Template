@@ -19,7 +19,7 @@ export function useMockAuth() {
         await new Promise((resolve) => setTimeout(resolve, 800));
 
         if (provider === "mock") {
-          const email = credentials?.email?.trim() || "dev@monarch.com";
+          const email = credentials?.email?.trim() || "dev@example.com";
           const name = email.split("@")[0] || "Developer";
           setUser({ id: "1", email, name });
           logger.info("Mock sign-in successful", { email });

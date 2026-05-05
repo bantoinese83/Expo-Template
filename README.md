@@ -2,6 +2,14 @@
 
 A battle-hardened, 100/100 quality foundation for building high-fidelity cross-platform apps. This template is designed for **maximum developer velocity**, absolute type safety, and production-grade resilience.
 
+### Clone → your app in minutes
+
+1. `npm install --legacy-peer-deps`
+2. `npm run init-app -- --name "Your App" --slug your-app --bundle com.you.yourapp` (sets Expo identity, bundle IDs, npm package name, env scheme)
+3. `cp .env.example .env` → `npm start`
+
+Full path from template to API, features, and EAS: **[docs/getting-started.md](./docs/getting-started.md)**.
+
 ---
 
 ## ✨ Features
@@ -103,14 +111,15 @@ import { GlassCard } from "premium-ui";
 
 ## 📖 Key Scripts
 
-| Command                    | Description                                             |
-| :------------------------- | :------------------------------------------------------ |
-| `npm run check-all`        | Run Lint, Type-check, Format, and Jest (Goal: 100/100). |
-| `npm run generate:api`     | Generate React Query hooks from Swagger/OpenAPI.        |
-| `npm run generate:feature` | Scaffold a standard, clean-architecture feature.        |
-| `npm run db:generate`      | Generate SQL migrations from Drizzle schema.            |
-| `npm run db:push`          | Apply migrations to your local SQLite DB.               |
-| `npm run deploy`           | Trigger a production build via EAS.                     |
+| Command                    | Description                                                          |
+| :------------------------- | :------------------------------------------------------------------- |
+| `npm run check-all`        | Run Lint, Type-check, Format, and Jest (Goal: 100/100).              |
+| `npm run generate:api`     | Generate React Query hooks from Swagger/OpenAPI.                     |
+| `npm run generate:feature` | Scaffold a standard, clean-architecture feature.                     |
+| `npm run db:generate`      | Generate SQL migrations from Drizzle schema.                         |
+| `npm run db:push`          | Apply migrations to your local SQLite DB.                            |
+| `npm run deploy`           | Trigger a production build via EAS.                                  |
+| `npm run init-app`         | Rename the template (name, slug, bundle ID, scheme, `.env.example`). |
 
 ## 📁 Directory Overview
 

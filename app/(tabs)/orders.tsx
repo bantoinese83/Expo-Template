@@ -1,12 +1,11 @@
-import React, { useMemo, useState, useEffect, useCallback } from "react";
-import { View, RefreshControl } from "react-native";
-import { FlashList } from "@shopify/flash-list";
-const TypedFlashList = FlashList as any;
+import React, { useCallback, useEffect, useMemo, useState } from "react";
+import { View } from "react-native";
+import { FlashList, type ListRenderItem } from "@shopify/flash-list";
 
-import { AppText } from "../../src/components/ui/AppText";
-import { AppCard } from "../../src/components/ui/AppCard";
-import { ScreenWrapper } from "../../src/components/ui/ScreenWrapper";
-import { AppCardSkeleton } from "../../src/components/ui/AppSkeleton";
+import { AppCard } from "@/components/ui/AppCard";
+import { AppCardSkeleton } from "@/components/ui/AppSkeleton";
+import { AppText } from "@/components/ui/AppText";
+import { ScreenWrapper } from "@/components/ui/ScreenWrapper";
 
 type Order = {
   id: string;
@@ -24,6 +23,37 @@ const DUMMY_ORDERS: Order[] = [
   { id: "6", orderNumber: "Order #12350", status: "Shipped", date: "Oct 29, 2025" },
 ];
 
+const OrderRow = React.memo(function OrderRow({ item }: { item: Order }) {
+  const isDelivered = item.status === "Delivered";
+  const isProcessing = item.status === "Processing";
+  const badgeBg = isDelivered ? "bg-emerald-50" : isProcessing ? "bg-amber-50" : "bg-slate-50";
+  const badgeText = isDelivered
+    ? "text-emerald-600"
+    : isProcessing
+      ? "text-amber-600"
+      : "text-slate-600";
+
+  return (
+    <AppCard className="mb-4" variant="elevated">
+      <View className="flex-row justify-between items-center">
+        <View>
+          <AppText variant="h3" className="text-base">
+            {item.orderNumber}
+          </AppText>
+          <AppText variant="caption" className="text-slate-500 mt-1">
+            {item.date}
+          </AppText>
+        </View>
+        <View className={`px-2 py-1 rounded-md ${badgeBg}`}>
+          <AppText variant="caption" className={`font-semibold ${badgeText}`}>
+            {item.status}
+          </AppText>
+        </View>
+      </View>
+    </AppCard>
+  );
+});
+
 export default function OrdersScreen() {
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
@@ -39,42 +69,7 @@ export default function OrdersScreen() {
     setTimeout(() => setRefreshing(false), 1500);
   }, []);
 
-  const renderItem = ({ item }: { item: Order }) => (
-    <AppCard className="mb-4" variant="elevated">
-      <View className="flex-row justify-between items-center">
-        <View>
-          <AppText variant="h3" className="text-base">
-            {item.orderNumber}
-          </AppText>
-          <AppText variant="caption" className="text-slate-500 mt-1">
-            {item.date}
-          </AppText>
-        </View>
-        <View
-          className={`px-2 py-1 rounded-md ${
-            item.status === "Delivered"
-              ? "bg-emerald-50"
-              : item.status === "Processing"
-                ? "bg-amber-50"
-                : "bg-slate-50"
-          }`}
-        >
-          <AppText
-            variant="caption"
-            className={`font-semibold ${
-              item.status === "Delivered"
-                ? "text-emerald-600"
-                : item.status === "Processing"
-                  ? "text-amber-600"
-                  : "text-slate-600"
-            }`}
-          >
-            {item.status}
-          </AppText>
-        </View>
-      </View>
-    </AppCard>
-  );
+  const renderItem = useCallback<ListRenderItem<Order>>(({ item }) => <OrderRow item={item} />, []);
 
   return (
     <ScreenWrapper scrollable={false}>
@@ -92,20 +87,14 @@ export default function OrdersScreen() {
           ))}
         </View>
       ) : (
-        <TypedFlashList
+        <FlashList<Order>
           data={data}
+          keyExtractor={(item) => item.id}
           renderItem={renderItem}
-          estimatedItemSize={85}
           contentContainerStyle={{ paddingBottom: 20 }}
           showsVerticalScrollIndicator={false}
-          refreshControl={
-            <RefreshControl
-              refreshing={refreshing}
-              onRefresh={onRefresh}
-              tintColor="#6366f1"
-              colors={["#6366f1"]}
-            />
-          }
+          refreshing={refreshing}
+          onRefresh={onRefresh}
           ListEmptyComponent={
             <View className="items-center justify-center mt-20">
               <AppText variant="body" className="text-slate-400">

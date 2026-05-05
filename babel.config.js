@@ -12,6 +12,8 @@ module.exports = function (api) {
         },
       ],
       ["inline-import", { extensions: [".sql"] }],
+      // Must run before the Reanimated plugin (which must stay last).
+      "babel-plugin-react-compiler",
       "react-native-reanimated/plugin",
     ],
   };

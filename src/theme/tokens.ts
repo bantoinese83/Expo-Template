@@ -45,6 +45,11 @@ export const colors = {
     light: "#e2e8f0",
     dark: "#1e293b",
   },
+
+  /** Full-screen placeholders (e.g. auth + DB bootstrap before navigation mounts). */
+  shell: {
+    bootstrap: "#263238",
+  },
 };
 
 export const spacing = {

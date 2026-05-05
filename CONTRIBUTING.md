@@ -7,10 +7,15 @@
 
 ## First-time setup
 
+Use the Node version in `.nvmrc` (`nvm use`). After cloning:
+
 ```bash
 npm install --legacy-peer-deps
+npm run init-app -- --name "My App" --slug my-app --bundle com.example.myapp
 cp .env.example .env
 ```
+
+See [docs/getting-started.md](./docs/getting-started.md) for the full checklist (API, Drizzle, EAS).
 
 ## Scripts (run before opening a PR)
 

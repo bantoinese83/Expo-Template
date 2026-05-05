@@ -12,6 +12,7 @@ import { useAppDeepLinks } from "@/features/linking";
 import { useAuthRouteSync } from "@/features/navigation";
 import { useCheckUpdates } from "@/features/updates/useCheckUpdates";
 import { useDebugStore } from "@/store/useDebugStore";
+import { colors } from "@/theme/tokens";
 
 /**
  * Auth + DB gate and root stack. Keeps `app/_layout.tsx` as a thin entry file.
@@ -27,7 +28,7 @@ export function RootGate() {
   const isBootstrapping = isAuthLoading || !isDbReady;
 
   if (isBootstrapping) {
-    return <View style={{ flex: 1, backgroundColor: "#263238" }} />;
+    return <View style={{ flex: 1, backgroundColor: colors.shell.bootstrap }} />;
   }
 
   if (migrationError) {

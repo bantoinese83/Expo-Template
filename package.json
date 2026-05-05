@@ -22,7 +22,8 @@
     "prepare": "husky",
     "generate:api": "orval",
     "deploy": "eas build --profile production",
-    "generate:feature": "node scripts/generate-feature.js"
+    "generate:feature": "node scripts/generate-feature.js",
+    "init-app": "node scripts/customize-app.js"
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx}": [

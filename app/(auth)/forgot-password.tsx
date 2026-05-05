@@ -1,10 +1,11 @@
 import React from "react";
 import { ScrollView } from "react-native";
-import { AppText } from "../../src/components/ui/AppText";
 import { SafeAreaView } from "react-native-safe-area-context";
-import PrimaryButton from "../../src/components/common/PrimaryButton";
-import TextField from "../../src/components/common/form/TextField";
 import { useRouter } from "expo-router";
+
+import PrimaryButton from "@/components/common/PrimaryButton";
+import TextField from "@/components/common/form/TextField";
+import { AppText } from "@/components/ui/AppText";
 
 export default function ForgotPasswordScreen() {
   const router = useRouter();
