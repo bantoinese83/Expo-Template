@@ -85,4 +85,14 @@ Creates `src/features/invoices/` with `components`, `hooks`, `api`, `types`, `se
 | Navigation rules   | `src/features/navigation/`                                                      |
 | Architecture notes | [`docs/adr/0001-architecture-overview.md`](./adr/0001-architecture-overview.md) |
 
+## 9. Common `expo run:ios` messages (usually harmless)
+
+| Message                                                      | Meaning                                                                                                                                                         |
+| ------------------------------------------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Invalid updates configuration / runtime version**          | Fixed in-repo via `runtimeVersion` in [`app.config.ts`](../app.config.ts). Re-run `npx expo prebuild` if native folders were generated before this change.      |
+| **Sentry — Missing config for organization, project**        | Set `SENTRY_ORG` and `SENTRY_PROJECT` in `.env` (see `.env.example`). [`app.config.ts`](../app.config.ts) passes them into the Sentry Expo plugin when present. |
+| **Pods/… iOS deployment version mismatch**                   | CocoaPods comparing a pod’s minimum iOS to the project—typically safe to ignore unless you see a real compile error.                                            |
+| **SafeAreaView has been deprecated**                         | Your screens already use `react-native-safe-area-context`; the warning usually comes from a dependency until they update.                                       |
+| **Xcode “ambiguous dependencies” / script runs every build** | Known noise from some Expo / Sentry build phases; optional cleanup in Xcode **Build Phases** if it bothers you.                                                 |
+
 For PR conventions, see [CONTRIBUTING.md](../CONTRIBUTING.md).
