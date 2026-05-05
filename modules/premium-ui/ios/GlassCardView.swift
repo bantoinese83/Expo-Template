@@ -17,13 +17,13 @@ struct GlassCardView: ExpoSwiftUI.View {
       if let title = props.title, !title.isEmpty {
         Text(title)
           .font(.system(size: 22, weight: .bold, design: .rounded))
-          .foregroundColor(.white)
+          .foregroundColor(.primary)
       }
       
       if let content = props.content, !content.isEmpty {
         Text(content)
           .font(.system(size: 16, weight: .medium, design: .rounded))
-          .foregroundColor(.white.opacity(0.8))
+          .foregroundColor(.secondary)
       }
     }
     .padding(20)
