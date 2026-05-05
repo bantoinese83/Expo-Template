@@ -6,6 +6,7 @@ import BottomSheet, {
   BottomSheetBackdropProps,
 } from "@gorhom/bottom-sheet";
 import { AppText } from "./AppText";
+import { useTheme } from "@/hooks/useTheme";
 
 /**
  * Standardized Bottom Sheet primitive for the Expo Template.
@@ -28,6 +29,7 @@ export interface BaseBottomSheetRef {
 export const BaseBottomSheet = forwardRef<BaseBottomSheetRef, BaseBottomSheetProps>(
   ({ children, snapPoints = ["25%", "50%", "90%"], title, onClose, index = -1 }, ref) => {
     const bottomSheetRef = useRef<BottomSheet>(null);
+    const { isDark } = useTheme();
 
     // Expose methods to parent components via ref
     useImperativeHandle(ref, () => ({
@@ -60,18 +62,29 @@ export const BaseBottomSheet = forwardRef<BaseBottomSheetRef, BaseBottomSheetPro
         enablePanDownToClose
         backdropComponent={renderBackdrop}
         onChange={handleSheetChanges}
-        handleIndicatorStyle={styles.handleIndicator}
-        backgroundStyle={styles.background}
+        handleIndicatorStyle={{
+          backgroundColor: isDark ? "#475569" : "#cbd5e1",
+          width: 44,
+          height: 5,
+        }}
+        backgroundStyle={{
+          backgroundColor: isDark ? "#0f172a" : "#ffffff",
+          borderTopLeftRadius: 32,
+          borderTopRightRadius: 32,
+        }}
       >
         <BottomSheetView style={styles.contentContainer}>
           {title && (
-            <View style={styles.header}>
-              <AppText variant="h3" className="text-center">
+            <View
+              className="py-4 border-b border-slate-50 dark:border-slate-800/50"
+              style={styles.header}
+            >
+              <AppText variant="h3" className="text-center text-[18px] tracking-tight">
                 {title}
               </AppText>
             </View>
           )}
-          <View className="flex-1 px-4 pt-2">{children}</View>
+          <View className="flex-1 px-6 pt-4">{children}</View>
         </BottomSheetView>
       </BottomSheet>
     );
@@ -82,18 +95,7 @@ const styles = StyleSheet.create({
   contentContainer: {
     flex: 1,
   },
-  handleIndicator: {
-    backgroundColor: "#cbd5e1",
-    width: 40,
-  },
-  background: {
-    backgroundColor: "#ffffff",
-    borderTopLeftRadius: 24,
-    borderTopRightRadius: 24,
-  },
   header: {
-    paddingVertical: 12,
-    borderBottomWidth: StyleSheet.hairlineWidth,
-    borderBottomColor: "#f1f5f9",
+    paddingVertical: 14,
   },
 });

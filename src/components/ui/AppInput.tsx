@@ -25,8 +25,12 @@ export const AppInput: React.FC<AppInputProps> = ({
   const [isPasswordVisible, setIsPasswordVisible] = useState(secureTextEntry);
 
   const inputClasses = `
-    w-full px-md py-[12px] rounded-md border-2 bg-slate-100 dark:bg-slate-900 
-    ${isFocused ? "border-primary dark:border-primary" : "border-slate-200 dark:border-slate-800"}
+    w-full px-4 py-[14px] rounded-xl border bg-slate-50 dark:bg-slate-900/50 
+    ${
+      isFocused
+        ? "border-primary/50 ring-2 ring-primary/10"
+        : "border-slate-100 dark:border-slate-800"
+    }
     ${error ? "border-danger" : ""}
     text-slate-900 dark:text-white
     ${showSearchIcon ? "pl-[44px]" : ""}
@@ -35,24 +39,24 @@ export const AppInput: React.FC<AppInputProps> = ({
   `;
 
   return (
-    <View className={`w-full mb-4 ${containerStyle}`}>
+    <View className={`w-full mb-5 ${containerStyle}`}>
       {label && (
         <AppText
           variant="caption"
-          className="mb-1.5 ml-1 font-medium text-slate-700 dark:text-slate-300"
+          className="mb-2 ml-1 text-[13px] font-semibold tracking-tight text-slate-500 dark:text-slate-500 uppercase"
         >
           {label}
         </AppText>
       )}
 
-      <View className="relative">
+      <View className="relative shadow-sm shadow-slate-100 dark:shadow-none">
         {showSearchIcon && (
           <View
-            className="absolute left-3.5 z-10 top-3.5"
+            className="absolute left-[15px] z-10 top-[15px]"
             accessibilityElementsHidden={true}
             importantForAccessibility="no-hide-descendants"
           >
-            <Search size={18} color={isFocused ? "#6366f1" : "#94a3b8"} />
+            <Search size={19} color={isFocused ? "#6366f1" : "#cbd5e1"} />
           </View>
         )}
 
@@ -60,7 +64,7 @@ export const AppInput: React.FC<AppInputProps> = ({
           className={inputClasses}
           onFocus={() => setIsFocused(true)}
           onBlur={() => setIsFocused(false)}
-          placeholderTextColor="#94a3b8"
+          placeholderTextColor="#cbd5e1"
           secureTextEntry={isPasswordVisible}
           accessibilityLabel={label || props.placeholder}
           accessibilityHint={error || props.accessibilityHint}
@@ -70,15 +74,15 @@ export const AppInput: React.FC<AppInputProps> = ({
 
         {type === "password" && (
           <TouchableOpacity
-            className="absolute right-3.5 top-3.5 p-1"
+            className="absolute right-[15px] top-[15px] p-0.5"
             onPress={() => setIsPasswordVisible(!isPasswordVisible)}
             accessibilityRole="button"
             accessibilityLabel={isPasswordVisible ? "Show password" : "Hide password"}
           >
             {isPasswordVisible ? (
-              <Eye size={18} color="#94a3b8" />
+              <Eye size={19} color="#cbd5e1" />
             ) : (
-              <EyeOff size={18} color="#94a3b8" />
+              <EyeOff size={19} color="#cbd5e1" />
             )}
           </TouchableOpacity>
         )}

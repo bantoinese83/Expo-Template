@@ -35,14 +35,17 @@ const FEATURES: Feature[] = [
 
 export function FeatureCard({ icon, title, desc }: Feature) {
   return (
-    <AppCard className="w-[48%] mb-md" padding="md">
-      <View className="w-10 h-10 rounded-lg bg-primary/10 dark:bg-primary/20 items-center justify-center">
+    <AppCard className="w-[48%] mb-4 border-slate-100/50" padding="md" variant="elevated">
+      <View className="w-12 h-12 rounded-2xl bg-white dark:bg-slate-800 items-center justify-center shadow-sm shadow-slate-200 dark:shadow-none border border-slate-50 dark:border-slate-700">
         <MaterialCommunityIcons name={icon as any} size={24} color="#6366f1" />
       </View>
-      <AppText variant="h3" className="mt-md text-base">
+      <AppText variant="h3" className="mt-4 text-[17px] font-semibold tracking-tight">
         {title}
       </AppText>
-      <AppText variant="body" className="text-slate-500 dark:text-slate-400 text-xs mt-xs leading-4">
+      <AppText
+        variant="body"
+        className="text-slate-500 dark:text-slate-400 text-[13px] mt-1.5 leading-[18px]"
+      >
         {desc}
       </AppText>
     </AppCard>

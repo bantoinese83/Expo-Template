@@ -2,9 +2,15 @@ import React from "react";
 import { View, TouchableOpacity, Text } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useTheme } from "../hooks/useTheme";
+import * as Haptics from "expo-haptics";
 
 export const ThemeToggle = () => {
   const { theme, toggleTheme } = useTheme();
+
+  const handleToggle = (value: "light" | "dark" | "system") => {
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    toggleTheme(value);
+  };
 
   const themes: { label: string; value: "light" | "dark" | "system"; icon: any }[] = [
     { label: "Light", value: "light", icon: "weather-sunny" },
@@ -13,25 +19,14 @@ export const ThemeToggle = () => {
   ];
 
   return (
-    <View className="flex-row bg-slate-100 dark:bg-slate-800 p-1 rounded-xl">
+    <View className="flex-row bg-slate-50 dark:bg-slate-900/50 p-1.5 rounded-2xl border border-slate-100 dark:border-slate-800/50">
       {themes.map((t) => (
         <TouchableOpacity
           key={t.value}
-          onPress={() => toggleTheme(t.value)}
-          className={`flex-1 flex-row items-center justify-center py-2 px-3 rounded-lg ${
-            theme === t.value ? "bg-white dark:bg-slate-700" : ""
+          onPress={() => handleToggle(t.value)}
+          className={`flex-1 flex-row items-center justify-center py-2.5 px-3 rounded-xl ${
+            theme === t.value ? "bg-white dark:bg-slate-800 shadow-sm" : ""
           }`}
-          style={
-            theme === t.value
-              ? {
-                  shadowColor: "#000",
-                  shadowOffset: { width: 0, height: 1 },
-                  shadowOpacity: 0.1,
-                  shadowRadius: 1,
-                  elevation: 1,
-                }
-              : undefined
-          }
         >
           <MaterialCommunityIcons
             name={t.icon}
@@ -39,7 +34,7 @@ export const ThemeToggle = () => {
             color={theme === t.value ? "#6366f1" : "#94a3b8"}
           />
           {theme === t.value && (
-            <Text className="ml-2 text-xs font-semibold text-slate-900 dark:text-white">
+            <Text className="ml-2.5 text-xs font-semibold tracking-tight text-slate-900 dark:text-white">
               {t.label}
             </Text>
           )}

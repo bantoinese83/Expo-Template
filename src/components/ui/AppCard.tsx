@@ -14,23 +14,25 @@ export const AppCard: React.FC<AppCardProps> = React.memo(
   ({ children, variant = "elevated", padding = "md", onPress, className = "", ...props }) => {
     const variants = {
       elevated:
-        "bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 shadow-sm",
-      outline: "bg-transparent border border-slate-200 dark:border-slate-800",
-      ghost: "bg-slate-50 dark:bg-slate-900/50",
+        "bg-white dark:bg-slate-900 border border-slate-100/50 dark:border-slate-800/50 shadow-md",
+      outline: "bg-transparent border border-slate-200/60 dark:border-slate-800/60",
+      ghost: "bg-slate-50/50 dark:bg-slate-900/30",
     };
 
     const paddings = {
       none: "p-0",
-      sm: "p-sm",
-      md: "p-md",
-      lg: "p-lg",
+      sm: "p-3",
+      md: "p-5",
+      lg: "p-7",
     };
 
     const Container = onPress ? Pressable : (View as any);
 
     return (
       <Container
-        className={`rounded-lg ${variants[variant]} ${paddings[padding]} ${className}`}
+        className={`rounded-xl ${variants[variant]} ${paddings[padding]} ${
+          onPress ? "active:scale-[0.98] transition-transform" : ""
+        } ${className}`}
         onPress={onPress}
         {...(onPress ? { android_ripple: { color: "#e2e8f0" } } : {})}
         {...props}

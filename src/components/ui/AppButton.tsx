@@ -48,12 +48,12 @@ export const AppButton: React.FC<AppButtonProps> = ({
   };
 
   const variants = {
-    primary: "bg-primary active:bg-indigo-700",
-    secondary: "bg-slate-200 dark:bg-slate-800 active:bg-slate-300 dark:active:bg-slate-700",
+    primary: "bg-primary active:bg-indigo-700 shadow-sm shadow-indigo-200 dark:shadow-none",
+    secondary: "bg-slate-100 dark:bg-slate-800 active:bg-slate-200 dark:active:bg-slate-700",
     danger: "bg-danger active:bg-red-600",
-    ghost: "bg-transparent active:bg-slate-100 dark:active:bg-slate-900",
+    ghost: "bg-transparent active:bg-slate-50 dark:active:bg-slate-900",
     outline:
-      "bg-transparent border border-primary active:bg-indigo-50 dark:active:bg-indigo-900/20",
+      "bg-transparent border border-slate-200 dark:border-slate-800 active:bg-slate-50 dark:active:bg-slate-900",
   };
 
   const textVariants = {
@@ -61,13 +61,13 @@ export const AppButton: React.FC<AppButtonProps> = ({
     secondary: "text-slate-900 dark:text-white font-semibold",
     danger: "text-white font-semibold",
     ghost: "text-primary dark:text-indigo-400 font-semibold",
-    outline: "text-primary dark:text-indigo-400 font-semibold",
+    outline: "text-slate-900 dark:text-slate-100 font-semibold",
   };
 
   const sizes = {
-    sm: "px-sm py-xs rounded-sm",
-    md: "px-md py-sm rounded-md",
-    lg: "px-lg py-md rounded-lg",
+    sm: "px-4 py-2 rounded-lg",
+    md: "px-6 py-3 rounded-xl",
+    lg: "px-8 py-4 rounded-2xl",
   };
 
   const textSizes = {

@@ -4,8 +4,8 @@
   "main": "expo-router/entry",
   "scripts": {
     "start": "expo start",
-    "android": "expo run:android",
-    "ios": "expo run:ios",
+    "android": "SENTRY_DISABLE_AUTO_UPLOAD=true expo run:android",
+    "ios": "SENTRY_DISABLE_AUTO_UPLOAD=true expo run:ios",
     "web": "expo start --web",
     "lint": "eslint . --ext .js,.jsx,.ts,.tsx --max-warnings 0",
     "format": "prettier --write .",
@@ -20,7 +20,8 @@
     "check-all": "npm run lint && npm run check-types && npm run format:check && npm run test",
     "prepare": "husky",
     "generate:api": "orval",
-    "deploy": "eas build --profile production"
+    "deploy": "eas build --profile production",
+    "generate:feature": "node scripts/generate-feature.js"
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx}": [

@@ -49,17 +49,20 @@ export default function LoginScreen() {
   return (
     <ScreenWrapper scrollable>
       <ScrollView contentContainerClassName="flex-grow p-lg" showsVerticalScrollIndicator={false}>
-        <View className="items-center mt-xl mb-lg">
-          <Logo size={80} className="mb-md shadow-lg" />
-          <AppText variant="h1" className="text-3xl text-center">
+        <View className="items-center mt-xl mb-12">
+          <Logo size={84} className="mb-6 shadow-xl shadow-indigo-100 dark:shadow-none" />
+          <AppText variant="h1" className="text-[34px] leading-tight tracking-tight text-center">
             Welcome Back
           </AppText>
-          <AppText variant="body" className="text-slate-500 dark:text-slate-400 mt-2 text-center">
+          <AppText
+            variant="body"
+            className="text-slate-500 dark:text-slate-400 mt-3 text-center text-[15px]"
+          >
             Sign in to your account
           </AppText>
         </View>
 
-        <View className="mb-8">
+        <View className="mb-10">
           <Controller
             control={control}
             name="email"
@@ -109,33 +112,35 @@ export default function LoginScreen() {
           className="mb-lg"
         />
 
-        <View className="flex-row items-center my-lg">
-          <View className="flex-1 h-[1px] bg-slate-200 dark:bg-slate-800" />
+        <View className="flex-row items-center my-10">
+          <View className="flex-1 h-[1px] bg-slate-100 dark:bg-slate-800" />
           <AppText
             variant="caption"
-            className="mx-4 text-slate-400 uppercase tracking-widest font-bold"
+            className="mx-6 text-[10px] text-slate-400 dark:text-slate-500 uppercase tracking-[2px] font-bold"
           >
             or continue with
           </AppText>
-          <View className="flex-1 h-[1px] bg-slate-200 dark:bg-slate-800" />
+          <View className="flex-1 h-[1px] bg-slate-100 dark:bg-slate-800" />
         </View>
 
-        <View className="flex-row justify-between mb-8 gap-x-4">
-          <TouchableOpacity className="flex-1 h-[52px] border-2 border-slate-100 dark:border-slate-800 rounded-md items-center justify-center flex-row active:bg-slate-50 dark:active:bg-slate-900 transition-colors">
+        <View className="flex-row justify-between mb-10 gap-x-4">
+          <TouchableOpacity className="flex-1 h-[56px] border border-slate-100 dark:border-slate-800 rounded-xl items-center justify-center flex-row active:bg-slate-50 dark:active:bg-slate-900 shadow-sm shadow-slate-50 dark:shadow-none transition-colors">
             <MaterialCommunityIcons name="google" size={20} color="#EA4335" />
-            <AppText className="ml-2 font-semibold">Google</AppText>
+            <AppText className="ml-2.5 font-semibold text-[15px]">Google</AppText>
           </TouchableOpacity>
-          <TouchableOpacity className="flex-1 h-[52px] border-2 border-slate-100 dark:border-slate-800 rounded-md items-center justify-center flex-row active:bg-slate-50 dark:active:bg-slate-900 transition-colors">
+          <TouchableOpacity className="flex-1 h-[56px] border border-slate-100 dark:border-slate-800 rounded-xl items-center justify-center flex-row active:bg-slate-50 dark:active:bg-slate-900 shadow-sm shadow-slate-50 dark:shadow-none transition-colors">
             <MaterialCommunityIcons name="apple" size={20} color={isDark ? "white" : "black"} />
-            <AppText className="ml-2 font-semibold">Apple</AppText>
+            <AppText className="ml-2.5 font-semibold text-[15px]">Apple</AppText>
           </TouchableOpacity>
         </View>
 
-        <View className="flex-row justify-center items-center mt-auto pb-md">
-          <AppText className="text-slate-500 dark:text-slate-400">Don't have an account? </AppText>
+        <View className="flex-row justify-center items-center mt-auto pb-6">
+          <AppText className="text-slate-500 dark:text-slate-400 text-[15px]">
+            Don't have an account?{" "}
+          </AppText>
           <Link href={"/signup" as Href} asChild>
             <TouchableOpacity>
-              <AppText className="text-primary font-bold">Sign Up</AppText>
+              <AppText className="text-primary font-bold text-[15px]">Sign Up</AppText>
             </TouchableOpacity>
           </Link>
         </View>

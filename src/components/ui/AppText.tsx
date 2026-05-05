@@ -14,11 +14,11 @@ export const AppText: React.FC<AppTextProps> = ({
   ...props
 }) => {
   const variantStyles = {
-    h1: "text-4xl font-bold text-slate-950 dark:text-slate-50",
-    h2: "text-3xl font-semibold text-slate-900 dark:text-slate-100",
-    h3: "text-2xl font-medium text-slate-800 dark:text-slate-200",
-    body: "text-base text-slate-600 dark:text-slate-400",
-    caption: "text-sm text-slate-500 dark:text-slate-600",
+    h1: "text-4xl font-bold tracking-tight leading-tight text-slate-950 dark:text-slate-50",
+    h2: "text-3xl font-semibold tracking-tight leading-tight text-slate-900 dark:text-slate-100",
+    h3: "text-2xl font-medium tracking-tight leading-snug text-slate-800 dark:text-slate-200",
+    body: "text-base leading-relaxed text-slate-600 dark:text-slate-400",
+    caption: "text-sm leading-normal text-slate-500 dark:text-slate-500",
   };
 
   // Maps variants to accessibility roles

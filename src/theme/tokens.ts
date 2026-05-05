@@ -90,6 +90,17 @@ export const typography = {
     bold: "700",
     black: "900",
   },
+  // Added for professional polish
+  letterSpacing: {
+    tight: -0.5,
+    normal: 0,
+    wide: 0.5,
+  },
+  lineHeight: {
+    tight: 1.25,
+    normal: 1.5,
+    relaxed: 1.75,
+  },
 };
 
 export const shadows = {
@@ -103,15 +114,15 @@ export const shadows = {
   md: {
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.1,
-    shadowRadius: 6,
+    shadowOpacity: 0.08,
+    shadowRadius: 10,
     elevation: 4,
   },
   lg: {
     shadowColor: "#000",
-    shadowOffset: { width: 0, height: 10 },
-    shadowOpacity: 0.1,
-    shadowRadius: 15,
+    shadowOffset: { width: 0, height: 12 },
+    shadowOpacity: 0.12,
+    shadowRadius: 20,
     elevation: 10,
   },
 };
