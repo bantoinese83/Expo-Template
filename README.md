@@ -11,18 +11,19 @@ A battle-hardened, 100/100 quality foundation for building high-fidelity cross-p
 - **Expo Router (v6+)**: Type-safe, file-based routing with deep link and universal link support.
 - **Modular shell**: Providers and RootGate are in `src/providers/`; app-wide bootstrap is in `src/bootstrap.ts`; logic is in `src/features/`.
 - **Strict TypeScript**: 100% coverage with zero `any` types and strict validation.
-- **Design System**: Atomic UI Kit (`AppButton`, `AppInput`, `AppCard`) powered by **NativeWind v4** and **Reanimated 4**.
+- **Design System & Native Extensions**: Atomic UI Kit (`AppButton`, `AppInput`, `AppCard`) powered by **NativeWind v4** and **Reanimated 4**, extended with native **SwiftUI Glassmorphism** via a custom Expo Module (`premium-ui` GlassCard).
 
 ### 🛠️ Developer Velocity (New!)
 
 - **Swagger-to-Hook (Orval)**: Automatically transform OpenAPI/Swagger specs into type-safe React Query hooks.
 - **Settings UI Pack**: Pre-built, premium dashboard for settings and legal (Privacy/Terms) screens.
 - **Standardized API Layer**: Centralized **Axios** client with automated interceptors for auth, logging, and error tracking.
+- **Automated Feature Scaffolder**: Run `npm run generate:feature` to instantly scaffold standard feature subfolders with clean architectural boundaries.
 
 ### 🔐 Performance & Monitoring
 
 - **Sentry-Ready**: Integrated monitoring via `ErrorTracking.ts` with auto-initialization in the root layout.
-- **Offline Persistence**: **React Query** persistence with `AsyncStorage` and **Drizzle SQLite** for local-first data.
+- **Offline Persistence**: **React Query** persistence with ultra-fast **MMKV v4** native storage, alongside **Drizzle SQLite** for local relational schemas.
 - **Automated Quality**: **Husky** and **Lint-staged** pre-commit hooks ensure zero lint/type errors in your repo.
 
 ---
@@ -51,6 +52,9 @@ The app uses a **single SQLite file** (`app.sqlite`, see `src/db/sqliteDatabase.
 
 ```bash
 npm run db:generate
+```
+
+```bash
 npm run db:push
 ```
 
@@ -74,33 +78,39 @@ Stop writing network boilerplate. Point the template to your Swagger spec and ge
 2. Run: `npm run generate:api`.
 3. Use your new type-safe hooks: `import { useMyService } from "@/api/generated";`
 
-### ⚙️ 2. Rapid UI Pack
+### 🏗️ 2. Scaffolding Feature Modules
 
-Your app comes with a pre-built [Settings Dashboard](file:///Users/monarchlabsinc./Desktop/Work/Projects/2026_expo_templete/app/settings/index.tsx).
+Maintain standard folder boundaries automatically. To create a new feature module (e.g. `billing`):
 
-- **Settings**: Use `(settings)` to add account/preference toggles.
-- **Legal**: Just add your text to `app/settings/legal.tsx` to get beautiful Privacy Policy and TOS screens.
+1. Run: `npm run generate:feature`
+2. Follow prompt to enter feature name: `billing`
+3. The script scaffolds complete clean-architecture directories (`components/`, `hooks/`, `services/`, `store/`) instantly.
 
-### 🚨 3. Monitoring & Errors
+### 💎 3. Premium Glassmorphic Cards (SwiftUI)
 
-Use the `errorTracking` service globally to capture exceptions:
+Your template ships with native Swift-UI glassmorphic widgets:
 
 ```typescript
-import { errorTracking } from "@/services/ErrorTracking";
-errorTracking.captureException(error, { category: "payment_flow" });
+import { GlassCard } from "premium-ui";
+
+<GlassCard
+  title="Native SwiftUI Card"
+  content="System-level real-time blur materials adapt dynamically to Light and Dark modes with automatic contrast adjustment."
+/>
 ```
 
 ---
 
 ## 📖 Key Scripts
 
-| Command                | Description                                             |
-| :--------------------- | :------------------------------------------------------ |
-| `npm run check-all`    | Run Lint, Type-check, Format, and Jest (Goal: 100/100). |
-| `npm run generate:api` | Generate React Query hooks from Swagger/OpenAPI.        |
-| `npm run db:generate`  | Generate SQL migrations from Drizzle schema.            |
-| `npm run db:push`      | Apply migrations to your local SQLite DB.               |
-| `npm run deploy`       | Trigger a production build via EAS.                     |
+| Command                    | Description                                             |
+| :------------------------- | :------------------------------------------------------ |
+| `npm run check-all`        | Run Lint, Type-check, Format, and Jest (Goal: 100/100). |
+| `npm run generate:api`     | Generate React Query hooks from Swagger/OpenAPI.        |
+| `npm run generate:feature` | Scaffold a standard, clean-architecture feature.        |
+| `npm run db:generate`      | Generate SQL migrations from Drizzle schema.            |
+| `npm run db:push`          | Apply migrations to your local SQLite DB.               |
+| `npm run deploy`           | Trigger a production build via EAS.                     |
 
 ## 📁 Directory Overview
 
@@ -108,10 +118,12 @@ errorTracking.captureException(error, { category: "payment_flow" });
   - `(auth)/`: Login, Signup, Forgot Password.
   - `(tabs)/`: Main app navigation.
   - `settings/`: Pre-built settings/legal pack.
+- `modules/`: Custom Expo Native Modules (e.g., `premium-ui` containing SwiftUI code).
+- `scripts/`: Custom tooling scripts (e.g., `generate-feature.js`).
 - `src/api/`: Centralized Axios client and interceptors.
 - `src/components/ui/`: Atomic UI kit (high-fidelity primitives).
 - `src/db/`: SQLite schema and Drizzle client.
-- `src/services/`: Monitoring, Deep Linking, and Auth services.
+- `src/services/`: Monitoring, Storage (MMKV), Deep Linking, and Auth services.
 
 ---
 
