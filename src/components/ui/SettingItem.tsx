@@ -24,7 +24,7 @@ export const SettingItem: React.FC<SettingItemProps> = React.memo(
 
     const content = (
       <View className="flex-row items-center justify-between py-[14px] px-md bg-transparent">
-        <View className="flex-row items-center">
+        <View className="flex-row items-center flex-shrink">
           {icon && (
             <View
               className={`w-8 h-8 rounded-sm items-center justify-center mr-3 ${
@@ -55,6 +55,8 @@ export const SettingItem: React.FC<SettingItemProps> = React.memo(
               onValueChange={onToggle}
               trackColor={{ false: "#e2e8f0", true: "#6366f1" }}
               thumbColor="#ffffff"
+              accessibilityLabel={label}
+              accessibilityRole="switch"
             />
           ) : (
             <>
@@ -73,13 +75,22 @@ export const SettingItem: React.FC<SettingItemProps> = React.memo(
     );
 
     if (isToggle) {
-      return <View>{content}</View>;
+      return <View accessibilityRole="none">{content}</View>;
     }
 
     return (
-      <TouchableOpacity onPress={onPress} disabled={isLoading} activeOpacity={0.7}>
+      <TouchableOpacity
+        onPress={onPress}
+        disabled={isLoading}
+        activeOpacity={0.7}
+        accessibilityRole="button"
+        accessibilityLabel={label}
+        accessibilityState={{ disabled: isLoading }}
+      >
         {content}
       </TouchableOpacity>
     );
   }
 );
+
+SettingItem.displayName = "SettingItem";

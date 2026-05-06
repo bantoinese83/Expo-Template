@@ -57,7 +57,7 @@ export default function SignupScreen() {
   };
 
   return (
-    <ScreenWrapper scrollable className="bg-white dark:bg-slate-950">
+    <ScreenWrapper scrollable animate className="bg-white dark:bg-slate-950">
       <ScrollView contentContainerClassName="flex-grow p-6" showsVerticalScrollIndicator={false}>
         <View className="items-center mt-4 mb-8">
           <View className="w-16 h-16 bg-primary/10 dark:bg-primary/20 rounded-2xl items-center justify-center mb-md">

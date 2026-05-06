@@ -7,6 +7,7 @@ import {
   Alert,
   Text,
   Pressable,
+  Appearance,
 } from "react-native";
 import { AlertCircle, RefreshCw, ChevronRight } from "lucide-react-native";
 import * as Updates from "expo-updates";
@@ -26,6 +27,8 @@ interface State {
   reportReference: string | null;
 }
 
+const getIsDark = () => Appearance.getColorScheme() === "dark";
+
 export class ErrorBoundary extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
@@ -40,7 +43,6 @@ export class ErrorBoundary extends React.Component<Props, State> {
     errorTracking.captureException(error, { errorInfo });
     const reportReference =
       `REF-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 6)}`.toUpperCase();
-    // Defer logger + follow-up state so Zustand subscribers are not notified mid–error-boundary commit.
     queueMicrotask(() => {
       logger.error("Global Error Caught", error, errorInfo);
       this.setState({ reportReference });
@@ -51,7 +53,6 @@ export class ErrorBoundary extends React.Component<Props, State> {
     try {
       await Updates.reloadAsync();
     } catch (_e) {
-      // Fallback reload if Updates fails
       this.setState({ hasError: false, error: null, reportReference: null, showDetails: false });
     }
   };
@@ -68,18 +69,21 @@ export class ErrorBoundary extends React.Component<Props, State> {
 
   render() {
     if (this.state.hasError) {
+      const isDark = getIsDark();
+      const t = isDark ? darkTokens : lightTokens;
+
       return (
-        <View style={styles.container}>
-          <LinearGradient colors={["#ffffff", "#f8fafc"]} style={StyleSheet.absoluteFill} />
+        <View style={[styles.container, { backgroundColor: t.bg }]}>
+          <LinearGradient colors={t.gradient} style={StyleSheet.absoluteFill} />
 
           <View style={styles.centerContent}>
-            <View style={styles.iconCircle}>
+            <View style={[styles.iconCircle, { backgroundColor: t.iconBg }]}>
               <AlertCircle size={48} color="#f43f5e" />
             </View>
 
-            <Text style={styles.title}>Application Error</Text>
+            <Text style={[styles.title, { color: t.title }]}>Application Error</Text>
 
-            <Text style={styles.subtitle}>
+            <Text style={[styles.subtitle, { color: t.subtitle }]}>
               Something unexpected happened. We have recorded the error and our team will look into
               it.
             </Text>
@@ -87,6 +91,8 @@ export class ErrorBoundary extends React.Component<Props, State> {
             <View style={styles.actions}>
               <Pressable
                 onPress={this.handleRestart}
+                accessibilityRole="button"
+                accessibilityLabel="Restart Application"
                 style={({ pressed }) => [styles.btnPrimary, pressed && styles.btnPressed]}
               >
                 <RefreshCw size={18} color="#ffffff" />
@@ -95,7 +101,13 @@ export class ErrorBoundary extends React.Component<Props, State> {
 
               <Pressable
                 onPress={this.handleSendReport}
-                style={({ pressed }) => [styles.btnOutline, pressed && styles.btnPressed]}
+                accessibilityRole="button"
+                accessibilityLabel="Send Error Report"
+                style={({ pressed }) => [
+                  styles.btnOutline,
+                  { borderColor: t.border, backgroundColor: t.surface },
+                  pressed && styles.btnPressed,
+                ]}
               >
                 <Text style={styles.btnOutlineText}>Send Error Report</Text>
               </Pressable>
@@ -104,27 +116,36 @@ export class ErrorBoundary extends React.Component<Props, State> {
             <TouchableOpacity
               onPress={() => this.setState({ showDetails: !this.state.showDetails })}
               style={styles.detailsToggle}
+              accessibilityRole="button"
+              accessibilityLabel="Toggle technical details"
             >
-              <Text style={styles.detailsLabel}>Technical details</Text>
+              <Text style={[styles.detailsLabel, { color: t.muted }]}>Technical details</Text>
               <View style={this.state.showDetails ? styles.chevronOpen : styles.chevronClosed}>
-                <ChevronRight size={14} color="#94a3b8" />
+                <ChevronRight size={14} color={t.muted} />
               </View>
             </TouchableOpacity>
 
             {this.state.showDetails && (
-              <View style={styles.detailsCard}>
+              <View
+                style={[
+                  styles.detailsCard,
+                  { backgroundColor: t.detailsBg, borderColor: t.detailsBorder },
+                ]}
+              >
                 <ScrollView style={styles.detailsScroll}>
                   <Text style={styles.detailsError}>
                     {this.state.error?.name}: {this.state.error?.message}
                   </Text>
-                  <Text style={styles.detailsStack}>{this.state.error?.stack}</Text>
+                  <Text style={[styles.detailsStack, { color: t.muted }]}>
+                    {this.state.error?.stack}
+                  </Text>
                 </ScrollView>
               </View>
             )}
           </View>
 
           <View style={styles.footer}>
-            <Text style={styles.footerText}>
+            <Text style={[styles.footerText, { color: t.footerText }]}>
               {this.state.reportReference
                 ? `Reference: ${this.state.reportReference}`
                 : "Preparing reference..."}
@@ -138,10 +159,37 @@ export class ErrorBoundary extends React.Component<Props, State> {
   }
 }
 
+const lightTokens = {
+  bg: "#ffffff",
+  gradient: ["#ffffff", "#f8fafc"] as [string, string],
+  surface: "#ffffff",
+  title: "#020617",
+  subtitle: "#64748b",
+  border: "#e2e8f0",
+  muted: "#94a3b8",
+  iconBg: "#fff1f2",
+  detailsBg: "#f8fafc",
+  detailsBorder: "#f1f5f9",
+  footerText: "#cbd5e1",
+};
+
+const darkTokens = {
+  bg: "#020617",
+  gradient: ["#020617", "#0f172a"] as [string, string],
+  surface: "#0f172a",
+  title: "#f8fafc",
+  subtitle: "#94a3b8",
+  border: "#1e293b",
+  muted: "#64748b",
+  iconBg: "#450a0a",
+  detailsBg: "#0f172a",
+  detailsBorder: "#1e293b",
+  footerText: "#475569",
+};
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#ffffff",
   },
   centerContent: {
     flex: 1,
@@ -153,7 +201,6 @@ const styles = StyleSheet.create({
     width: 96,
     height: 96,
     borderRadius: 48,
-    backgroundColor: "#fff1f2",
     alignItems: "center",
     justifyContent: "center",
     marginBottom: 32,
@@ -166,14 +213,12 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 30,
     fontWeight: "700",
-    color: "#020617",
     textAlign: "center",
     marginBottom: 12,
   },
   subtitle: {
     fontSize: 16,
     lineHeight: 24,
-    color: "#64748b",
     textAlign: "center",
     marginBottom: 40,
     maxWidth: 340,
@@ -205,8 +250,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     borderRadius: 12,
     borderWidth: 1,
-    borderColor: "#e2e8f0",
-    backgroundColor: "#ffffff",
   },
   btnOutlineText: {
     color: "#6366f1",
@@ -225,7 +268,6 @@ const styles = StyleSheet.create({
   detailsLabel: {
     fontSize: 14,
     fontWeight: "500",
-    color: "#94a3b8",
   },
   chevronClosed: {
     marginLeft: 4,
@@ -239,10 +281,8 @@ const styles = StyleSheet.create({
     width: "100%",
     maxWidth: 400,
     maxHeight: 192,
-    backgroundColor: "#f8fafc",
     borderRadius: 12,
     borderWidth: 1,
-    borderColor: "#f1f5f9",
     padding: 12,
   },
   detailsScroll: {
@@ -257,7 +297,6 @@ const styles = StyleSheet.create({
     fontFamily: "Menlo",
     fontSize: 10,
     lineHeight: 16,
-    color: "#94a3b8",
     marginTop: 8,
   },
   footer: {
@@ -266,6 +305,5 @@ const styles = StyleSheet.create({
   },
   footerText: {
     fontSize: 12,
-    color: "#cbd5e1",
   },
 });

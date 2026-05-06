@@ -47,7 +47,7 @@ export default function LoginScreen() {
   };
 
   return (
-    <ScreenWrapper scrollable>
+    <ScreenWrapper scrollable animate>
       <ScrollView contentContainerClassName="flex-grow p-lg" showsVerticalScrollIndicator={false}>
         <View className="items-center mt-xl mb-12">
           <Logo size={84} className="mb-6 shadow-xl shadow-indigo-100 dark:shadow-none" />
@@ -124,11 +124,19 @@ export default function LoginScreen() {
         </View>
 
         <View className="flex-row justify-between mb-10 gap-x-4">
-          <TouchableOpacity className="flex-1 h-[56px] border border-slate-100 dark:border-slate-800 rounded-xl items-center justify-center flex-row active:bg-slate-50 dark:active:bg-slate-900 shadow-sm shadow-slate-50 dark:shadow-none transition-colors">
+          <TouchableOpacity
+            accessibilityRole="button"
+            accessibilityLabel="Sign in with Google"
+            className="flex-1 h-[56px] border border-slate-100 dark:border-slate-800 rounded-xl items-center justify-center flex-row active:bg-slate-50 dark:active:bg-slate-900 shadow-sm shadow-slate-50 dark:shadow-none transition-colors"
+          >
             <MaterialCommunityIcons name="google" size={20} color="#EA4335" />
             <AppText className="ml-2.5 font-semibold text-[15px]">Google</AppText>
           </TouchableOpacity>
-          <TouchableOpacity className="flex-1 h-[56px] border border-slate-100 dark:border-slate-800 rounded-xl items-center justify-center flex-row active:bg-slate-50 dark:active:bg-slate-900 shadow-sm shadow-slate-50 dark:shadow-none transition-colors">
+          <TouchableOpacity
+            accessibilityRole="button"
+            accessibilityLabel="Sign in with Apple"
+            className="flex-1 h-[56px] border border-slate-100 dark:border-slate-800 rounded-xl items-center justify-center flex-row active:bg-slate-50 dark:active:bg-slate-900 shadow-sm shadow-slate-50 dark:shadow-none transition-colors"
+          >
             <MaterialCommunityIcons name="apple" size={20} color={isDark ? "white" : "black"} />
             <AppText className="ml-2.5 font-semibold text-[15px]">Apple</AppText>
           </TouchableOpacity>

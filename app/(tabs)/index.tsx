@@ -28,7 +28,7 @@ export default function Home() {
         userName={user?.name || "Developer"}
         userImage={getAvatarUrl(user?.name || "Dev")}
         greeting="Welcome to"
-        onNotificationPress={() => {}}
+        onNotificationPress={() => router.push("/notifications")}
         notificationCount={3}
       />
 

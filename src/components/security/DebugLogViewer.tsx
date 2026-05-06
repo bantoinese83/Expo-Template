@@ -1,5 +1,6 @@
 import React, { useState } from "react";
-import { FlatList, StyleSheet, TouchableOpacity, View, Share } from "react-native";
+import { StyleSheet, TouchableOpacity, View, Share } from "react-native";
+import { FlashList } from "@shopify/flash-list";
 import { X, Share2, Trash2 } from "lucide-react-native";
 import Animated, { SlideInDown, SlideOutDown } from "react-native-reanimated";
 
@@ -73,7 +74,7 @@ export function DebugLogViewer({ isVisible, onClose }: DebugLogViewerProps) {
         </View>
 
         {/* List */}
-        <FlatList
+        <FlashList
           data={filteredLogs}
           keyExtractor={(item) => item.id}
           contentContainerStyle={{ padding: 16 }}
@@ -107,7 +108,6 @@ export function DebugLogViewer({ isVisible, onClose }: DebugLogViewerProps) {
             </AppCard>
           )}
         />
-
         {/* Actions */}
         <View className="p-6 flex-row space-x-4 border-t border-slate-100 dark:border-slate-800">
           <AppButton

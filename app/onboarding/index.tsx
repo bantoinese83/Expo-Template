@@ -93,7 +93,7 @@ export default function OnboardingScreen() {
   };
 
   return (
-    <ScreenWrapper className="bg-white dark:bg-slate-950" padding={false}>
+    <ScreenWrapper className="bg-white dark:bg-slate-950" padding={false} animate>
       <FlatList
         ref={flatListRef}
         data={STEPS}

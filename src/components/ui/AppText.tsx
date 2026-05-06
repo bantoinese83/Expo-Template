@@ -37,3 +37,5 @@ export const AppText: React.FC<AppTextProps> = React.memo(
     );
   }
 );
+
+AppText.displayName = "AppText";

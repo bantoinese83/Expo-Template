@@ -19,11 +19,11 @@ export const AppInput: React.FC<AppInputProps> = React.memo(
     type = "text",
     containerStyle = "",
     className = "",
-    secureTextEntry,
+    secureTextEntry: _secureTextEntry,
     ...props
   }) => {
     const [isFocused, setIsFocused] = useState(false);
-    const [isPasswordVisible, setIsPasswordVisible] = useState(secureTextEntry);
+    const [isSecure, setIsSecure] = useState(type === "password");
 
     const inputClasses = `
     w-full px-4 py-[14px] rounded-xl border bg-slate-50 dark:bg-slate-900/50 
@@ -66,7 +66,7 @@ export const AppInput: React.FC<AppInputProps> = React.memo(
             onFocus={() => setIsFocused(true)}
             onBlur={() => setIsFocused(false)}
             placeholderTextColor="#cbd5e1"
-            secureTextEntry={isPasswordVisible}
+            secureTextEntry={isSecure}
             accessibilityLabel={label || props.placeholder}
             accessibilityHint={error || props.accessibilityHint}
             accessibilityState={{ disabled: props.editable === false }}
@@ -76,15 +76,11 @@ export const AppInput: React.FC<AppInputProps> = React.memo(
           {type === "password" && (
             <TouchableOpacity
               className="absolute right-[15px] top-[15px] p-0.5"
-              onPress={() => setIsPasswordVisible(!isPasswordVisible)}
+              onPress={() => setIsSecure(!isSecure)}
               accessibilityRole="button"
-              accessibilityLabel={isPasswordVisible ? "Show password" : "Hide password"}
+              accessibilityLabel={isSecure ? "Show password" : "Hide password"}
             >
-              {isPasswordVisible ? (
-                <Eye size={19} color="#cbd5e1" />
-              ) : (
-                <EyeOff size={19} color="#cbd5e1" />
-              )}
+              {isSecure ? <EyeOff size={19} color="#cbd5e1" /> : <Eye size={19} color="#cbd5e1" />}
             </TouchableOpacity>
           )}
         </View>
@@ -102,3 +98,5 @@ export const AppInput: React.FC<AppInputProps> = React.memo(
     );
   }
 );
+
+AppInput.displayName = "AppInput";

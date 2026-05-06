@@ -1,11 +1,12 @@
-import React from "react";
-import { View, ScrollView } from "react-native";
+import React, { useState } from "react";
+import { View, ScrollView, Alert, Linking } from "react-native";
 import { useRouter } from "expo-router";
 
 import { AppText, AppCard, SettingItem, ScreenWrapper } from "@/components/ui";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { useAuth } from "@/hooks/useAuth";
 import { useDebugStore } from "@/store/useDebugStore";
+import { useCheckUpdates } from "@/features/updates/useCheckUpdates";
 
 /**
  * Settings Dashboard.
@@ -14,6 +15,8 @@ import { useDebugStore } from "@/store/useDebugStore";
 export default function SettingsScreen() {
   const router = useRouter();
   const { signOut, user } = useAuth();
+  const [notificationsEnabled, setNotificationsEnabled] = useState(true);
+  const { checkForUpdate } = useCheckUpdates();
 
   const navigateToLegal = (type: string) => {
     router.push({
@@ -39,7 +42,13 @@ export default function SettingsScreen() {
             onPress={() => router.push("/(tabs)/profile" as any)}
           />
           <View className="h-[1px] bg-slate-100 dark:bg-slate-800 ml-[56px]" />
-          <SettingItem label="Security & Password" icon="shield-lock-outline" onPress={() => {}} />
+          <SettingItem
+            label="Security & Password"
+            icon="shield-lock-outline"
+            onPress={() =>
+              Alert.alert("Coming Soon", "Security settings will be available in a future release.")
+            }
+          />
         </AppCard>
 
         {/* Preferences Section */}
@@ -56,14 +65,24 @@ export default function SettingsScreen() {
             <ThemeToggle />
           </View>
           <View className="h-[1px] bg-slate-100 dark:bg-slate-800 ml-[56px]" />
-          <SettingItem label="Language" icon="translate" value="English" onPress={() => {}} />
+          <SettingItem
+            label="Language"
+            icon="translate"
+            value="English"
+            onPress={() =>
+              Alert.alert(
+                "Coming Soon",
+                "Language selection will be available in a future release."
+              )
+            }
+          />
           <View className="h-[1px] bg-slate-100 dark:bg-slate-800 ml-[56px]" />
           <SettingItem
             label="Push Notifications"
             icon="bell-outline"
             type="toggle"
-            value={true}
-            onToggle={(val) => console.log("Toggle Notifications", val)}
+            value={notificationsEnabled}
+            onToggle={setNotificationsEnabled}
           />
         </AppCard>
 
@@ -94,9 +113,19 @@ export default function SettingsScreen() {
           </AppText>
         </View>
         <AppCard padding="none" className="overflow-hidden">
-          <SettingItem label="Help Center" icon="help-circle-outline" onPress={() => {}} />
+          <SettingItem
+            label="Help Center"
+            icon="help-circle-outline"
+            onPress={() =>
+              Linking.openURL("https://github.com/bantoinese83/2026_expo_templete/issues")
+            }
+          />
           <View className="h-[1px] bg-slate-100 dark:bg-slate-800 ml-[56px]" />
-          <SettingItem label="Contact Us" icon="email-outline" onPress={() => {}} />
+          <SettingItem
+            label="Contact Us"
+            icon="email-outline"
+            onPress={() => Linking.openURL("mailto:support@monarch.com")}
+          />
         </AppCard>
 
         {/* Debug Section (Template Only) */}
@@ -117,11 +146,7 @@ export default function SettingsScreen() {
                 onPress={() => useDebugStore.getState().showViewer()}
               />
               <View className="h-[1px] bg-slate-100 dark:bg-slate-800 ml-[56px]" />
-              <SettingItem
-                label="Check for Updates"
-                icon="refresh"
-                onPress={() => console.log("Manual check for updates")}
-              />
+              <SettingItem label="Check for Updates" icon="refresh" onPress={checkForUpdate} />
             </AppCard>
           </>
         )}

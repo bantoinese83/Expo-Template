@@ -1,12 +1,15 @@
 node_modules/
 .history/
 .git/
+.vscode/
 coverage/
 .expo/
 expo-env.d.ts
 assets/
 package-lock.json
 drizzle/meta/
+ios/
+android/
 App.js
 index.js
 index.ts

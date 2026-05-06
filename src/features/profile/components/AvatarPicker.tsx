@@ -1,5 +1,5 @@
 import React from "react";
-import { View, TouchableOpacity } from "react-native";
+import { View, Pressable } from "react-native";
 import { Image } from "expo-image";
 import * as ImagePicker from "expo-image-picker";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
@@ -25,9 +25,11 @@ export function AvatarPicker({ currentAvatar, onAvatarChange }: AvatarPickerProp
 
   return (
     <View className="items-center mb-10">
-      <TouchableOpacity
+      <Pressable
         onPress={pickImage}
-        className="relative active:scale-95 transition-transform"
+        accessibilityRole="button"
+        accessibilityLabel="Change profile picture"
+        className="relative"
       >
         <View className="w-28 h-28 rounded-full bg-slate-100 dark:bg-slate-900/50 items-center justify-center border-[3px] border-white dark:border-slate-900 shadow-xl shadow-slate-200 dark:shadow-none overflow-hidden">
           {currentAvatar ? (
@@ -39,7 +41,7 @@ export function AvatarPicker({ currentAvatar, onAvatarChange }: AvatarPickerProp
         <View className="absolute bottom-0 right-0 w-9 h-9 bg-primary rounded-full items-center justify-center border-[3px] border-white dark:border-slate-900 shadow-md">
           <MaterialCommunityIcons name="camera" size={18} color="white" />
         </View>
-      </TouchableOpacity>
+      </Pressable>
     </View>
   );
 }

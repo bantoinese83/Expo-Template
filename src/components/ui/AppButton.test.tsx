@@ -4,10 +4,6 @@ import { AppButton } from "./AppButton";
 import * as Haptics from "expo-haptics";
 
 describe("AppButton", () => {
-  it("simple test", () => {
-    expect(true).toBe(true);
-  });
-
   it("renders correctly with title", () => {
     const { getByText } = render(<AppButton title="Click Me" />);
     expect(getByText("Click Me")).toBeTruthy();

@@ -15,6 +15,7 @@ export default function TabLayout() {
     <Tabs
       screenOptions={{
         headerShown: false,
+        lazy: true,
         tabBarActiveTintColor: colors.primary,
         tabBarInactiveTintColor: colors.slate[400],
         tabBarStyle: {
@@ -44,7 +45,7 @@ export default function TabLayout() {
       <Tabs.Screen
         name="orders"
         options={{
-          title: "Orders",
+          title: t("orders"),
           tabBarIcon: ({ color, size }) => (
             <MaterialCommunityIcons name="clipboard-text-outline" size={size} color={color} />
           ),
@@ -53,14 +54,14 @@ export default function TabLayout() {
       <Tabs.Screen
         name="add-order"
         options={{
-          title: "Add",
+          title: t("add"),
           tabBarButton: (props) => <TabBarButton {...props} />,
         }}
       />
       <Tabs.Screen
         name="customers"
         options={{
-          title: "Customers",
+          title: t("customers"),
           tabBarIcon: ({ color, size }) => (
             <MaterialCommunityIcons name="account-group-outline" size={size} color={color} />
           ),

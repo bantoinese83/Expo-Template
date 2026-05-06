@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Alert } from "react-native";
 import * as Updates from "expo-updates";
 
@@ -11,7 +11,7 @@ import { logger } from "@/utils/logger";
 export function useCheckUpdates() {
   const [isChecking, setIsChecking] = useState(false);
 
-  async function onFetchUpdateAsync() {
+  const checkForUpdate = useCallback(async () => {
     try {
       setIsChecking(true);
       const update = await Updates.checkForUpdateAsync();
@@ -38,19 +38,17 @@ export function useCheckUpdates() {
         );
       }
     } catch (e) {
-      // In development, this often fails if not using an EAS build.
       logger.debug("Updates check failed (expected in dev)", e);
     } finally {
       setIsChecking(false);
     }
-  }
-
-  useEffect(() => {
-    // Only check in production or if not in expo go
-    if (!__DEV__) {
-      onFetchUpdateAsync();
-    }
   }, []);
 
-  return { isChecking, checkForUpdate: onFetchUpdateAsync };
+  useEffect(() => {
+    if (!__DEV__) {
+      checkForUpdate();
+    }
+  }, [checkForUpdate]);
+
+  return { isChecking, checkForUpdate };
 }

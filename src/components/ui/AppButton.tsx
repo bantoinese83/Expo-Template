@@ -110,3 +110,5 @@ export const AppButton: React.FC<AppButtonProps> = React.memo(
     );
   }
 );
+
+AppButton.displayName = "AppButton";

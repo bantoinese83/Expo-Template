@@ -34,13 +34,27 @@ export const ScreenWrapper: React.FC<ScreenWrapperProps> = ({
   className = "",
   style,
   contentContainerStyle,
-  animate = true,
+  animate = false,
 }) => {
   const { isDark } = useTheme();
   const insets = useSafeAreaInsets();
 
   const Container = withSafeArea ? SafeAreaView : View;
   const Wrapper = scrollable ? ScrollView : (View as any);
+
+  const content = (
+    <Wrapper
+      className={`flex-1 ${padding ? "px-md" : ""}`}
+      contentContainerStyle={[
+        scrollable ? { flexGrow: 1, paddingBottom: insets.bottom + 20 } : {},
+        contentContainerStyle,
+      ]}
+      showsVerticalScrollIndicator={false}
+      keyboardShouldPersistTaps="handled"
+    >
+      {children}
+    </Wrapper>
+  );
 
   return (
     <Container
@@ -55,24 +69,18 @@ export const ScreenWrapper: React.FC<ScreenWrapperProps> = ({
         behavior={Platform.OS === "ios" ? "padding" : "height"}
         style={{ flex: 1 }}
       >
-        <MotiView
-          from={animate ? { opacity: 0, translateY: 10 } : {}}
-          animate={{ opacity: 1, translateY: 0 }}
-          transition={{ type: "timing", duration: 400 }}
-          style={{ flex: 1 }}
-        >
-          <Wrapper
-            className={`flex-1 ${padding ? "px-md" : ""}`}
-            contentContainerStyle={[
-              scrollable ? { flexGrow: 1, paddingBottom: insets.bottom + 20 } : {},
-              contentContainerStyle,
-            ]}
-            showsVerticalScrollIndicator={false}
-            keyboardShouldPersistTaps="handled"
+        {animate ? (
+          <MotiView
+            from={{ opacity: 0, translateY: 10 }}
+            animate={{ opacity: 1, translateY: 0 }}
+            transition={{ type: "timing", duration: 400 }}
+            style={{ flex: 1 }}
           >
-            {children}
-          </Wrapper>
-        </MotiView>
+            {content}
+          </MotiView>
+        ) : (
+          <View style={{ flex: 1 }}>{content}</View>
+        )}
       </KeyboardAvoidingView>
     </Container>
   );

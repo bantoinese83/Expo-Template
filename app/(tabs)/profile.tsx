@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { View, ScrollView, TouchableOpacity } from "react-native";
+import { View, ScrollView, Pressable } from "react-native";
 import { useRouter } from "expo-router";
 import { useTranslation } from "react-i18next";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
@@ -37,12 +37,14 @@ export default function ProfileScreen() {
         {/* Header */}
         <View className="flex-row justify-between items-center mb-8">
           <AppText variant="h1">{t("profile")}</AppText>
-          <TouchableOpacity
+          <Pressable
             onPress={() => router.push("/settings")}
-            className="w-10 h-10 bg-slate-100 dark:bg-slate-800 rounded-full items-center justify-center active:scale-95 transition-transform"
+            accessibilityRole="button"
+            accessibilityLabel="Settings"
+            className="w-10 h-10 bg-slate-100 dark:bg-slate-800 rounded-full items-center justify-center"
           >
             <MaterialCommunityIcons name="cog-outline" size={24} color="#64748b" />
-          </TouchableOpacity>
+          </Pressable>
         </View>
 
         {/* Avatar Section */}

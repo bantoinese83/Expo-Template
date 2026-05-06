@@ -25,11 +25,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [isInitializing, setIsInitializing] = useState(true);
 
   useEffect(() => {
-    // Initial boot check (e.g., check secure store for tokens)
     const init = async () => {
       await initSession();
-      // Simulating a small delay for demo purposes
-      await new Promise((resolve) => setTimeout(resolve, 500));
       setIsInitializing(false);
     };
     init();
